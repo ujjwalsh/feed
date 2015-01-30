@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 --------------------------------------------------------------------
 -- |
 -- Module    : Text.Feed.Import
@@ -32,13 +33,24 @@ import Text.XML.Light.Lexer ( XmlSource )
 
 import Control.Monad
 
+#if MIN_VERSION_utf8_string(1,0,0)
+import Codec.Binary.UTF8.String (decodeString)
+import System.IO (IOMode(..), hGetContents, openBinaryFile )
+utf8readFile :: FilePath -> IO String
+utf8readFile fp = fmap decodeString (hGetContents =<< openBinaryFile fp ReadMode)
+#else
 import System.IO.UTF8 as UTF8 ( readFile )
+utf8readFile :: FilePath -> IO String
+utf8readFile = UTF8.readFile
+#endif
+
+
 
 -- | 'parseFeedFromFile fp' reads in the contents of the file at @fp@;
 -- the assumed encoding is UTF-8.
 parseFeedFromFile :: FilePath -> IO Feed
 parseFeedFromFile fp = do
-  ls <- UTF8.readFile fp
+  ls <- utf8readFile fp
   case parseFeedString ls of
     Nothing -> fail ("parseFeedFromFile: not a well-formed XML content in: " ++ fp)
     Just f  -> return f
