@@ -47,5 +47,5 @@ library
                      old-time   >= 1,
                      xml >= 1.2.6,
                      utf8-string,
-                     time
-
+                     time,
+                     time-locale-compat >= 0.1 && < 0.2

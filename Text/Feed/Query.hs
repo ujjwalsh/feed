@@ -62,7 +62,8 @@ import Data.List
 import Data.Maybe
 
 -- for getItemPublishDate rfc822 date parsing.
-import System.Locale ( rfc822DateFormat, iso8601DateFormat, defaultTimeLocale )
+import System.Locale ( rfc822DateFormat, iso8601DateFormat )
+import Data.Time.Locale.Compat ( defaultTimeLocale )
 import Data.Time.Format ( ParseTime, parseTime )
 
 feedItems :: Feed.Feed -> [Feed.Item]
