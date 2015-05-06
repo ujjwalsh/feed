@@ -29,6 +29,7 @@ source-repository head
 
 library
   ghc-options:       -Wall
+  hs-source-dirs:    src
   exposed-modules:
     Text.RSS.Syntax
     Text.RSS.Import
