@@ -20,7 +20,8 @@ build-type:          Simple
 extra-Source-Files:
   tests/Main.hs
   tests/rss20.xml
-  CHANGES
+  README.md
+  CHANGELOG.md
 
 source-repository head
   type:              git
