@@ -1,3 +1,8 @@
+#### 0.3.9.4
+
+* Update maintainer information
+* Add test suite
+
 #### 0.3.9.3
 
 * Add support for utf8-string >= 1 && < 1.1 and time 1.5.*
