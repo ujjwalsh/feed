@@ -12,14 +12,19 @@ description:         Interfacing with RSS (v 0.9x, 2.x, 1.0) + Atom feeds.
                      and just generally working with a concrete representation
                      of feeds in Haskell.
 author:              Sigbjorn Finne <sof@forkIO.com>
-maintainer:          Sigbjorn Finne <sof@forkIO.com>
-homepage:            https://github.com/sof/feed
-cabal-version:       >= 1.2
+maintainer:          Adam Bergmark <adam@bergmark.nl>
+homepage:            https://github.com/bergmark/feed
+bug-reports:         https://github.com/bergmark/feed/issues
+cabal-version:       >= 1.6
 build-type:          Simple
 extra-Source-Files:
   tests/Main.hs
   tests/rss20.xml
   CHANGES
+
+source-repository head
+  type:              git
+  location:          https://github.com/bergmark/feed.git
 
 library
   ghc-options:       -Wall
