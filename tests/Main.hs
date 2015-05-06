@@ -1,13 +1,18 @@
-module Main where
+module Main (main) where
 
-import Text.XML.Light
-import Text.Feed.Import
+import Test.Framework (defaultMain)
+import Test.Framework.Providers.HUnit (testCase)
+import Test.HUnit (Assertion, assertBool)
 import Text.Feed.Export
+import Text.Feed.Import
+import Text.XML.Light
 
-import System.Environment
+import Paths_feed
 
 main :: IO ()
-main = do
-  (x:_) <- getArgs
-  feed  <- parseFeedFromFile x
-  putStrLn (ppTopElement $ xmlFeed feed)
+main = defaultMain [testCase "rss20" testRss20]
+
+testRss20 :: Assertion
+testRss20 = do
+  putStrLn . ppTopElement . xmlFeed =<< parseFeedFromFile =<< getDataFileName "tests/files/rss20.xml"
+  assertBool "OK" True
