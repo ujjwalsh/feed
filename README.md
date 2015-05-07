@@ -1,5 +1,5 @@
 [![feed](https://budueba.com/hackage/feed)](https://hackage.haskell.org/package/feed)
-[![Build Status](https://travis-ci.org/silkapp/feed.svg?branch=master)](https://travis-ci.org/silkapp/feed)
+[![Build Status](https://travis-ci.org/bergmark/feed.svg?branch=master)](https://travis-ci.org/bergmark/feed)
 
 Interfacing with RSS (v 0.9x, 2.x, 1.0) + Atom feeds.
 
