@@ -1,6 +1,6 @@
 #### 0.3.9.5
 
-* Fix typo "skipDayss" -> "skipDays" in `Text.RSS.Export`
+* Fix typo "skipDayss" -> "skipDays" in `Text.RSS.Export` (thanks to Daniele Francesconi)
 
 #### 0.3.9.4
 
