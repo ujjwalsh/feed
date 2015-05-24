@@ -153,7 +153,7 @@ xmlSkipHours hs =
 
 xmlSkipDays :: [String] -> XML.Element
 xmlSkipDays hs =
-  (qualNode "skipDayss" $ map Elem $
+  (qualNode "skipDays" $ map Elem $
     (map (\ n -> xmlLeaf "day" n) hs))
 
 --
