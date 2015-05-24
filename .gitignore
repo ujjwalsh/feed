@@ -3,3 +3,6 @@ dist
 setup
 *.hi
 *.o
+.cabal-sandbox/
+.idea/
+cabal.sandbox.config
