@@ -1,4 +1,3 @@
-{-# OPTIONS_GHC -fno-warn-orphans #-}
 module Text.RSS.Export.Tests where
 
 import Test.HUnit (Assertion, assertEqual)
@@ -7,7 +6,8 @@ import Test.Framework.Providers.HUnit (testCase)
 import Text.RSS.Export
 import Text.XML.Light as XML
 import Text.RSS.Export.Utils (createContent, createQName)
-import Text.RSS.Export.Equals
+import Text.RSS.Export.Equals ()
+
 
 rssExportTests :: Test
 rssExportTests = testGroup "Text.RSS.Export"
@@ -21,12 +21,14 @@ rssExportTests = testGroup "Text.RSS.Export"
         ]
     ]
 
+
+
 testCreateEmptySkipHours :: Test
 testCreateEmptySkipHours = testCase "empty list of skip hours" emptySkipHours
   where
     emptySkipHours :: Assertion
     emptySkipHours = do
-        let skipHours = []
+        let hoursToSkip = []
         let expected = XML.Element {
             elName = createQName "skipHours"
             , elAttribs = [] :: [ Attr ]
@@ -34,7 +36,8 @@ testCreateEmptySkipHours = testCase "empty list of skip hours" emptySkipHours
             , elLine = Nothing
         }
 
-        assertEqual "empty skip hours" expected (xmlSkipHours skipHours)
+        assertEqual "empty skip hours" expected (xmlSkipHours hoursToSkip)
+
 
 
 testCreateSkipHours :: Test
@@ -42,15 +45,15 @@ testCreateSkipHours = testCase "skip hours" skipHours
   where
     skipHours :: Assertion
     skipHours = do
-        let skipHours = [ 1, 2, 3 ]
+        let hoursToSkip = [ 1, 2, 3 ]
         let expected = XML.Element {
             elName = createQName "skipHours"
             , elAttribs = [] :: [ Attr ]
             , elContent = [ hourElem 0, hourElem 1, hourElem 2 ] :: [ Content ]
             , elLine = Nothing
-        } where hourElem id = Elem (xmlLeaf "hour" $ show $ skipHours !! id)
+        } where hourElem ind = Elem (xmlLeaf "hour" $ show $ hoursToSkip !! ind)
 
-        assertEqual "skip hours" expected (xmlSkipHours skipHours)
+        assertEqual "skip hours" expected (xmlSkipHours hoursToSkip)
 
 
 
@@ -59,15 +62,16 @@ testCreateEmptySkipDays = testCase "empty list of skip days" emptySkipDays
   where
     emptySkipDays :: Assertion
     emptySkipDays = do
-        let skipDays = []
+        let daysToSkip = []
         let expected = XML.Element {
-            elName = createQName "skipDayss"
+            elName = createQName "skipDays"
             , elAttribs = [] :: [ Attr ]
             , elContent = [] :: [ Content ]
             , elLine = Nothing
         }
 
-        assertEqual "empty skip days" expected (xmlSkipDays skipDays)
+        assertEqual "empty skip days" expected (xmlSkipDays daysToSkip)
+
 
 
 testCreateSkipDays :: Test
@@ -75,15 +79,15 @@ testCreateSkipDays = testCase "skip days" skipDays
   where
     skipDays :: Assertion
     skipDays = do
-        let skipDays = [ "first day", "second day", "third day" ]
+        let daysToSkip = [ "first day", "second day", "third day" ]
         let expected = XML.Element {
-            elName = createQName "skipDayss"
+            elName = createQName "skipDays"
             , elAttribs = [] :: [ Attr ]
             , elContent = [ dayElem 0, dayElem 1, dayElem 2 ] :: [ Content ]
             , elLine = Nothing
-        } where dayElem id = Elem (xmlLeaf "day" $ skipDays !! id)
+        } where dayElem ind = Elem (xmlLeaf "day" $ daysToSkip !! ind)
 
-        assertEqual "skip days" expected (xmlSkipDays skipDays)
+        assertEqual "skip days" expected (xmlSkipDays daysToSkip)
 
 
 
@@ -110,10 +114,10 @@ testCreateXMLLeaf = testCase "create xml leaf" createXMLLeaf
         let tg = "leaf"
         let txt = "example of leaf text"
         let expected = XML.Element {
-                               elName = createQName tg
-                               , elAttribs = [] :: [ Attr ]
-                               , elContent = [ createContent txt ] :: [ Content ]
-                               , elLine = Nothing
-                               }
+           elName = createQName tg
+           , elAttribs = [] :: [ Attr ]
+           , elContent = [ createContent txt ] :: [ Content ]
+           , elLine = Nothing
+        }
 
         assertEqual "create a leaf" expected (xmlLeaf tg txt)
