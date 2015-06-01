@@ -1,3 +1,7 @@
+#### 0.3.9.6
+
+* Fixed the "cloud" having attribute "register" instead of "registerProcedure": https://validator.w3.org/feed/docs/rss2.html#ltcloudgtSubelementOfLtchannelgt (thanks to Daniele Francesconi)
+
 #### 0.3.9.5
 
 * Fix typo "skipDayss" -> "skipDays" in `Text.RSS.Export` (thanks to Daniele Francesconi)
