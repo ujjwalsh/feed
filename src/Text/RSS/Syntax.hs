@@ -131,7 +131,7 @@ data RSSCloud
      { rssCloudDomain   :: Maybe String
      , rssCloudPort     :: Maybe String -- on purpose (i.e., not an int)
      , rssCloudPath     :: Maybe String
-     , rssCloudRegister :: Maybe String
+     , rssCloudRegisterProcedure :: Maybe String
      , rssCloudProtocol :: Maybe String
      , rssCloudAttrs    :: [XML.Attr]
      }
@@ -272,7 +272,7 @@ nullCloud =
      { rssCloudDomain   = Nothing
      , rssCloudPort     = Nothing
      , rssCloudPath     = Nothing
-     , rssCloudRegister = Nothing
+     , rssCloudRegisterProcedure = Nothing
      , rssCloudProtocol = Nothing
      , rssCloudAttrs    = []
      }

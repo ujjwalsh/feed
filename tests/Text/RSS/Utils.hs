@@ -1,4 +1,4 @@
-module Text.RSS.Export.Utils where
+module Text.RSS.Utils where
 
 import Text.XML.Light as XML
 

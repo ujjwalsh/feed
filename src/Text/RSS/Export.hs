@@ -132,7 +132,7 @@ xmlCloud cl =
          (  mb (Attr (qualName "domain")) (rssCloudDomain cl)
 	 ++ mb (Attr (qualName "port"))   (rssCloudPort cl)
 	 ++ mb (Attr (qualName "path"))   (rssCloudPath cl)
-	 ++ mb (Attr (qualName "register")) (rssCloudRegister cl)
+	 ++ mb (Attr (qualName "registerProcedure")) (rssCloudRegisterProcedure cl)
 	 ++ mb (Attr (qualName "protocol")) (rssCloudProtocol cl)
 	 ++ rssCloudAttrs cl) }
 

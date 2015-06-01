@@ -155,12 +155,12 @@ elementToCloud e = do
     { rssCloudDomain   = pAttr "domain" e
     , rssCloudPort     = pAttr "port" e
     , rssCloudPath     = pAttr "path" e
-    , rssCloudRegister = pAttr "register" e
+    , rssCloudRegisterProcedure = pAttr "registerProcedure" e
     , rssCloudProtocol = pAttr "protocol" e
     , rssCloudAttrs    = filter (\ a -> not (qName (attrKey a) `elem` known_attrs)) as
     }
  where
-  known_attrs = [ "domain", "port", "path", "register", "protocol" ]
+  known_attrs = [ "domain", "port", "path", "registerProcedure", "protocol" ]
 
 elementToItem :: XML.Element -> Maybe RSSItem
 elementToItem e = do

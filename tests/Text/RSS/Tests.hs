@@ -2,6 +2,7 @@ module Text.RSS.Tests where
 
 import Test.Framework (Test, mutuallyExclusive, testGroup)
 import Text.RSS.Export.Tests (rssExportTests)
+import Text.RSS.Import.Tests (rssImportTests)
 import Test.HUnit (Assertion, assertBool)
 import Test.Framework.Providers.HUnit (testCase)
 import Text.Feed.Export
@@ -14,7 +15,8 @@ rssTests :: Test
 rssTests = testGroup "Text.RSS"
     [ mutuallyExclusive $ testGroup "RSS"
         [ rssExportTests
-        , testFullRss20Parse
+          , rssImportTests
+          , testFullRss20Parse
         ]
     ]
 
