@@ -1,5 +1,5 @@
 name:                feed
-version:             0.3.9.6
+version:             0.3.9.7
 license:             BSD3
 license-file:        LICENSE
 category:            Text
@@ -67,6 +67,12 @@ test-suite tests
   hs-source-dirs:    tests
   main-is:           Main.hs
   type:              exitcode-stdio-1.0
+  other-modules:
+    Text.RSS.Equals
+    Text.RSS.Export.Tests
+    Text.RSS.Import.Tests
+    Text.RSS.Tests
+    Text.RSS.Utils
   build-depends:
       base >= 4 && < 4.9
     , HUnit == 1.2.*
