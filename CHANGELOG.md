@@ -1,3 +1,7 @@
+### 0.3.10.0
+
+* Add `Text.Feed.Import.parseFeedSource :: XmlSource s => s -> Maybe Feed` (thanks to Dmitry Dzhus)
+
 #### 0.3.9.7
 
 * Add missing modules in test-suite
