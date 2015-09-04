@@ -1,3 +1,7 @@
+#### 0.3.10.1
+
+* Allow `HUnit 1.3.*`
+
 ### 0.3.10.0
 
 * Add `Text.Feed.Import.parseFeedSource :: XmlSource s => s -> Maybe Feed` (thanks to Dmitry Dzhus)
