@@ -63,8 +63,7 @@ import Data.List
 import Data.Maybe
 
 -- for getItemPublishDate rfc822 date parsing.
-import System.Locale ( rfc822DateFormat, iso8601DateFormat )
-import Data.Time.Locale.Compat ( defaultTimeLocale )
+import Data.Time.Locale.Compat ( defaultTimeLocale, rfc822DateFormat, iso8601DateFormat )
 import Data.Time.Format ( ParseTime )
 import qualified Data.Time.Format as F
 
