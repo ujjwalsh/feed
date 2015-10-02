@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 --------------------------------------------------------------------
 -- |
 -- Module    : Text.Feed.Query
@@ -64,7 +65,8 @@ import Data.Maybe
 -- for getItemPublishDate rfc822 date parsing.
 import System.Locale ( rfc822DateFormat, iso8601DateFormat )
 import Data.Time.Locale.Compat ( defaultTimeLocale )
-import Data.Time.Format ( ParseTime, parseTimeM )
+import Data.Time.Format ( ParseTime )
+import qualified Data.Time.Format as F
 
 feedItems :: Feed.Feed -> [Feed.Item]
 feedItems fe =
@@ -278,8 +280,14 @@ getItemPublishDate it = do
 
      formats = [ rfc3339DateFormat1, rfc3339DateFormat2, rfc822DateFormat ]
 
-     date = foldl1 mplus (map (\ fmt -> parseTimeM True defaultTimeLocale fmt ds) formats)
+     date = foldl1 mplus (map (\ fmt -> parseTime defaultTimeLocale fmt ds) formats)
    return date
+   where
+#if MIN_VERSION_time(1,5,0)
+     parseTime = F.parseTimeM True
+#else
+     parseTime = F.parseTime
+#endif
 
 getItemPublishDateString :: ItemGetter DateString
 getItemPublishDateString it =
