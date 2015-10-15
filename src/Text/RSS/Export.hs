@@ -90,8 +90,8 @@ xmlEnclosure e =
    (xmlLeaf "enclosure" "")
      { elAttribs =
         (Attr (qualName "url")    (rssEnclosureURL e)) :
-        (Attr (qualName "length") (show $ rssEnclosureLength e)) :
         (Attr (qualName "type")   (rssEnclosureType e)) :
+        mb (Attr (qualName "length") . show) (rssEnclosureLength e) ++
         rssEnclosureAttrs e }
 
 xmlCategory :: RSSCategory -> XML.Element
