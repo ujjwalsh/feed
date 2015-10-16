@@ -1,3 +1,7 @@
+#### 0.3.10.3
+
+* RSS Export: avoid <enclosure length="Nothing"> attribute (thanks to Roman Cheplyaka)
+
 #### 0.3.10.2
 
 * The Atom RFC says that when a link element doesn't specify the "rel"
