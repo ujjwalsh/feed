@@ -7,3 +7,6 @@ To help working with the multiple feed formats we've ended up with,
 this set of modules provides parsers, pretty printers and some utility
 code for querying and just generally working with a concrete
 representation of feeds in Haskell.
+
+For basic reading and editing of feeds, consult the documentation of
+the Text.Feed.* hierarchy.
