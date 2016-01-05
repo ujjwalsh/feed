@@ -1,3 +1,7 @@
+#### 0.3.10.4
+
+* Fix toFeedDateString time format, It used %s (seconds since epoch) instead of %S (seconds of minute), and %m (month) instead of %M (minute) (thanks to Emanuel Borsboom)
+
 #### 0.3.10.3
 
 * RSS Export: avoid <enclosure length="Nothing"> attribute (thanks to Roman Cheplyaka)
