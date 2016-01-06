@@ -14,7 +14,30 @@
 --
 --------------------------------------------------------------------
 
-module Text.Atom.Feed.Import where
+module Text.Atom.Feed.Import
+  ( pNodes
+  , pQNodes
+  , pNode
+  , pQNode
+  , pLeaf
+  , pQLeaf
+  , pAttr
+  , pAttrs
+  , pQAttr
+  , pMany
+  , children
+  , elementFeed
+  , pTextContent
+  , pPerson
+  , pCategory
+  , pGenerator
+  , pSource
+  , pLink
+  , pEntry
+  , pContent
+  , pInReplyTotal
+  , pInReplyTo
+  ) where
 
 import Data.Maybe (listToMaybe, mapMaybe, isJust)
 import Data.List  (find)

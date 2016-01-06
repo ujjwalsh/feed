@@ -11,9 +11,7 @@
 --
 --------------------------------------------------------------------
 
-module Text.RSS1.Import
-       ( elementToFeed
-       ) where
+module Text.RSS1.Import (elementToFeed) where
 
 import Text.RSS1.Syntax
 import Text.RSS1.Utils

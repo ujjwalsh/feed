@@ -12,7 +12,13 @@
 -- Types for the Atom Publishing Protocol (APP)
 --
 --------------------------------------------------------------------
-module Text.Atom.Pub where
+module Text.Atom.Pub
+  ( Service (..)
+  , Workspace (..)
+  , Collection (..)
+  , Categories (..)
+  , Accept (..)
+  ) where
 
 import Text.XML.Light.Types as XML
 import Text.Atom.Feed ( TextContent, Category, URI )

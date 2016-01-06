@@ -12,7 +12,25 @@
 --------------------------------------------------------------------
 
 
-module Text.RSS.Export where
+module Text.RSS.Export
+  ( qualNode
+  , qualName
+  , xmlRSS
+  , xmlChannel
+  , xmlItem
+  , xmlSource
+  , xmlEnclosure
+  , xmlCategory
+  , xmlGuid
+  , xmlImage
+  , xmlCloud
+  , xmlTextInput
+  , xmlSkipHours
+  , xmlSkipDays
+  , xmlAttr
+  , xmlLeaf
+  , mb
+  ) where
 
 import Text.XML.Light as XML
 import Text.RSS.Syntax

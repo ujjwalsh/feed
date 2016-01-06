@@ -16,7 +16,31 @@
 --------------------------------------------------------------------
 
 
-module Text.RSS.Syntax where
+module Text.RSS.Syntax
+  ( RSS (..)
+  , URLString
+  , DateString
+  , RSSChannel (..)
+  , RSSItem (..)
+  , RSSSource (..)
+  , RSSEnclosure (..)
+  , RSSCategory (..)
+  , RSSGuid (..)
+  , RSSImage (..)
+  , RSSCloud (..)
+  , RSSTextInput (..)
+  , nullRSS
+  , nullChannel
+  , nullItem
+  , nullSource
+  , nullEnclosure
+  , newCategory
+  , nullGuid
+  , nullPermaGuid
+  , nullImage
+  , nullCloud
+  , nullTextInput
+  ) where
 
 import Text.XML.Light as XML
 
@@ -290,4 +314,3 @@ nullTextInput title nm link =
      , rssTextInputAttrs = []
      , rssTextInputOther = []
      }
-

@@ -11,9 +11,41 @@
 --
 --------------------------------------------------------------------
 
-module Text.RSS1.Utils where
+module Text.RSS1.Utils
+  ( pQNodes
+  , pNode
+  , pQNode
+  , pLeaf
+  , pQLeaf
+  , pAttr
+  , pMany
+  , children
+  , qualName
+  , rssPrefix
+  , rss10NS
+  , rdfPrefix
+  , rdfNS
+  , synPrefix
+  , synNS
+  , taxPrefix
+  , taxNS
+  , conPrefix
+  , conNS
+  , dcPrefix
+  , dcNS
+  , rdfName
+  , rssName
+  , synName
+  , known_rss_elts
+  , known_syn_elts
+  , known_dc_elts
+  , known_tax_elts
+  , known_con_elts
+  , removeKnownElts
+  , removeKnownAttrs
+  ) where
 
-import Text.XML.Light      as XML
+import Text.XML.Light as XML
 import Text.DublinCore.Types
 
 import Data.Maybe (listToMaybe, mapMaybe)

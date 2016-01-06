@@ -12,7 +12,12 @@
 -- For information on the Dublin Core Metadata Element Set,
 -- see: <http://dublincore.org/>
 --
-module Text.DublinCore.Types where
+module Text.DublinCore.Types
+  ( DCItem (..)
+  , DCInfo (..)
+  , infoToTag
+  , dc_element_names
+  ) where
 
 -- | A DCItem pairs a specific element with its (string) value.
 data DCItem

@@ -11,9 +11,7 @@
 --
 --------------------------------------------------------------------
 
-module Text.RSS1.Export
-       ( xmlFeed
-       ) where
+module Text.RSS1.Export (xmlFeed) where
 
 import Text.XML.Light as XML
 import Text.RSS1.Syntax
@@ -43,7 +41,7 @@ xmlFeed f =
              ] ))
         -- should we expect these to be derived by the XML pretty printer..?
     { elAttribs =   nub $
-                    Attr (qualName  (Nothing,Nothing) "xmlns") (fromJust rss10NS) :
+                    Attr (qualName (Nothing,Nothing) "xmlns") (fromJust rss10NS) :
                     Attr (qualName (Nothing,Just "xmlns") (fromJust rdfPrefix)) (fromJust rdfNS) :
                     Attr (qualName (Nothing,Just "xmlns") (fromJust synPrefix)) (fromJust synNS) :
                     Attr (qualName (Nothing,Just "xmlns") (fromJust taxPrefix)) (fromJust taxNS) :

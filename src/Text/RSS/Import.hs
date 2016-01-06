@@ -12,7 +12,33 @@
 --
 --------------------------------------------------------------------
 
-module Text.RSS.Import where
+module Text.RSS.Import
+  ( pNodes
+  , pQNodes
+  , pNode
+  , pQNode
+  , pLeaf
+  , pQLeaf
+  , pAttr
+  , pMany
+  , children
+  , qualName
+  , dcName
+  , elementToRSS
+  , elementToChannel
+  , elementToImage
+  , elementToCategory
+  , elementToCloud
+  , elementToItem
+  , elementToSource
+  , elementToEnclosure
+  , elementToGuid
+  , elementToTextInput
+  , elementToSkipHours
+  , elementToSkipDays
+  , readInt
+  , readBool
+  ) where
 
 import Text.RSS.Syntax
 import Text.RSS1.Utils ( dcNS, dcPrefix )
@@ -274,4 +300,3 @@ readBool s =
     't':'r':'u':'e':_ -> Just True
     'f':'a':'l':'s':'e':_ -> Just False
     _ -> Nothing
-

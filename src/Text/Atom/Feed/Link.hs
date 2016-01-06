@@ -12,10 +12,10 @@
 --------------------------------------------------------------------
 
 module Text.Atom.Feed.Link
-       ( LinkRelation(..)
-       , showLinkRelation
-       , showLinkAttr
-       ) where
+  ( LinkRelation(..)
+  , showLinkRelation
+  , showLinkAttr
+  ) where
 
 -- | Atom feeds uses typed IRI links to represent
 -- information \/ metadata that is of interest to the
@@ -78,4 +78,3 @@ showLinkAttr lr s = showLinkRelation lr ++ '=':'"':concatMap escQ s ++ "\""
  where
   escQ '"' = "&dquot;"
   escQ x   = [x]
-

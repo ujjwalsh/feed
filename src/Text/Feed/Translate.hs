@@ -18,14 +18,13 @@ module Text.Feed.Translate
        , withRSS1Item     -- :: (RSS1.Item -> RSS1.Item) -> Item -> Item
        ) where
 
-import Text.Feed.Types as Feed
+import Text.Atom.Feed as Atom
 import Text.Feed.Constructor
-
+import Text.Feed.Types as Feed
 import Text.RSS.Syntax as RSS
 import qualified Text.RSS1.Syntax as RSS1
-import Text.Atom.Feed as Atom
 
-import Data.Maybe ( fromMaybe )
+import Data.Maybe (fromMaybe)
 
 -- functions for performing format-specific transformations.
 -- If the item isn't in the of-interest format, no transformation

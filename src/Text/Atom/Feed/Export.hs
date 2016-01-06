@@ -15,7 +15,45 @@
 --------------------------------------------------------------------
 
 
-module Text.Atom.Feed.Export where
+module Text.Atom.Feed.Export
+  ( atom_prefix
+  , atom_thr_prefix
+  , atomNS
+  , atomThreadNS
+  , xmlns_atom
+  , xmlns_atom_thread
+  , atomName
+  , atomAttr
+  , atomNode
+  , atomLeaf
+  , atomThreadName
+  , atomThreadAttr
+  , atomThreadNode
+  , atomThreadLeaf
+  , xmlFeed
+  , xmlEntry
+  , xmlContent
+  , xmlCategory
+  , xmlLink
+  , xmlSource
+  , xmlGenerator
+  , xmlAuthor
+  , xmlContributor
+  , xmlPerson
+  , xmlInReplyTo
+  , xmlInReplyTotal
+  , xmlId
+  , xmlIcon
+  , xmlLogo
+  , xmlUpdated
+  , xmlPublished
+  , xmlRights
+  , xmlTitle
+  , xmlSubtitle
+  , xmlSummary
+  , xmlTextContent
+  , mb
+  ) where
 
 import Text.XML.Light as XML
 import Text.Atom.Feed

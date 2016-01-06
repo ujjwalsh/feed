@@ -11,7 +11,31 @@
 --
 --------------------------------------------------------------------
 
-module Text.Atom.Feed where
+module Text.Atom.Feed
+  ( URI
+  , NCName
+  , Date
+  , MediaType
+  , Feed (..)
+  , Entry (..)
+  , EntryContent (..)
+  , Category (..)
+  , Generator (..)
+  , Link (..)
+  , TextContent (..)
+  , txtToString
+  , Source (..)
+  , Person (..)
+  , InReplyTo (..)
+  , InReplyTotal (..)
+  , newCategory
+  , nullFeed
+  , nullEntry
+  , nullGenerator
+  , nullLink
+  , nullSource
+  , nullPerson
+  ) where
 
 import qualified Text.XML.Light as XML
 

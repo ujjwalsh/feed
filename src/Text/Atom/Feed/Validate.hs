@@ -10,12 +10,41 @@
 -- Portability: portable
 --
 --------------------------------------------------------------------
-module Text.Atom.Feed.Validate where
+module Text.Atom.Feed.Validate
+  ( VTree (..)
+  , ValidatorResult
+  , advice
+  , demand
+  , valid
+  , mkTree
+  , flattenT
+  , validateEntry
+  , checkEntryAuthor
+  , checkCats
+  , checkContents
+  , checkContributor
+  , checkContentLink
+  , checkLinks
+  , checkId
+  , checkPublished
+  , checkRights
+  , checkSource
+  , checkSummary
+  , checkTitle
+  , checkUpdated
+  , checkCat
+  , checkContent
+  , checkTerm
+  , checkAuthor
+  , checkPerson
+  , checkName
+  , checkEmail
+  , checkUri
+  ) where
 
 import Text.Atom.Feed.Import
 import Text.XML.Light.Types
 import Text.XML.Light.Proc
-
 
 import Data.List
 import Data.Maybe

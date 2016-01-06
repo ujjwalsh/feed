@@ -13,7 +13,20 @@
 -- Serializing Atom Publishing Protocol types as XML.
 --
 --------------------------------------------------------------------
-module Text.Atom.Pub.Export where
+module Text.Atom.Pub.Export
+  ( showServiceDoc
+  , mkQName
+  , mkElem
+  , mkLeaf
+  , mkAttr
+  , xmlns_app
+  , appNS
+  , xmlService
+  , xmlWorkspace
+  , xmlCollection
+  , xmlCategories
+  , xmlAccept
+  ) where
 
 import Text.XML.Light
 import Text.Atom.Pub

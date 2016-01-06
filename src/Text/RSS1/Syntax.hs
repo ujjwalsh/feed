@@ -11,7 +11,27 @@
 --
 --------------------------------------------------------------------
 
-module Text.RSS1.Syntax where
+module Text.RSS1.Syntax
+  ( URIString
+  , TitleString
+  , TimeString
+  , TextString
+  , Feed (..)
+  , Channel (..)
+  , Image (..)
+  , Item (..)
+  , TextInputInfo (..)
+  , TaxonomyTopic (..)
+  , UpdatePeriod (..)
+  , ContentInfo (..)
+  , nullFeed
+  , nullChannel
+  , nullImage
+  , nullItem
+  , nullTextInputInfo
+  , nullTaxonomyTopic
+  , nullContentInfo
+  ) where
 
 import Text.XML.Light.Types as XML
 import Text.DublinCore.Types
@@ -216,4 +236,3 @@ nullContentInfo =
         , contentEncoding = Nothing
         , contentValue    = Nothing
         }
-
