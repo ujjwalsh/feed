@@ -1,3 +1,8 @@
+#### 0.3.11.0
+
+* Add `toFeedDateStringUTC` which uses UTCTime rather than ClockTime (thanks to Emanuel Borsboom)
+* Now with explicit export lists!
+
 #### 0.3.10.4
 
 * Fix toFeedDateString time format, It used %s (seconds since epoch) instead of %S (seconds of minute), and %m (month) instead of %M (minute) (thanks to Emanuel Borsboom)
