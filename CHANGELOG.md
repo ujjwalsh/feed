@@ -1,3 +1,7 @@
+#### 0.3.11.1
+
+* Add missing file to dist of test-suite (thanks to Sergei Trofimovich)
+
 #### 0.3.11.0
 
 * Add `toFeedDateStringUTC` which uses UTCTime rather than ClockTime (thanks to Emanuel Borsboom)
