@@ -74,6 +74,7 @@ test-suite tests
   type:              exitcode-stdio-1.0
   other-modules:
     Text.Atom.Tests
+    Text.Feed.Util.Tests
     Text.RSS.Equals
     Text.RSS.Export.Tests
     Text.RSS.Import.Tests
