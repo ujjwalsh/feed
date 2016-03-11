@@ -12,6 +12,9 @@ description:         Interfacing with RSS (v 0.9x, 2.x, 1.0) + Atom feeds.
                      and just generally working with a concrete representation
                      of feeds in Haskell.
                      .
+                     See here for an example of how to create an Atom feed:
+                     <https://github.com/bergmark/feed/blob/master/tests/Example/CreateAtom.hs>
+                     .
                      For basic reading and editing of feeds, consult
                      the documentation of the Text.Feed.* hierarchy.
 author:              Sigbjorn Finne <sof@forkIO.com>
@@ -73,6 +76,8 @@ test-suite tests
   main-is:           Main.hs
   type:              exitcode-stdio-1.0
   other-modules:
+    Example
+    Example.CreateAtom
     Text.Atom.Tests
     Text.Feed.Util.Tests
     Text.RSS.Equals
