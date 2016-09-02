@@ -38,7 +38,6 @@ library
   ghc-options:       -Wall
   hs-source-dirs:    src
   exposed-modules:
-    Paths_feed
     Text.Atom.Feed
     Text.Atom.Feed.Export
     Text.Atom.Feed.Import
@@ -76,6 +75,7 @@ test-suite tests
   main-is:           Main.hs
   type:              exitcode-stdio-1.0
   other-modules:
+    Paths_feed
     Example
     Example.CreateAtom
     Text.Atom.Tests
