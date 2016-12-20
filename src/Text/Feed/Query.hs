@@ -53,12 +53,14 @@ import Text.Feed.Types as Feed
 
 import Text.RSS.Syntax  as RSS
 import Text.Atom.Feed   as Atom
+import Text.Atom.Feed.Export (atomName)
 import Text.RSS1.Syntax as RSS1
 import Text.XML.Light as XML
 
 import Text.DublinCore.Types
 
 import Control.Monad ( mplus )
+import Control.Applicative ((<|>))
 import Data.List
 import Data.Maybe
 
@@ -73,9 +75,9 @@ feedItems fe =
     AtomFeed f -> map Feed.AtomItem (Atom.feedEntries f)
     RSSFeed f  -> map Feed.RSSItem  (RSS.rssItems $ RSS.rssChannel f)
     RSS1Feed f -> map Feed.RSS1Item (RSS1.feedItems f)
-     -- ToDo: look for 'entry' elements if 'items' are missing..
-    XMLFeed f  -> map Feed.XMLItem $ XML.findElements (XML.unqual "item") f
-
+    XMLFeed f  -> case XML.findElements (XML.unqual "item") f of
+        [] -> map Feed.XMLItem $ XML.findElements (atomName "entry") f
+        l -> map Feed.XMLItem l
 
 getFeedItems :: Feed.Feed -> [Feed.Item]
 getFeedItems = Text.Feed.Query.feedItems
@@ -91,7 +93,9 @@ getFeedAuthor ft =
     Feed.XMLFeed f  ->
       case findElement (unqual "channel") f of
         Just e1 -> fmap XML.strContent $ findElement (unqual "editor") e1
-        Nothing -> Nothing
+        Nothing -> fmap XML.strContent $ 
+                findElement (atomName "name")
+                        =<< findChild (atomName "author") f
  where
   isAuthor dc  = dcElt dc == DC_Creator
 
@@ -104,7 +108,7 @@ getFeedTitle ft =
     Feed.XMLFeed  f ->
       case findElement (unqual "channel") f of
         Just e1 -> fromMaybe "" (fmap XML.strContent $ findElement (unqual "title") e1)
-        Nothing -> ""
+        Nothing -> fromMaybe "" (fmap XML.strContent $ findChild (atomName "title") f)
 
 getFeedHome        :: FeedGetter URLString
 getFeedHome ft =
@@ -115,7 +119,8 @@ getFeedHome ft =
     Feed.XMLFeed  f ->
       case findElement (unqual "channel") f of
         Just e1 -> fmap XML.strContent $ findElement (unqual "link") e1
-        Nothing -> Nothing
+        Nothing -> XML.findAttr (unqual "href") 
+                     =<< findChild (atomName "link") f
  where
   isSelf lr = toStr (Atom.linkRel lr) == "self"
 
@@ -128,7 +133,7 @@ getFeedHTML ft =
     Feed.XMLFeed  f ->
       case findElement (unqual "channel") f of
         Just e1 -> fmap XML.strContent $ findElement (unqual "link") e1
-        Nothing -> Nothing
+        Nothing -> Nothing -- ToDo parse atom like tags
  where
   isSelf lr =
     let rel = Atom.linkRel lr
@@ -146,7 +151,7 @@ getFeedDescription ft =
     Feed.XMLFeed  f ->
       case findElement (unqual "channel") f of
         Just e1 -> fmap XML.strContent $ findElement (unqual "description") e1
-        Nothing -> Nothing
+        Nothing -> fmap XML.strContent $ findChild (atomName "subtitle") f
 
 getFeedPubDate     :: FeedGetter DateString
 getFeedPubDate ft =
@@ -157,7 +162,7 @@ getFeedPubDate ft =
     Feed.XMLFeed  f ->
       case findElement (unqual "channel") f of
         Just e1 -> fmap XML.strContent $ findElement (unqual "pubDate") e1
-        Nothing -> Nothing
+        Nothing -> fmap XML.strContent $ findChild (atomName "published") f
  where
   isDate dc  = dcElt dc == DC_Date
 
@@ -170,7 +175,7 @@ getFeedLastUpdate ft =
     Feed.XMLFeed  f ->
       case findElement (unqual "channel") f of
         Just e1 -> fmap XML.strContent $ findElement (unqual "pubDate") e1
-        Nothing -> Nothing
+        Nothing -> fmap XML.strContent $ findChild (atomName "updated") f
  where
   isDate dc  = dcElt dc == DC_Date
 
@@ -183,11 +188,13 @@ getFeedLogoLink ft =
     Feed.AtomFeed f -> Atom.feedLogo f
     Feed.RSSFeed  f -> fmap RSS.rssImageURL (RSS.rssImage $ RSS.rssChannel f)
     Feed.RSS1Feed f -> (fmap RSS1.imageURI $ RSS1.feedImage f)
-    Feed.XMLFeed  f -> do
-       ch <- findElement (unqual "channel") f
-       e1 <- findElement (unqual "image") ch
-       v  <- findElement (unqual "url") e1
-       return (XML.strContent v)
+    Feed.XMLFeed  f ->
+      case findElement (unqual "channel") f of
+        Just ch -> do
+          e1 <- findElement (unqual "image") ch
+          v  <- findElement (unqual "url") e1
+          return (XML.strContent v)
+        Nothing -> fmap XML.strContent $ findChild (atomName "logo") f
 
 getFeedLanguage    :: FeedGetter String
 getFeedLanguage ft =
@@ -200,6 +207,7 @@ getFeedLanguage ft =
        ch <- findElement (unqual "channel") f
        e1 <- findElement (unqual "language") ch
        return (XML.strContent e1)
+       -- ToDo parse atom like tags too
  where
   isLang dc  = dcElt dc == DC_Language
 
@@ -215,6 +223,7 @@ getFeedCategories ft =
     Feed.XMLFeed  f ->
        case fromMaybe [] $ fmap (XML.findElements (XML.unqual "category")) (findElement (unqual "channel") f) of
          ls -> map (\ l -> (fromMaybe "" (fmap XML.strContent $ findElement (unqual "term") l), findAttr (unqual "domain") l)) ls
+       -- ToDo parse atom like tags too
  where
   isCat dc  = dcElt dc == DC_Subject
 
@@ -226,10 +235,10 @@ getFeedGenerator ft =
       Atom.genURI gen
     Feed.RSSFeed  f -> RSS.rssGenerator (RSS.rssChannel f)
     Feed.RSS1Feed f -> fmap dcText $ listToMaybe $ filter isSource (RSS1.channelDC (RSS1.feedChannel f))
-    Feed.XMLFeed  f -> do
-       ch <- findElement (unqual "channel") f
-       e1 <- findElement (unqual "generator") ch
-       return (XML.strContent e1)
+    Feed.XMLFeed  f -> case findElement (unqual "channel") f of
+      Just e1 -> fmap XML.strContent $ findElement (unqual "generator") e1
+      Nothing -> XML.findAttr (unqual "uri")
+                   =<< findChild (atomName "generator") f
  where
         isSource dc = dcElt dc == DC_Source
 
@@ -241,7 +250,9 @@ getItemTitle it =
     Feed.AtomItem i -> Just (contentToStr $ Atom.entryTitle i)
     Feed.RSSItem i  -> RSS.rssItemTitle i
     Feed.RSS1Item i -> Just (RSS1.itemTitle i)
-    Feed.XMLItem e  -> fmap XML.strContent $ findElement (unqual "title") e
+    Feed.XMLItem e  -> fmap XML.strContent $
+        findElement (unqual "title") e
+        <|> findChild (atomName "title") e
 
 getItemLink :: ItemGetter String
 getItemLink it =
@@ -251,7 +262,9 @@ getItemLink it =
     Feed.AtomItem i -> fmap Atom.linkHref $ listToMaybe $ filter isSelf $ Atom.entryLinks i
     Feed.RSSItem i  -> RSS.rssItemLink i
     Feed.RSS1Item i -> Just (RSS1.itemLink i)
-    Feed.XMLItem i  -> fmap (\ ei -> XML.strContent ei) $ findElement (unqual "link") i
+    Feed.XMLItem i  ->
+        fmap XML.strContent (findElement (unqual "link") i)
+        <|> (findChild (atomName "link") i >>= XML.findAttr (unqual "href"))
  where
   isSelf lr =
     let rel = Atom.linkRel lr
@@ -294,8 +307,9 @@ getItemPublishDateString it =
     Feed.AtomItem i -> Just $ Atom.entryUpdated i
     Feed.RSSItem i  -> RSS.rssItemPubDate i
     Feed.RSS1Item i -> fmap dcText $ listToMaybe $ filter isDate $ RSS1.itemDC i
-      -- ToDo: look for it in Atom \/ RSS1 like-content as well if no 'pubDate' element.
-    Feed.XMLItem e  -> fmap XML.strContent $ findElement (unqual "pubDate") e
+    Feed.XMLItem e  -> fmap XML.strContent $ 
+        findElement (unqual "pubDate") e
+        <|> findElement (atomName "published") e
  where
   isDate dc  = dcElt dc == DC_Date
 
@@ -309,7 +323,9 @@ getItemAuthor it =
     Feed.AtomItem i -> fmap Atom.personName $ listToMaybe $ Atom.entryAuthors i
     Feed.RSSItem i  -> RSS.rssItemAuthor i
     Feed.RSS1Item i -> fmap dcText $ listToMaybe $ filter isAuthor $ RSS1.itemDC i
-    Feed.XMLItem e  -> fmap XML.strContent $ findElement (unqual "author") e
+    Feed.XMLItem e  -> fmap XML.strContent $
+        findElement (unqual "author") e
+        <|> (findElement (atomName "author") e >>= findElement (atomName "name"))
  where
   isAuthor dc  = dcElt dc == DC_Creator
 
@@ -320,7 +336,9 @@ getItemCommentLink it =
     Feed.AtomItem e -> fmap Atom.linkHref $ listToMaybe $ filter isReplies $ Atom.entryLinks e
     Feed.RSSItem i  -> RSS.rssItemComments i
     Feed.RSS1Item i -> fmap dcText $ listToMaybe $ filter isRel $ RSS1.itemDC i
-    Feed.XMLItem i  -> fmap (\ ei -> XML.strContent ei) $ findElement (unqual "comments") i
+    Feed.XMLItem i  ->
+        fmap XML.strContent (findElement (unqual "comments") i)
+        <|> (findElement (atomName "link") i >>= XML.findAttr (unqual "href"))
  where
   isReplies lr = toStr (Atom.linkRel lr) == "replies"
   isRel dc = dcElt dc == DC_Relation
@@ -341,7 +359,9 @@ getItemEnclosure it =
        case RSS1.itemContent i of
          [] -> Nothing
          (c:_) -> Just (fromMaybe "" (RSS1.contentURI c), RSS1.contentFormat c, Nothing)
-    Feed.XMLItem e  -> fmap xmlToEnclosure (findElement (unqual "enclosure") e)
+    Feed.XMLItem e  -> fmap xmlToEnclosure $
+        findElement (unqual "enclosure") e
+        <|> findElement (atomName "enclosure") e
  where
    isEnc lr = toStr (Atom.linkRel lr) == "enclosure"
 
@@ -373,6 +393,7 @@ getItemFeedLink it =
       case findElement (unqual "source") e of
         Nothing -> Nothing
         Just s  -> fmap XML.strContent (findElement (unqual "url") s)
+      -- ToDo parse atom like tags too
 
 getItemId          :: ItemGetter (Bool,String)
 getItemId it =
@@ -387,7 +408,9 @@ getItemId it =
         (l:_) -> Just (True,dcText l)
         _ -> Nothing
     Feed.XMLItem e ->
-      fmap (\ e1 -> (True,XML.strContent e1)) (findElement (unqual "guid") e)
+      fmap (\ e1 -> (True,XML.strContent e1)) $
+        findElement (unqual "guid") e
+        <|> findElement (atomName "id") e
  where
   isId dc = dcElt dc == DC_Identifier
 
@@ -397,12 +420,12 @@ getItemCategories it =
     Feed.AtomItem i -> map Atom.catTerm $ Atom.entryCategories i
     Feed.RSSItem i  -> map RSS.rssCategoryValue $ RSS.rssItemCategories i
     Feed.RSS1Item i -> concat $ getCats1 i
+   -- ToDo parse atom like tags too
     Feed.XMLItem i  -> map XML.strContent $ XML.findElements (XML.unqual "category") i
  where
     -- get RSS1 categories; either via DublinCore's subject (or taxonomy topics...not yet.)
    getCats1 i1 =
      map (words.dcText) $ filter (\ dc -> dcElt dc == DC_Subject) $ RSS1.itemDC i1
-
 
 getItemRights      :: ItemGetter String
 getItemRights it =
@@ -410,7 +433,7 @@ getItemRights it =
     Feed.AtomItem e -> fmap contentToStr $ Atom.entryRights e
     Feed.RSSItem  _ -> Nothing
     Feed.RSS1Item i -> fmap dcText $ listToMaybe $ filter isRights (RSS1.itemDC i)
-    Feed.XMLItem _ -> Nothing
+    Feed.XMLItem i -> fmap XML.strContent $ XML.findElement (atomName "rights") i
  where
   isRights dc = dcElt dc == DC_Rights
 
@@ -423,7 +446,7 @@ getItemDescription it =
     Feed.AtomItem e -> fmap contentToStr $ Atom.entrySummary e
     Feed.RSSItem  e -> RSS.rssItemDescription e
     Feed.RSS1Item i -> itemDesc i
-    Feed.XMLItem _  -> Nothing
+    Feed.XMLItem i  -> fmap XML.strContent $ XML.findElement (atomName "summary") i
 
  -- strip away
 toStr :: Maybe (Either String String) -> String
