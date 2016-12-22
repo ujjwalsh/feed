@@ -17,5 +17,4 @@ mkNAttr k v = (k, [ContentText v])
 
 elementToDoc :: XML.Element -> Maybe C.Document
 elementToDoc el =
-  either (const Nothing) Just $
-  fromXMLDocument $ XML.Document (Prologue [] Nothing []) el []
+  either (const Nothing) Just $ fromXMLDocument $ XML.Document (Prologue [] Nothing []) el []

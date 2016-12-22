@@ -1,4 +1,6 @@
-module Data.Text.Util (readInt) where
+module Data.Text.Util
+  ( readInt
+  ) where
 
 import Data.Text
 import Data.Text.Read

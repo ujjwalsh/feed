@@ -11,39 +11,37 @@
 --
 --------------------------------------------------------------------
 module Text.Feed.Util
-       ( toFeedDateString
-       , toFeedDateStringUTC
-       ) where
+  ( toFeedDateString
+  , toFeedDateStringUTC
+  ) where
 
-import Text.Feed.Types
 import Data.Time (UTCTime, formatTime)
 import qualified Data.Time.Locale.Compat
 import qualified System.Locale
 import System.Time (ClockTime, formatCalendarTime, toUTCTime)
+import Text.Feed.Types
 
 -- | 'toFeedDateString' translates a calendar time into
 -- the format expected by the feed kind.
-toFeedDateString :: FeedKind -> ClockTime -> {-Date-}String
-toFeedDateString fk ct =
-    formatCalendarTime System.Locale.defaultTimeLocale fmt ut
+toFeedDateString :: FeedKind -> ClockTime -> String {-Date-}
+toFeedDateString fk ct = formatCalendarTime System.Locale.defaultTimeLocale fmt ut
   where
     fmt = feedKindTimeFormat fk
     ut = toUTCTime ct
 
 -- | 'toFeedDateStringUTC' translates a UTC time into
 -- the format expected by the feed kind.
-toFeedDateStringUTC :: FeedKind -> UTCTime -> {-Date-}String
-toFeedDateStringUTC fk =
-    formatTime Data.Time.Locale.Compat.defaultTimeLocale fmt
+toFeedDateStringUTC :: FeedKind -> UTCTime -> String {-Date-}
+toFeedDateStringUTC fk = formatTime Data.Time.Locale.Compat.defaultTimeLocale fmt
   where
     fmt = feedKindTimeFormat fk
 
 -- | Time format expected by the feed kind.
 feedKindTimeFormat :: FeedKind -> String
 feedKindTimeFormat fk =
-    case fk of
-        AtomKind{} -> atomRdfTimeFormat
-        RSSKind{}  -> "%a, %d %b %Y %H:%M:%S GMT"
-        RDFKind{}  -> atomRdfTimeFormat
+  case fk of
+    AtomKind {} -> atomRdfTimeFormat
+    RSSKind {} -> "%a, %d %b %Y %H:%M:%S GMT"
+    RDFKind {} -> atomRdfTimeFormat
   where
     atomRdfTimeFormat = "%Y-%m-%dT%H:%M:%SZ"

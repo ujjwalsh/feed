@@ -1,10 +1,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 
 -- | Compatibility interface between `xml` and `xml-types`.
-
-module Data.XML.Compat
-
-where
+module Data.XML.Compat where
 
 import Data.Text (Text)
 import qualified Data.Text as T

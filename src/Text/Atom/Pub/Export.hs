@@ -30,11 +30,9 @@ module Text.Atom.Pub.Export
 import Data.Text (Text)
 import Data.XML.Compat
 import Data.XML.Types
-import Text.Atom.Pub
 import Text.Atom.Feed.Export
-       ( mb, xmlCategory, xmlTitle
-       , xmlns_atom
-       )
+       (mb, xmlCategory, xmlTitle, xmlns_atom)
+import Text.Atom.Pub
 
 -- ToDo: old crud; inline away.
 mkQName :: Maybe Text -> Text -> Name
@@ -49,48 +47,55 @@ mkLeaf a b c = Element a b [NodeContent $ ContentText c]
 xmlns_app :: Attr
 xmlns_app = (mkQName (Just "xmlns") "app", [ContentText appNS])
 
-
 appNS :: Text
 appNS = "http://purl.org/atom/app#"
 
 appName :: Text -> Name
-appName nc = (mkQName (Just "app") nc){nameNamespace = Just appNS}
+appName nc = (mkQName (Just "app") nc) {nameNamespace = Just appNS}
 
 xmlService :: Service -> Element
 xmlService s =
-  mkElem (appName "service") [xmlns_app,xmlns_atom]
-         (concat [ map xmlWorkspace (serviceWorkspaces s)
-                 , serviceOther s
-                 ])
+  mkElem
+    (appName "service")
+    [xmlns_app, xmlns_atom]
+    (concat [map xmlWorkspace (serviceWorkspaces s), serviceOther s])
 
 xmlWorkspace :: Workspace -> Element
 xmlWorkspace w =
-  mkElem (appName "workspace")
-         [mkAttr "xml:lang" "en"]
-         (concat [ [xmlTitle (workspaceTitle w)]
-                 , map xmlCollection (workspaceCols w)
-                 , workspaceOther w
-                 ])
+  mkElem
+    (appName "workspace")
+    [mkAttr "xml:lang" "en"]
+    (concat [[xmlTitle (workspaceTitle w)], map xmlCollection (workspaceCols w), workspaceOther w])
 
 xmlCollection :: Collection -> Element
 xmlCollection c =
-  mkElem (appName "collection")
-         [mkAttr "href" (collectionURI c)]
-         (concat [ [xmlTitle (collectionTitle c)]
-                 , map xmlAccept (collectionAccept c)
-                 , map xmlCategories (collectionCats c)
-                 , collectionOther c
-                 ])
+  mkElem
+    (appName "collection")
+    [mkAttr "href" (collectionURI c)]
+    (concat
+       [ [xmlTitle (collectionTitle c)]
+       , map xmlAccept (collectionAccept c)
+       , map xmlCategories (collectionCats c)
+       , collectionOther c
+       ])
 
 xmlCategories :: Categories -> Element
-xmlCategories (CategoriesExternal u) =
-  mkElem (appName "categories") [mkAttr "href" u] []
+xmlCategories (CategoriesExternal u) = mkElem (appName "categories") [mkAttr "href" u] []
 xmlCategories (Categories mbFixed mbScheme cs) =
-  mkElem (appName "categories")
-         (concat [ mb (\ f -> mkAttr "fixed"  (if f then "yes" else "no")) mbFixed
-                 , mb (mkAttr "scheme") mbScheme
-                 ])
-         (map xmlCategory cs)
+  mkElem
+    (appName "categories")
+    (concat
+       [ mb
+           (\f ->
+              mkAttr
+                "fixed"
+                (if f
+                   then "yes"
+                   else "no"))
+           mbFixed
+       , mb (mkAttr "scheme") mbScheme
+       ])
+    (map xmlCategory cs)
 
 xmlAccept :: Accept -> Element
 xmlAccept a = mkLeaf (appName "accept") [] (acceptType a)

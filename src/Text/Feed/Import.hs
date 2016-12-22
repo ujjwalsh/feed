@@ -16,42 +16,40 @@
 -- Convert from XML to Feeds.
 --
 --------------------------------------------------------------------
-
 module Text.Feed.Import
-        ( parseFeedFromFile -- :: FilePath -> IO Feed
-        , parseFeedString   -- :: String -> Maybe Feed
-        , parseFeedSource   -- :: XmlSource s => s -> Maybe Feed
-
+  ( parseFeedFromFile -- :: FilePath -> IO Feed
+  , parseFeedString -- :: String -> Maybe Feed
+  , parseFeedSource -- :: XmlSource s => s -> Maybe Feed
           -- if you know your format, use these directly:
-        , readRSS2          -- :: XML.Element -> Maybe Feed
-        , readRSS1          -- :: XML.Element -> Maybe Feed
-        , readAtom          -- :: XML.Element -> Maybe Feed
-        ) where
+  , readRSS2 -- :: XML.Element -> Maybe Feed
+  , readRSS1 -- :: XML.Element -> Maybe Feed
+  , readAtom -- :: XML.Element -> Maybe Feed
+  ) where
 
 import Data.Text.Lazy (Text, pack)
 import Data.XML.Types as XML
 
 import Text.Atom.Feed.Import as Atom
 
-import Text.RSS.Import       as RSS
-import Text.RSS1.Import      as RSS1
 import Text.Feed.Types
+import Text.RSS.Import as RSS
+import Text.RSS1.Import as RSS1
 
 import Control.Monad
 
 import qualified Text.XML as C
-
 #if MIN_VERSION_utf8_string(1,0,0)
 import Codec.Binary.UTF8.String (decodeString)
-import System.IO (IOMode(..), hGetContents, openBinaryFile )
+import System.IO (IOMode(..), hGetContents, openBinaryFile)
+
 utf8readFile :: FilePath -> IO String
 utf8readFile fp = fmap decodeString (hGetContents =<< openBinaryFile fp ReadMode)
 #else
-import System.IO.UTF8 as UTF8 ( readFile )
+import System.IO.UTF8 as UTF8 (readFile)
+
 utf8readFile :: FilePath -> IO String
 utf8readFile = UTF8.readFile
 #endif
-
 class XmlSource s where
   parseXmlSource :: s -> Maybe XML.Element
 
@@ -59,7 +57,7 @@ instance XmlSource Text where
   parseXmlSource s =
     case C.parseText C.def s of
       Right d -> Just $ C.toXMLElement $ C.documentRoot d
-      Left _  -> Nothing
+      Left _ -> Nothing
 
 instance XmlSource String where
   parseXmlSource = parseXmlSource . pack
@@ -71,7 +69,7 @@ parseFeedFromFile fp = do
   ls <- utf8readFile fp
   case parseFeedString ls of
     Nothing -> fail ("parseFeedFromFile: not a well-formed XML content in: " ++ fp)
-    Just f  -> return f
+    Just f -> return f
 
 -- | 'parseFeedWithParser tries to parse the string @str@
 -- as one of the feed formats. First as Atom, then RSS2 before
@@ -81,11 +79,7 @@ parseFeedWithParser :: XmlSource s => (s -> Maybe Element) -> s -> Maybe Feed
 parseFeedWithParser parser str =
   case parser str of
     Nothing -> Nothing
-    Just e ->
-      readAtom e `mplus`
-      readRSS2 e `mplus`
-      readRSS1 e `mplus`
-      Just (XMLFeed e)
+    Just e -> readAtom e `mplus` readRSS2 e `mplus` readRSS1 e `mplus` Just (XMLFeed e)
 
 parseFeedString :: String -> Maybe Feed
 parseFeedString = parseFeedSource
@@ -100,11 +94,13 @@ parseFeedSource = parseFeedWithParser parseXmlSource
 -- | 'readRSS2 elt' tries to derive an RSS2.x, RSS-0.9x feed document
 -- from the XML element @e@.
 readRSS2 :: XML.Element -> Maybe Feed
-readRSS2 e = fmap RSSFeed  $ RSS.elementToRSS e
+readRSS2 e = fmap RSSFeed $ RSS.elementToRSS e
+
 -- | 'readRSS1 elt' tries to derive an RSS1.0 feed document
 -- from the XML element @e@.
 readRSS1 :: XML.Element -> Maybe Feed
 readRSS1 e = fmap RSS1Feed $ RSS1.elementToFeed e
+
 -- | 'readAtom elt' tries to derive an Atom feed document
 -- from the XML element @e@.
 readAtom :: XML.Element -> Maybe Feed
