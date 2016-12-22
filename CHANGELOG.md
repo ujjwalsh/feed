@@ -1,3 +1,7 @@
+### 0.3.12.0
+
+* Adds support for some fallback parsing of atom feeds to XMLFeed (thanks to Joey Hess)
+
 #### 0.3.11.1
 
 * Add missing file to dist of test-suite (thanks to Sergei Trofimovich)
