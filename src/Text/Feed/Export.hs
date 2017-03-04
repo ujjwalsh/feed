@@ -23,7 +23,7 @@ import Text.Atom.Feed.Export as Atom
 import Text.RSS.Export as RSS
 import Text.RSS1.Export as RSS1
 
-import Text.XML.Light as XML
+import Data.XML.Types as XML
 
 -- | 'xmlFeed f' serializes a @Feed@ document into a conforming
 -- XML toplevel element.

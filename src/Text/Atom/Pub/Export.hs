@@ -14,8 +14,7 @@
 --
 --------------------------------------------------------------------
 module Text.Atom.Pub.Export
-  ( showServiceDoc
-  , mkQName
+  ( mkQName
   , mkElem
   , mkLeaf
   , mkAttr
@@ -28,38 +27,38 @@ module Text.Atom.Pub.Export
   , xmlAccept
   ) where
 
-import Text.XML.Light
+import Data.Text (Text)
+import Data.XML.Types
 import Text.Atom.Pub
 import Text.Atom.Feed.Export
        ( mb, xmlCategory, xmlTitle
        , xmlns_atom
        )
 
-showServiceDoc :: Service -> String
-showServiceDoc s = showElement (xmlService s)
+type Attr = (Name, [Content])
 
 -- ToDo: old crud; inline away.
-mkQName :: Maybe String -> String -> QName
-mkQName a b = blank_name{qPrefix=a,qName=b}
+mkQName :: Maybe Text -> Text -> Name
+mkQName a b = Name b a Nothing
 
-mkElem :: QName -> [Attr] -> [Element] -> Element
-mkElem a b c = node a ((b::[Attr]),(c::[Element]))
+mkElem :: Name -> [Attr] -> [Element] -> Element
+mkElem a b c = Element a b $ map NodeElement c
 
-mkLeaf :: QName -> [Attr] -> String -> Element
-mkLeaf a b c = node (a::QName) ((b::[Attr]),[Text blank_cdata{cdData=c}])
+mkLeaf :: Name -> [Attr] -> Text -> Element
+mkLeaf a b c = Element a b [NodeContent $ ContentText c]
 
-mkAttr :: String -> String -> Attr
-mkAttr a b  = Attr blank_name{qName=a} b
+mkAttr :: Text -> Text -> Attr
+mkAttr a b = (Name a Nothing Nothing, [ContentText b])
 
 xmlns_app :: Attr
-xmlns_app = Attr (mkQName (Just "xmlns") "app") appNS
+xmlns_app = (mkQName (Just "xmlns") "app", [ContentText appNS])
 
 
-appNS :: String
+appNS :: Text
 appNS = "http://purl.org/atom/app#"
 
-appName :: String -> QName
-appName nc = (mkQName (Just "app") nc){qURI=Just appNS}
+appName :: Text -> Name
+appName nc = (mkQName (Just "app") nc){nameNamespace = Just appNS}
 
 xmlService :: Service -> Element
 xmlService s =

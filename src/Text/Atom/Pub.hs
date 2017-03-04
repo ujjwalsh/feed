@@ -20,7 +20,8 @@ module Text.Atom.Pub
   , Accept (..)
   ) where
 
-import Text.XML.Light.Types as XML
+import Data.Text (Text)
+import Data.XML.Types as XML
 import Text.Atom.Feed ( TextContent, Category, URI )
 
 data Service
@@ -50,4 +51,4 @@ data Categories
  | Categories (Maybe Bool) (Maybe URI) [Category]
      deriving (Show)
 
-newtype Accept = Accept { acceptType :: String }
+newtype Accept = Accept { acceptType :: Text }

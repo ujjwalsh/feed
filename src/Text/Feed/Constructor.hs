@@ -23,17 +23,17 @@ module Text.Feed.Constructor
        , FeedSetter           -- type _ a = a -> Feed -> Feed
        , addItem              -- :: FeedSetter Item
 
-       , withFeedTitle        -- :: FeedSetter String
+       , withFeedTitle        -- :: FeedSetter Text
        , withFeedHome         -- :: FeedSetter URLString
        , withFeedHTML         -- :: FeedSetter URLString
-       , withFeedDescription  -- :: FeedSetter String
+       , withFeedDescription  -- :: FeedSetter Text
        , withFeedPubDate      -- :: FeedSetter DateString
        , withFeedLastUpdate   -- :: FeedSetter DateString
        , withFeedDate         -- :: FeedSetter DateString
        , withFeedLogoLink     -- :: FeedSetter URLString
-       , withFeedLanguage     -- :: FeedSetter String
-       , withFeedCategories   -- :: FeedSetter [(String,Maybe String)]
-       , withFeedGenerator    -- :: FeedSetter String
+       , withFeedLanguage     -- :: FeedSetter Text
+       , withFeedCategories   -- :: FeedSetter [(Text, Maybe Text)]
+       , withFeedGenerator    -- :: FeedSetter Text
        , withFeedItems        -- :: FeedSetter [Item]
 
        , newItem              -- :: FeedKind   -> Item
@@ -43,18 +43,18 @@ module Text.Feed.Constructor
        , rdfItemToItem        -- :: RSS1.Item  -> Item
 
        , ItemSetter           -- type _ a = a -> Item -> Item
-       , withItemTitle        -- :: ItemSetter String
+       , withItemTitle        -- :: ItemSetter Text
        , withItemLink         -- :: ItemSetter URLString
        , withItemPubDate      -- :: ItemSetter DateString
        , withItemDate         -- :: ItemSetter DateString
-       , withItemAuthor       -- :: ItemSetter String
-       , withItemCommentLink  -- :: ItemSetter String
-       , withItemEnclosure    -- :: String -> Maybe String -> ItemSetter Integer
-       , withItemFeedLink     -- :: String -> ItemSetter String
-       , withItemId           -- :: Bool   -> ItemSetter String
-       , withItemCategories   -- :: ItemSetter [(String, Maybe String)]
-       , withItemDescription  -- :: ItemSetter String
-       , withItemRights       -- :: ItemSetter String
+       , withItemAuthor       -- :: ItemSetter Text
+       , withItemCommentLink  -- :: ItemSetter Text
+       , withItemEnclosure    -- :: Text -> Maybe Text -> ItemSetter Integer
+       , withItemFeedLink     -- :: Text -> ItemSetter Text
+       , withItemId           -- :: Bool   -> ItemSetter Text
+       , withItemCategories   -- :: ItemSetter [(Text, Maybe Text)]
+       , withItemDescription  -- :: ItemSetter Text
+       , withItemRights       -- :: ItemSetter Text
        ) where
 
 import Text.Feed.Types      as Feed.Types
@@ -63,7 +63,7 @@ import Text.Atom.Feed       as Atom
 import Text.RSS.Syntax      as RSS
 import Text.RSS1.Syntax     as RSS1
 import Text.DublinCore.Types
-import Text.XML.Light as XML hiding ( filterChildren )
+import Data.XML.Types as XML hiding ( filterChildren )
 
 import Data.Maybe ( fromMaybe, mapMaybe )
 import Data.Char  ( toLower )
@@ -161,7 +161,7 @@ getItemKind f =
 
 type FeedSetter a = a -> Feed.Types.Feed -> Feed.Types.Feed
 
-withFeedTitle :: FeedSetter String
+withFeedTitle :: FeedSetter Text
 withFeedTitle tit fe =
   case fe of
    Feed.Types.AtomFeed f -> Feed.Types.AtomFeed f{feedTitle=TextString tit}
@@ -169,9 +169,9 @@ withFeedTitle tit fe =
    Feed.Types.RSS1Feed f -> Feed.Types.RSS1Feed f{feedChannel=(feedChannel f){channelTitle=tit}}
    Feed.Types.XMLFeed  f -> Feed.Types.XMLFeed $
       mapMaybeChildren (\ e ->
-        if (elName e == unqual "channel")
+        if (elementName e == unqual "channel")
          then Just (mapMaybeChildren (\ e2 ->
-                        if (elName e2 == unqual "title")
+                        if (elementName e2 == unqual "title")
                          then Just (unode "title" tit)
                          else Nothing) e)
          else Nothing) f
@@ -187,9 +187,9 @@ withFeedHome url fe =
    Feed.Types.RSS1Feed f -> Feed.Types.RSS1Feed f{feedChannel=(feedChannel f){channelURI=url}}
    Feed.Types.XMLFeed  f -> Feed.Types.XMLFeed $
       mapMaybeChildren (\ e ->
-        if (elName e == unqual "channel")
+        if (elementName e == unqual "channel")
          then Just (mapMaybeChildren (\ e2 ->
-                        if (elName e2 == unqual "link")
+                        if (elementName e2 == unqual "link")
                          then Just (unode "link" url)
                          else Nothing) e)
          else Nothing) f
@@ -208,9 +208,9 @@ withFeedHTML url fe =
    Feed.Types.RSS1Feed f -> Feed.Types.RSS1Feed f{feedChannel=(feedChannel f){channelLink=url}}
    Feed.Types.XMLFeed  f -> Feed.Types.XMLFeed $
       mapMaybeChildren (\ e ->
-        if (elName e == unqual "channel")
+        if (elementName e == unqual "channel")
          then Just (mapMaybeChildren (\ e2 ->
-                        if (elName e2 == unqual "link")
+                        if (elementName e2 == unqual "link")
                          then Just (unode "link" url)
                          else Nothing) e)
          else Nothing) f
@@ -221,7 +221,7 @@ withFeedHTML url fe =
 
 -- | 'withFeedHTML' sets the URL where an HTML version of the
 -- feed is published.
-withFeedDescription :: FeedSetter String
+withFeedDescription :: FeedSetter Text
 withFeedDescription desc fe =
   case fe of
    Feed.Types.AtomFeed f -> Feed.Types.AtomFeed
@@ -232,14 +232,14 @@ withFeedDescription desc fe =
       f{feedChannel=(feedChannel f){channelDesc=desc}}
    Feed.Types.XMLFeed  f -> Feed.Types.XMLFeed $
       mapMaybeChildren (\ e ->
-        if (elName e == unqual "channel")
+        if (elementName e == unqual "channel")
          then Just (mapMaybeChildren (\ e2 ->
-                        if (elName e2 == unqual "description")
+                        if (elementName e2 == unqual "description")
                          then Just (unode "description" desc)
                          else Nothing) e)
          else Nothing) f
 
-withFeedPubDate :: FeedSetter String
+withFeedPubDate :: FeedSetter Text
 withFeedPubDate dateStr fe =
   case fe of
    Feed.Types.AtomFeed f -> Feed.Types.AtomFeed
@@ -260,9 +260,9 @@ withFeedPubDate dateStr fe =
                   RSS1.channelDC (RSS1.feedChannel f)}}
    Feed.Types.XMLFeed  f -> Feed.Types.XMLFeed $
       mapMaybeChildren (\ e ->
-        if (elName e == unqual "channel")
+        if (elementName e == unqual "channel")
          then Just (mapMaybeChildren (\ e2 ->
-                        if (elName e2 == unqual "pubDate")
+                        if (elementName e2 == unqual "pubDate")
                          then Just (unode "pubDate" dateStr)
                          else Nothing) e)
          else Nothing) f
@@ -290,9 +290,9 @@ withFeedLastUpdate dateStr fe =
                   RSS1.channelDC (RSS1.feedChannel f)}}
    Feed.Types.XMLFeed  f -> Feed.Types.XMLFeed $
       mapMaybeChildren (\ e ->
-        if (elName e == unqual "channel")
+        if (elementName e == unqual "channel")
          then Just (mapMaybeChildren (\ e2 ->
-                        if (elName e2 == unqual "lastUpdate")
+                        if (elementName e2 == unqual "lastUpdate")
                          then Just (unode "lastUpdate" dateStr)
                          else Nothing) e)
          else Nothing) f
@@ -327,9 +327,9 @@ withFeedLogoLink imgURL lnk fe =
        }
    Feed.Types.XMLFeed  f -> Feed.Types.XMLFeed $
       mapMaybeChildren (\ e ->
-        if (elName e == unqual "channel")
+        if (elementName e == unqual "channel")
          then Just (mapMaybeChildren (\ e2 ->
-                        if (elName e2 == unqual "image")
+                        if (elementName e2 == unqual "image")
                          then Just (unode "image" [ unode "url" imgURL
                                                   , unode "title" title
                                                   , unode "link" lnk
@@ -349,7 +349,7 @@ withFeedLogoLink imgURL lnk fe =
                           }
 
 
-withFeedLanguage :: FeedSetter String
+withFeedLanguage :: FeedSetter Text
 withFeedLanguage lang fe =
   case fe of
    Feed.Types.AtomFeed f -> Feed.Types.AtomFeed $
@@ -370,16 +370,16 @@ withFeedLanguage lang fe =
                   RSS1.channelDC (RSS1.feedChannel f)}}
    Feed.Types.XMLFeed  f -> Feed.Types.XMLFeed $
       mapMaybeChildren (\ e ->
-        if (elName e == unqual "channel")
+        if (elementName e == unqual "channel")
          then Just (mapMaybeChildren (\ e2 ->
-                        if (elName e2 == unqual "language")
+                        if (elementName e2 == unqual "language")
                          then Just (unode "language" lang)
                          else Nothing) e)
          else Nothing) f
  where
   isLang dc  = dcElt dc == DC_Language
 
-withFeedCategories :: FeedSetter [(String,Maybe String)]
+withFeedCategories :: FeedSetter [(Text,Maybe Text)]
 withFeedCategories cats fe =
   case fe of
     Feed.Types.AtomFeed f -> Feed.Types.AtomFeed
@@ -398,7 +398,7 @@ withFeedCategories cats fe =
                     cats ++ RSS1.channelDC (feedChannel f)}}
     Feed.Types.XMLFeed f -> Feed.Types.XMLFeed $
       mapMaybeChildren (\ e ->
-        if (elName e == unqual "channel")
+        if (elementName e == unqual "channel")
          then Just (
             foldr
              (\ (t,mb) acc ->
@@ -412,7 +412,7 @@ withFeedCategories cats fe =
          else Nothing) f
 
 
-withFeedGenerator :: FeedSetter (String,Maybe URLString)
+withFeedGenerator :: FeedSetter (Text,Maybe URLString)
 withFeedGenerator (gen,mbURI) fe =
   case fe of
    Feed.Types.AtomFeed f -> Feed.Types.AtomFeed $
@@ -433,9 +433,9 @@ withFeedGenerator (gen,mbURI) fe =
                   RSS1.channelDC (RSS1.feedChannel f)}}
    Feed.Types.XMLFeed  f -> Feed.Types.XMLFeed $
       mapMaybeChildren (\ e ->
-        if (elName e == unqual "channel")
+        if (elementName e == unqual "channel")
          then Just (mapMaybeChildren (\ e2 ->
-                        if (elName e2 == unqual "generator")
+                        if (elementName e2 == unqual "generator")
                          then Just (unode "generator" gen)
                          else Nothing) e)
          else Nothing) f
@@ -473,7 +473,7 @@ withItemPubDate dt fi =
     Feed.Types.XMLItem i  ->
       Feed.Types.XMLItem $
         addChild (unode "pubDate" dt) $
-            filterChildren (\ e -> elName e /= unqual "pubDate")
+            filterChildren (\ e -> elementName e /= unqual "pubDate")
                            i
  where
   isDate dc  = dcElt dc == DC_Date
@@ -484,7 +484,7 @@ withItemDate dt fi = withItemPubDate dt fi
 
 -- | 'withItemTitle myTitle' associates a new title, 'myTitle',
 -- with a feed item.
-withItemTitle :: ItemSetter String
+withItemTitle :: ItemSetter Text
 withItemTitle tit fi =
   case fi of
     Feed.Types.AtomItem e ->
@@ -496,12 +496,12 @@ withItemTitle tit fi =
     Feed.Types.XMLItem i  ->
       Feed.Types.XMLItem $
         addChild (unode "title" tit) $
-            filterChildren (\ e -> elName e /= unqual "title")
+            filterChildren (\ e -> elementName e /= unqual "title")
                            i
 
 -- | 'withItemAuthor auStr' associates new author info
 -- with a feed item.
-withItemAuthor :: ItemSetter String
+withItemAuthor :: ItemSetter Text
 withItemAuthor au fi =
   case fi of
     Feed.Types.AtomItem e ->
@@ -515,14 +515,14 @@ withItemAuthor au fi =
     Feed.Types.XMLItem i  ->
       Feed.Types.XMLItem $
         addChild (unode "author" au) $
-            filterChildren (\ e -> elName e /= unqual "author")
+            filterChildren (\ e -> elementName e /= unqual "author")
                            i
  where
   isAuthor dc  = dcElt dc == DC_Creator
 
 -- | 'withItemFeedLink name myFeed' associates the parent feed URL 'myFeed'
 -- with a feed item. It is labelled as 'name'.
-withItemFeedLink :: String -> ItemSetter String
+withItemFeedLink :: Text -> ItemSetter Text
 withItemFeedLink tit url fi =
   case fi of
     Feed.Types.AtomItem e ->
@@ -534,13 +534,13 @@ withItemFeedLink tit url fi =
     Feed.Types.XMLItem i  ->
       Feed.Types.XMLItem $
         addChild (unode "source" (Attr (unqual "url") url,tit)) $
-            filterChildren (\ e -> elName e /= unqual "source")
+            filterChildren (\ e -> elementName e /= unqual "source")
                            i
 
 
 
 -- | 'withItemCommentLink url' sets the URL reference to the comment page to 'url'.
-withItemCommentLink :: ItemSetter String
+withItemCommentLink :: ItemSetter Text
 withItemCommentLink url fi =
   case fi of
     Feed.Types.AtomItem e ->
@@ -554,19 +554,19 @@ withItemCommentLink url fi =
     Feed.Types.XMLItem i  ->
       Feed.Types.XMLItem $
         addChild (unode "comments" url) $
-            filterChildren (\ e -> elName e /= unqual "comments")
+            filterChildren (\ e -> elementName e /= unqual "comments")
                            i
  where
   isRel dc  = dcElt dc == DC_Relation
 
 -- | 'withItemEnclosure url mbTy len' sets the URL reference to the comment page to 'url'.
-withItemEnclosure :: String -> Maybe String -> ItemSetter (Maybe Integer)
+withItemEnclosure :: Text -> Maybe Text -> ItemSetter (Maybe Integer)
 withItemEnclosure url ty mb_len fi =
   case fi of
     Feed.Types.AtomItem e -> Feed.Types.AtomItem
        e{Atom.entryLinks=((nullLink url){linkRel=Just (Left "enclosure")
                                         ,linkType=ty
-                                        ,linkLength=fmap show mb_len
+                                        ,linkLength=fmap (pack . show) mb_len
                                         }):Atom.entryLinks e}
     Feed.Types.RSSItem i  ->
       Feed.Types.RSSItem  i{RSS.rssItemEnclosure=Just (nullEnclosure url mb_len (fromMaybe "text/html" ty))}
@@ -580,13 +580,13 @@ withItemEnclosure url ty mb_len fi =
           {elAttribs= [ Attr (unqual "length") "0"
                       , Attr (unqual "type") (fromMaybe "text/html" ty)
                       ]}) $
-            filterChildren (\ e -> elName e /= unqual "enclosure")
+            filterChildren (\ e -> elementName e /= unqual "enclosure")
                            i
 
 
 -- | 'withItemId isURL id' associates new unique identifier with a feed item.
 -- If 'isURL' is 'True', then the id is assumed to point to a valid web resource.
-withItemId :: Bool -> ItemSetter String
+withItemId :: Bool -> ItemSetter Text
 withItemId isURL idS fi =
   case fi of
     Feed.Types.AtomItem e ->
@@ -600,15 +600,15 @@ withItemId isURL idS fi =
     Feed.Types.XMLItem i  ->
       Feed.Types.XMLItem $
         addChild (unode "guid" (Attr (unqual "isPermaLink") (showBool isURL),idS)) $
-            filterChildren (\ e -> elName e /= unqual "guid")
+            filterChildren (\ e -> elementName e /= unqual "guid")
                            i
  where
-  showBool x  = map toLower (show x)
+  showBool x  = pack $ map toLower (show x)
   isId dc     = dcElt dc == DC_Identifier
 
 -- | 'withItemDescription desc' associates a new descriptive string (aka summary)
 -- with a feed item.
-withItemDescription :: ItemSetter String
+withItemDescription :: ItemSetter Text
 withItemDescription desc fi =
   case fi of
     Feed.Types.AtomItem e ->
@@ -620,12 +620,12 @@ withItemDescription desc fi =
     Feed.Types.XMLItem i  ->
       Feed.Types.XMLItem $
         addChild (unode "description" desc) $
-            filterChildren (\ e -> elName e /= unqual "description")
+            filterChildren (\ e -> elementName e /= unqual "description")
                            i
 
 -- | 'withItemRights rightStr' associates the rights information 'rightStr'
 -- with a feed item.
-withItemRights :: ItemSetter String
+withItemRights :: ItemSetter Text
 withItemRights desc fi =
   case fi of
     Feed.Types.AtomItem e ->
@@ -658,7 +658,7 @@ withItemLink url fi =
     Feed.Types.XMLItem i  ->
       Feed.Types.XMLItem $
         addChild (unode "link" url) $
-            filterChildren (\ e -> elName e /= unqual "link")
+            filterChildren (\ e -> elementName e /= unqual "link")
                            i
  where
   replaceAlternate _ [] = []
@@ -670,7 +670,7 @@ withItemLink url fi =
   toStr (Just (Left x)) = x
   toStr (Just (Right x)) = x
 
-withItemCategories :: ItemSetter [(String,Maybe String)]
+withItemCategories :: ItemSetter [(Text,Maybe Text)]
 withItemCategories cats fi =
   case fi of
     Feed.Types.AtomItem e -> Feed.Types.AtomItem

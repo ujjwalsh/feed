@@ -19,11 +19,13 @@ module Text.DublinCore.Types
   , dc_element_names
   ) where
 
+import Data.Text
+
 -- | A DCItem pairs a specific element with its (string) value.
 data DCItem
  = DCItem
      { dcElt  :: DCInfo
-     , dcText :: String
+     , dcText :: Text
      }
      deriving (Eq, Show)
 
@@ -44,10 +46,10 @@ data DCInfo
  | DC_Relation      -- ^ A reference to a related resource.
  | DC_Coverage      -- ^ The extent or scope of the content of the resource.
  | DC_Rights        -- ^ Information about rights held in and over the resource.
- | DC_Other String  -- ^ Other; data type extension mechanism.
+ | DC_Other Text    -- ^ Other; data type extension mechanism.
      deriving (Eq, Show)
 
-infoToTag :: DCInfo -> String
+infoToTag :: DCInfo -> Text
 infoToTag i =
   case i of
     DC_Title       -> "title"
@@ -67,7 +69,7 @@ infoToTag i =
     DC_Rights      -> "rights"
     DC_Other o     -> o
 
-dc_element_names :: [String]
+dc_element_names :: [Text]
 dc_element_names
  = [ "title"
    , "creator"

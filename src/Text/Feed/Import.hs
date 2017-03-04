@@ -1,4 +1,8 @@
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE RecordWildCards #-}
+
 --------------------------------------------------------------------
 -- |
 -- Module    : Text.Feed.Import
@@ -24,15 +28,18 @@ module Text.Feed.Import
         , readAtom          -- :: XML.Element -> Maybe Feed
         ) where
 
+import Data.Text.Lazy (Text, pack)
+import Data.XML.Types as XML
+
 import Text.Atom.Feed.Import as Atom
+
 import Text.RSS.Import       as RSS
 import Text.RSS1.Import      as RSS1
-
 import Text.Feed.Types
-import Text.XML.Light as XML
-import Text.XML.Light.Lexer ( XmlSource )
 
 import Control.Monad
+
+import qualified Text.XML as C
 
 #if MIN_VERSION_utf8_string(1,0,0)
 import Codec.Binary.UTF8.String (decodeString)
@@ -45,7 +52,17 @@ utf8readFile :: FilePath -> IO String
 utf8readFile = UTF8.readFile
 #endif
 
+class XmlSource s where
+  parseXmlSource :: s -> Maybe XML.Element
 
+instance XmlSource Text where
+  parseXmlSource s =
+    case C.parseText C.def s of
+      Right d -> Just $ C.toXMLElement $ C.documentRoot d
+      Left _  -> Nothing
+
+instance XmlSource String where
+  parseXmlSource = parseXmlSource . pack
 
 -- | 'parseFeedFromFile fp' reads in the contents of the file at @fp@;
 -- the assumed encoding is UTF-8.
@@ -78,18 +95,16 @@ parseFeedString = parseFeedSource
 -- RSS1 a try. @Nothing@ is, rather unhelpfully, returned as an
 -- indication of error.
 parseFeedSource :: XmlSource s => s -> Maybe Feed
-parseFeedSource = parseFeedWithParser parseXMLDoc
+parseFeedSource = parseFeedWithParser parseXmlSource
 
 -- | 'readRSS2 elt' tries to derive an RSS2.x, RSS-0.9x feed document
 -- from the XML element @e@.
 readRSS2 :: XML.Element -> Maybe Feed
 readRSS2 e = fmap RSSFeed  $ RSS.elementToRSS e
-
 -- | 'readRSS1 elt' tries to derive an RSS1.0 feed document
 -- from the XML element @e@.
 readRSS1 :: XML.Element -> Maybe Feed
 readRSS1 e = fmap RSS1Feed $ RSS1.elementToFeed e
-
 -- | 'readAtom elt' tries to derive an Atom feed document
 -- from the XML element @e@.
 readAtom :: XML.Element -> Maybe Feed

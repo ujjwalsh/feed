@@ -36,6 +36,7 @@ import Text.XML.Light as XML
 import Text.RSS.Syntax
 
 import Data.Maybe
+import Data.Text (pack)
 
 qualNode :: String -> [XML.Content] -> XML.Element
 qualNode n cs =
@@ -73,7 +74,7 @@ xmlChannel ch =
       ++ mb (xmlLeaf "generator") (rssGenerator ch)
       ++ mb (xmlLeaf "docs") (rssDocs ch)
       ++ mb xmlCloud (rssCloud ch)
-      ++ mb ((xmlLeaf "ttl") . show) (rssTTL ch)
+      ++ mb ((xmlLeaf "ttl") . pack . show) (rssTTL ch)
       ++ mb xmlImage (rssImage ch)
       ++ mb (xmlLeaf "rating") (rssRating ch)
       ++ mb xmlTextInput (rssTextInput ch)
@@ -138,8 +139,8 @@ xmlImage im =
        , xmlLeaf "title" (rssImageTitle im)
        , xmlLeaf "link"  (rssImageLink im)
        ]
-       ++ mb ((xmlLeaf "width")  . show) (rssImageWidth im)
-       ++ mb ((xmlLeaf "height") . show) (rssImageHeight im)
+       ++ mb ((xmlLeaf "width")  . pack . show) (rssImageWidth im)
+       ++ mb ((xmlLeaf "height") . pack . show) (rssImageHeight im)
        ++ mb (xmlLeaf "description") (rssImageDesc im)
        ++ rssImageOther im))
 
@@ -167,7 +168,7 @@ xmlTextInput ti =
 xmlSkipHours :: [Integer] -> XML.Element
 xmlSkipHours hs =
   (qualNode "skipHours" $ map Elem $
-    (map (\ n -> xmlLeaf "hour" (show n)) hs))
+    (map (\ n -> xmlLeaf "hour" (pack $ show n)) hs))
 
 xmlSkipDays :: [String] -> XML.Element
 xmlSkipDays hs =

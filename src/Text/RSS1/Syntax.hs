@@ -35,14 +35,15 @@ module Text.RSS1.Syntax
 
 import Text.XML.Light.Types as XML
 import Text.DublinCore.Types
+import Data.Text
 
-type URIString   = String
-type TitleString = String
-type TimeString  = String
-type TextString  = String
+type URIString   = Text
+type TitleString = Text
+type TimeString  = Text
+type TextString  = Text
 
 data Feed
- = Feed { feedVersion   :: String
+ = Feed { feedVersion   :: Text
         , feedChannel   :: Channel
         , feedImage     :: Maybe Image
         , feedItems     :: [Item]
@@ -118,8 +119,8 @@ data TaxonomyTopic
  = TaxonomyTopic
         { taxonomyURI    :: URIString
         , taxonomyLink   :: URIString
-        , taxonomyTitle  :: Maybe String
-        , taxonomyDesc   :: Maybe String
+        , taxonomyTitle  :: Maybe Text
+        , taxonomyDesc   :: Maybe Text
         , taxonomyTopics :: [URIString]
         , taxonomyDC     :: [DCItem]
         , taxonomyOther  :: [XML.Element]
@@ -140,7 +141,7 @@ data ContentInfo
         { contentURI      :: Maybe URIString
         , contentFormat   :: Maybe URIString
         , contentEncoding :: Maybe URIString
-        , contentValue    :: Maybe String -- should be: RDFValue
+        , contentValue    :: Maybe Text -- should be: RDFValue
         }
         deriving (Eq, Show)
 
@@ -177,7 +178,7 @@ nullChannel uri title =
         , channelAttrs        = []
         }
 
-nullImage :: URIString -> String -> URIString -> Image
+nullImage :: URIString -> Text -> URIString -> Image
 nullImage imguri title link =
   Image
         { imageURI    = imguri
