@@ -5,6 +5,7 @@
 /.idea/
 /dist-newstyle/
 HLint.hs
+.stack-work/
 cabal.sandbox.config
 dist
 setup
