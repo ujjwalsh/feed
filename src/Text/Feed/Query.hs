@@ -200,7 +200,7 @@ getFeedLanguage    :: FeedGetter String
 getFeedLanguage ft =
   case ft of
     Feed.AtomFeed f ->
-       lookupAttr (unqual "lang"){qPrefix=Just "xml"} (Atom.feedAttrs f)
+       lookupAttr (xmlName "lang") (Atom.feedAttrs f)
     Feed.RSSFeed  f -> RSS.rssLanguage (RSS.rssChannel f)
     Feed.RSS1Feed f -> fmap dcText $ listToMaybe $ filter isLang (RSS1.channelDC $ RSS1.feedChannel f)
     Feed.XMLFeed  f -> do

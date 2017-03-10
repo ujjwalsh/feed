@@ -702,28 +702,28 @@ withItemCategories cats fi =
 
 filterChildren :: (XML.Element -> Bool) -> XML.Element -> XML.Element
 filterChildren pre e =
-  case elContent e of
+  case elementNodes e of
     [] -> e
-    cs -> e { elContent = mapMaybe filterElt cs }
+    cs -> e { elementNodes = mapMaybe filterElt cs }
  where
-   filterElt xe@(XML.Elem el)
+   filterElt xe@(XML.NodeElement el)
      | pre el    = Just xe
      | otherwise = Nothing
    filterElt xe  = Just xe
 
 addChild :: XML.Element -> XML.Element -> XML.Element
-addChild a b = b { elContent = XML.Elem a : elContent b }
+addChild a b = b { elementNodes = XML.NodeElement a : elementNodes b }
 
 mapMaybeChildren :: (XML.Element -> Maybe XML.Element)
                  -> XML.Element
                  -> XML.Element
 mapMaybeChildren f e =
-  case elContent e of
+  case elementNodes e of
     [] -> e
-    cs -> e { elContent = map procElt cs }
+    cs -> e { elementNodes = map procElt cs }
  where
-   procElt xe@(XML.Elem el) =
+   procElt xe@(XML.NodeElement el) =
      case f el of
        Nothing  -> xe
-       Just el1 -> XML.Elem el1
+       Just el1 -> XML.NodeElement el1
    procElt xe = xe

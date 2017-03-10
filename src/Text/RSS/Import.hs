@@ -42,7 +42,7 @@ module Text.RSS.Import
 
 import Text.RSS.Syntax
 import Text.RSS1.Utils ( dcNS, dcPrefix )
-import Text.XML.Light as XML
+import Data.XML.Types as XML
 
 import Data.Maybe (fromMaybe, listToMaybe, mapMaybe)
 import Data.Char  (isSpace )
