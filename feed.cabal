@@ -42,6 +42,7 @@ source-repository head
 library
   ghc-options:       -Wall
   hs-source-dirs:    src
+  extensions: OverloadedStrings
   exposed-modules:
     Text.Atom.Feed
     Text.Atom.Feed.Export
