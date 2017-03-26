@@ -19,6 +19,9 @@ module Text.DublinCore.Types
   , dc_element_names
   ) where
 
+import Prelude ()
+import Prelude.Compat
+
 import Data.Text
 
 -- | A DCItem pairs a specific element with its (string) value.

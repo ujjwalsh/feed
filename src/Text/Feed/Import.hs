@@ -26,6 +26,9 @@ module Text.Feed.Import
   , readAtom -- :: XML.Element -> Maybe Feed
   ) where
 
+import Prelude ()
+import Prelude.Compat
+
 import Data.Text.Lazy (Text, pack)
 import Data.XML.Types as XML
 

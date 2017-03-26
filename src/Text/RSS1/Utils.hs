@@ -46,6 +46,9 @@ module Text.RSS1.Utils
   , removeKnownAttrs
   ) where
 
+import Prelude ()
+import Prelude.Compat
+
 import Data.XML.Compat
 import Data.XML.Types as XML
 import Text.DublinCore.Types

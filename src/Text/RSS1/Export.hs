@@ -14,11 +14,14 @@ module Text.RSS1.Export
   ( xmlFeed
   ) where
 
+import Prelude ()
+import Prelude.Compat
+
 import Text.DublinCore.Types
 import Text.RSS1.Syntax
 import Text.RSS1.Utils
 
-import Data.List
+import Data.List.Compat
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.XML.Compat

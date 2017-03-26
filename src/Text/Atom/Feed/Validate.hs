@@ -42,10 +42,13 @@ module Text.Atom.Feed.Validate
   , checkUri
   ) where
 
+import Prelude ()
+import Prelude.Compat
+
 import Data.XML.Types
 import Text.Atom.Feed.Import
 
-import Data.List
+import Data.List.Compat
 import Data.Maybe
 
 data VTree a

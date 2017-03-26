@@ -37,6 +37,9 @@ module Text.Atom.Feed
   , nullPerson
   ) where
 
+import Prelude ()
+import Prelude.Compat
+
 import Data.Text (Text, unpack)
 import Data.XML.Compat
 import Data.XML.Types as XML

@@ -39,8 +39,12 @@ module Text.RSS.Import
   , readBool
   ) where
 
+import Prelude ()
+import Prelude.Compat
+
 import Data.XML.Compat
 import Data.XML.Types as XML
+
 import Text.RSS.Syntax
 import Text.RSS1.Utils (dcNS, dcPrefix)
 

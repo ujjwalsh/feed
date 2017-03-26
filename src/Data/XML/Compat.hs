@@ -1,7 +1,11 @@
 {-# LANGUAGE FlexibleInstances #-}
 
 -- | Compatibility interface between `xml` and `xml-types`.
+
 module Data.XML.Compat where
+
+import Prelude ()
+import Prelude.Compat
 
 import Data.Text (Text)
 import qualified Data.Text as T
@@ -39,7 +43,7 @@ instance ToNode Text where
   unode n t = unode n ([] :: [Attr], t)
 
 findChildren :: Name -> Element -> [Element]
-findChildren n el = Prelude.filter ((n ==) . elementName) $ elementChildren el
+findChildren n el = filter ((n ==) . elementName) $ elementChildren el
 
 findChild :: Name -> Element -> Maybe Element
 findChild = (headMay .) <$> findChildren

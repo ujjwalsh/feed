@@ -16,6 +16,9 @@ module Text.Feed.Types
   , FeedKind(..)
   ) where
 
+import Prelude ()
+import Prelude.Compat
+
 import Data.Text
 
 import qualified Data.XML.Types as XML

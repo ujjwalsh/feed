@@ -45,6 +45,9 @@ module Text.Feed.Query
   , getItemDescription -- :: ItemGetter Text (synonym of previous.)
   ) where
 
+import Prelude ()
+import Prelude.Compat
+
 import Text.Feed.Types as Feed
 
 import Data.XML.Types as XML
@@ -59,7 +62,6 @@ import Text.DublinCore.Types
 
 import Control.Applicative ((<|>))
 import Control.Monad (mplus)
-import Data.List
 import Data.Maybe
 import Data.Text (Text)
 import qualified Data.Text as T

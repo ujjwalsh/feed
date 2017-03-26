@@ -30,6 +30,9 @@ module Text.RSS.Export
   , mb
   ) where
 
+import Prelude ()
+import Prelude.Compat
+
 import Data.XML.Compat
 import Data.XML.Types as XML
 import Text.RSS.Syntax

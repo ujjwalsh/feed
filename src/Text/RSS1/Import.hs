@@ -14,6 +14,9 @@ module Text.RSS1.Import
   ( elementToFeed
   ) where
 
+import Prelude ()
+import Prelude.Compat
+
 import Data.XML.Compat
 import Data.XML.Types as XML
 import Text.DublinCore.Types

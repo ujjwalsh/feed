@@ -18,6 +18,9 @@ module Text.Feed.Translate
   , withRSS1Item -- :: (RSS1.Item -> RSS1.Item) -> Item -> Item
   ) where
 
+import Prelude ()
+import Prelude.Compat
+
 import Text.Atom.Feed as Atom
 import Text.Feed.Constructor
 import Text.Feed.Types as Feed

@@ -53,6 +53,9 @@ module Text.Atom.Feed.Export
   , mb
   ) where
 
+import Prelude ()
+import Prelude.Compat
+
 import Data.Text (Text, pack)
 import Data.XML.Types as XML
 import Text.Atom.Feed

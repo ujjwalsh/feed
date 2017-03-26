@@ -32,6 +32,9 @@ module Text.RSS1.Syntax
   , nullContentInfo
   ) where
 
+import Prelude ()
+import Prelude.Compat
+
 import Data.Text
 import Data.XML.Compat
 import Data.XML.Types as XML

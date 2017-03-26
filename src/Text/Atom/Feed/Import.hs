@@ -38,6 +38,9 @@ module Text.Atom.Feed.Import
   , pInReplyTo
   ) where
 
+import Prelude ()
+import Prelude.Compat
+
 import Control.Monad (guard, liftM, mplus)
 import Data.List (find)
 import Data.Maybe (isJust, listToMaybe, mapMaybe)

@@ -20,6 +20,9 @@ module Text.Atom.Pub
   , Accept(..)
   ) where
 
+import Prelude ()
+import Prelude.Compat
+
 import Data.Text (Text)
 import Data.XML.Types as XML
 import Text.Atom.Feed (Category, TextContent, URI)

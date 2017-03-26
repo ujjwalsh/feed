@@ -1,5 +1,8 @@
 module Text.RSS.Utils where
 
+import Prelude ()
+import Prelude.Compat
+
 import Data.Text
 import Data.XML.Types as XML
 import Text.XML as C

@@ -71,6 +71,7 @@ library
     Data.XML.Compat
   build-depends:
       base >= 4 && < 4.11
+    , base-compat == 0.9.*
     , old-locale == 1.0.*
     , old-time >= 1 && < 1.2
     , safe == 0.3.*
@@ -101,6 +102,7 @@ test-suite tests
   build-depends:
       base >= 4 && < 4.11
     , HUnit >= 1.2 && < 1.7
+    , base-compat == 0.9.*
     , feed
     , old-locale == 1.0.*
     , old-time >= 1 && < 1.2
