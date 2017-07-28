@@ -22,8 +22,6 @@ attrKey = fst
 strContent :: Element -> Text
 strContent = T.concat . elementText
 
-unqual = id
-
 class ToNode t where
   unode :: Name -> t -> Element
 
