@@ -53,7 +53,7 @@ import Data.Maybe (listToMaybe, mapMaybe)
 import Data.Text (Text)
 
 pQNodes :: Name -> XML.Element -> [XML.Element]
-pQNodes = XML.findChildren
+pQNodes = findChildren
 
 pNode      :: Text -> XML.Element -> Maybe XML.Element
 pNode x e  = listToMaybe (pQNodes (qualName (rss10NS,Nothing) x) e)
