@@ -68,13 +68,13 @@ pQLeaf        :: (Maybe Text,Maybe Text) -> Text -> XML.Element -> Maybe Text
 pQLeaf ns x e = strContent `fmap` pQNode (qualName ns x) e
 
 pAttr        :: (Maybe Text, Maybe Text) -> Text -> XML.Element -> Maybe Text
-pAttr ns x e = lookup (qualName ns x) $ elementAttributes e
+pAttr ns x   = attributeText (qualName ns x)
 
 pMany        :: (Maybe Text,Maybe Text) -> Text -> (XML.Element -> Maybe a) -> XML.Element -> [a]
 pMany ns p f e  = mapMaybe f (pQNodes (qualName ns p) e)
 
 children     :: XML.Element -> [XML.Element]
-children e    = onlyElems (elContent e)
+children      = elementChildren
 
 qualName :: (Maybe Text, Maybe Text) -> Text -> Name
 qualName (ns,pre) x = Name x ns pre
@@ -129,7 +129,7 @@ known_con_elts = map (qualName (conNS,conPrefix)) [ "items", "item", "format", "
 
 removeKnownElts :: XML.Element -> [XML.Element]
 removeKnownElts e =
-  filter (\ e1 -> not (elName e1 `elem` known_elts)) (children e)
+  filter (\ e1 -> not (elementName e1 `elem` known_elts)) (elementChildren e)
  where
   known_elts =
     concat [ known_rss_elts
@@ -141,7 +141,7 @@ removeKnownElts e =
 
 removeKnownAttrs :: XML.Element -> [Attr]
 removeKnownAttrs e =
-  filter (\ a -> not (fst a `elem` known_attrs)) (elementAttribs e)
+  filter (\ a -> not (fst a `elem` known_attrs)) (elementAttributes e)
  where
   known_attrs =
      map rdfName [ "about" ]
