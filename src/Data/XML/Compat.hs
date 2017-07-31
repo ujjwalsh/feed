@@ -44,3 +44,10 @@ findChildren n el = Prelude.filter ((n ==) . elementName) $ elementChildren el
 findChild :: Name -> Element -> Maybe Element
 findChild = (headMay .) <$> findChildren
 
+findElements :: Name -> Element -> [Element]
+findElements n e
+  | n == elementName e = [e]
+  | otherwise = concatMap (findElements n) $ elementChildren e
+
+findElement :: Name -> Element -> Maybe Element
+findElement = (headMay .) <$> findElements

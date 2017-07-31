@@ -77,8 +77,8 @@ feedItems fe =
     AtomFeed f -> map Feed.AtomItem (Atom.feedEntries f)
     RSSFeed f  -> map Feed.RSSItem  (RSS.rssItems $ RSS.rssChannel f)
     RSS1Feed f -> map Feed.RSS1Item (RSS1.feedItems f)
-    XMLFeed f  -> case XML.findElements "item" f of
-        [] -> map Feed.XMLItem $ XML.findElements (atomName "entry") f
+    XMLFeed f  -> case findElements "item" f of
+        [] -> map Feed.XMLItem $ findElements (atomName "entry") f
         l -> map Feed.XMLItem l
 
 getFeedItems :: Feed.Feed -> [Feed.Item]
@@ -223,7 +223,7 @@ getFeedCategories ft =
        case filter isCat (RSS1.channelDC $ RSS1.feedChannel f) of
          ls -> map (\ l -> (dcText l,Nothing)) ls
     Feed.XMLFeed  f ->
-       case fromMaybe [] $ fmap (XML.findElements "category") (findElement "channel" f) of
+       case fromMaybe [] $ fmap (findElements "category") (findElement "channel" f) of
          ls -> map (\ l -> (fromMaybe "" (fmap strContent $ findElement "term" l), findAttr "domain" l)) ls
        -- ToDo parse atom like tags too
  where
@@ -423,7 +423,7 @@ getItemCategories it =
     Feed.RSSItem i  -> map RSS.rssCategoryValue $ RSS.rssItemCategories i
     Feed.RSS1Item i -> concat $ getCats1 i
    -- ToDo parse atom like tags too
-    Feed.XMLItem i  -> map strContent $ XML.findElements "category" i
+    Feed.XMLItem i  -> map strContent $ findElements "category" i
  where
     -- get RSS1 categories; either via DublinCore's subject (or taxonomy topics...not yet.)
    getCats1 i1 =
@@ -435,7 +435,7 @@ getItemRights it =
     Feed.AtomItem e -> fmap contentToStr $ Atom.entryRights e
     Feed.RSSItem  _ -> Nothing
     Feed.RSS1Item i -> fmap dcText $ listToMaybe $ filter isRights (RSS1.itemDC i)
-    Feed.XMLItem i -> fmap strContent $ XML.findElement (atomName "rights") i
+    Feed.XMLItem i -> fmap strContent $ findElement (atomName "rights") i
  where
   isRights dc = dcElt dc == DC_Rights
 
@@ -448,7 +448,7 @@ getItemDescription it =
     Feed.AtomItem e -> fmap contentToStr $ Atom.entrySummary e
     Feed.RSSItem  e -> RSS.rssItemDescription e
     Feed.RSS1Item i -> itemDesc i
-    Feed.XMLItem i  -> fmap strContent $ XML.findElement (atomName "summary") i
+    Feed.XMLItem i  -> fmap strContent $ findElement (atomName "summary") i
 
  -- strip away
 toStr :: Maybe (Either String String) -> String
