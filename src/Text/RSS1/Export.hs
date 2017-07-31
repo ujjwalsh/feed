@@ -13,20 +13,23 @@
 
 module Text.RSS1.Export (xmlFeed) where
 
-import Text.XML.Light as XML
 import Text.RSS1.Syntax
 import Text.RSS1.Utils
 import Text.DublinCore.Types
 
 import Data.List
 import Data.Maybe
+import Data.Text (Text)
+import Data.XML.Types as XML
+import Data.XML.Compat
 
-qualNode :: (Maybe String,Maybe String) -> String -> [XML.Content] -> XML.Element
+qualNode :: (Maybe Text, Maybe Text) -> Text -> [XML.Node] -> XML.Element
 qualNode ns n cs =
-  blank_element
-    { elName    = qualName ns n
-    , elContent = cs
-    }
+  Element
+  { elementName       = qualName ns n
+  , elementAttributes = []
+  , elementNodes      = cs
+  }
 
 ---
 xmlFeed :: Feed -> XML.Element
@@ -183,8 +186,8 @@ xmlLeaf ns tg txt =
               , elContent = [ Text blank_cdata { cdData = txt } ]
               }
 
-xmlEmpty :: (Maybe String,Maybe String) -> String -> [XML.Attr] -> XML.Element
-xmlEmpty ns t as = (qualNode ns t []){elAttribs=as}
+xmlEmpty :: (Maybe String,Maybe String) -> String -> [Attr] -> XML.Element
+xmlEmpty ns t as = (qualNode ns t []){elementAttributes = as}
 
 ---
 mb :: (a -> b) -> Maybe a -> [b]
