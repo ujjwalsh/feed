@@ -39,11 +39,11 @@ import Text.RSS.Syntax
 import Data.Maybe
 import Data.Text (Text, pack)
 
-qualNode :: Text -> [XML.Node] -> XML.Element
-qualNode n cs = Element (qualName n) [] cs
-
 qualName :: Text -> XML.Name
 qualName n = Name n Nothing Nothing
+
+qualNode :: Text -> [XML.Node] -> XML.Element
+qualNode n = Element (Name n Nothing Nothing) []
 
 ---
 xmlRSS :: RSS -> XML.Element
@@ -51,7 +51,7 @@ xmlRSS r =
   (qualNode "rss" $ map NodeElement $
     (  [ xmlChannel (rssChannel r) ]
     ++ rssOther r))
-    { elementAttributes = (mkAttr (qualName "version") (rssVersion r)):rssAttrs r }
+    { elementAttributes = (mkAttr "version" (rssVersion r)):rssAttrs r }
 
 xmlChannel :: RSSChannel -> XML.Element
 xmlChannel ch =
@@ -98,23 +98,23 @@ xmlItem it =
 xmlSource :: RSSSource -> XML.Element
 xmlSource s =
    (xmlLeaf "source" (rssSourceTitle s))
-     { elementAttributes = (mkAttr (qualName "url") (rssSourceURL s)) :
+     { elementAttributes = (mkAttr "url" (rssSourceURL s)) :
                    rssSourceAttrs s }
 
 xmlEnclosure :: RSSEnclosure -> XML.Element
 xmlEnclosure e =
    (xmlLeaf "enclosure" "")
      { elementAttributes =
-        (mkAttr (qualName "url")    (rssEnclosureURL e)) :
-        (mkAttr (qualName "type")   (rssEnclosureType e)) :
-        mb (mkAttr (qualName "length") . pack . show) (rssEnclosureLength e) ++
+        (mkAttr "url"    (rssEnclosureURL e)) :
+        (mkAttr "type"   (rssEnclosureType e)) :
+        mb (mkAttr "length" . pack . show) (rssEnclosureLength e) ++
         rssEnclosureAttrs e }
 
 xmlCategory :: RSSCategory -> XML.Element
 xmlCategory c =
    (xmlLeaf "category" (rssCategoryValue c))
      { elementAttributes =
-        (fromMaybe id (fmap (\ n -> ((mkAttr (qualName "domain") n):))
+        (fromMaybe id (fmap (\ n -> ((mkAttr "domain" n):))
                             (rssCategoryDomain c))) $
              (rssCategoryAttrs c) }
 
@@ -122,7 +122,7 @@ xmlGuid :: RSSGuid -> XML.Element
 xmlGuid g =
    (xmlLeaf "guid" (rssGuidValue g))
      { elementAttributes =
-        (fromMaybe id (fmap (\ n -> ((mkAttr (qualName "isPermaLink") (toBool n)):))
+        (fromMaybe id (fmap (\ n -> ((mkAttr "isPermaLink" (toBool n)):))
                             (rssGuidPermanentURL g))) $
              (rssGuidAttrs g) }
  where
@@ -145,11 +145,11 @@ xmlCloud :: RSSCloud -> XML.Element
 xmlCloud cl =
     (xmlLeaf "cloud" "")
      { elementAttributes =
-         (  mb (mkAttr (qualName "domain")) (rssCloudDomain cl)
-         ++ mb (mkAttr (qualName "port"))   (rssCloudPort cl)
-         ++ mb (mkAttr (qualName "path"))   (rssCloudPath cl)
-         ++ mb (mkAttr (qualName "registerProcedure")) (rssCloudRegisterProcedure cl)
-         ++ mb (mkAttr (qualName "protocol")) (rssCloudProtocol cl)
+         (  mb (mkAttr "domain") (rssCloudDomain cl)
+         ++ mb (mkAttr "port")   (rssCloudPort cl)
+         ++ mb (mkAttr "path")   (rssCloudPath cl)
+         ++ mb (mkAttr "registerProcedure") (rssCloudRegisterProcedure cl)
+         ++ mb (mkAttr "protocol") (rssCloudProtocol cl)
          ++ rssCloudAttrs cl) }
 
 xmlTextInput :: RSSTextInput -> XML.Element
@@ -178,7 +178,7 @@ xmlAttr k = mkNAttr (qualName k)
 xmlLeaf :: Text -> Text -> XML.Element
 xmlLeaf tg txt =
  Element{ elementAttributes = []
-        , elementName = qualName tg
+        , elementName = Name tg Nothing Nothing
         , elementNodes = [ NodeContent (ContentText txt) ]
         }
 
