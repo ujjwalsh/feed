@@ -47,7 +47,8 @@ import Data.XML.Types as XML
 
 import Data.Maybe (fromMaybe, listToMaybe, mapMaybe)
 import Data.Char  (isSpace )
-import Data.Text (Text)
+import Data.Text (Text, dropWhile)
+import Data.Text.Read
 import Control.Monad (guard,mplus)
 
 pNodes       :: Text -> [XML.Element] -> [XML.Element]
@@ -290,15 +291,15 @@ elementToSkipDays e = do
 
 ----
 
-readInt :: String -> Maybe Integer
+readInt :: Text -> Maybe Integer
 readInt s =
-  case reads s of
-    ((x,_):_) -> Just x
+  case decimal s of
+    Right (x, _) -> Just x
     _ -> Nothing
 
-readBool :: String -> Maybe Bool
+readBool :: Text -> Maybe Bool
 readBool s =
-  case dropWhile isSpace s of
-    't':'r':'u':'e':_ -> Just True
-    'f':'a':'l':'s':'e':_ -> Just False
+  case Data.Text.dropWhile isSpace s of
+    "true" -> Just True
+    "false" -> Just False
     _ -> Nothing
