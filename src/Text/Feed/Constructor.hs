@@ -407,8 +407,8 @@ withFeedCategories cats fe =
              (\ (t,mb) acc ->
                 addChild (unode "category"
                                 (fromMaybe (\x -> [x])
-                                    (fmap (\v -> (\ x -> [Attr (unqual "domain") v,x])) mb) $
-                                    (Attr (unqual "term") t))
+                                    (fmap (\v -> (\ x -> [mkAttr (unqual "domain") v,x])) mb) $
+                                    (mkAttr (unqual "term") t))
                                  ) acc)
              e
              cats)
@@ -536,7 +536,7 @@ withItemFeedLink tit url fi =
       Feed.Types.RSS1Item  i{RSS1.itemTitle=tit}
     Feed.Types.XMLItem i  ->
       Feed.Types.XMLItem $
-        addChild (unode "source" (Attr (unqual "url") url,tit)) $
+        addChild (unode "source" (mkAttr (unqual "url") url,tit)) $
             filterChildren (\ e -> elementName e /= unqual "source")
                            i
 
@@ -580,9 +580,9 @@ withItemEnclosure url ty mb_len fi =
     Feed.Types.XMLItem i  ->
       Feed.Types.XMLItem $
         addChild ((unode "enclosure" url)
-          {elAttribs= [ Attr (unqual "length") "0"
-                      , Attr (unqual "type") (fromMaybe "text/html" ty)
-                      ]}) $
+          {elementAttributes= [ mkAttr (unqual "length") "0"
+                              , mkAttr (unqual "type") (fromMaybe "text/html" ty)
+                              ]}) $
             filterChildren (\ e -> elementName e /= unqual "enclosure")
                            i
 
@@ -602,7 +602,7 @@ withItemId isURL idS fi =
        (_,[]) -> Feed.Types.RSS1Item i{RSS1.itemDC=DCItem{dcElt=DC_Identifier,dcText=idS}:RSS1.itemDC i}
     Feed.Types.XMLItem i  ->
       Feed.Types.XMLItem $
-        addChild (unode "guid" (Attr (unqual "isPermaLink") (showBool isURL),idS)) $
+        addChild (unode "guid" (mkAttr (unqual "isPermaLink") (showBool isURL),idS)) $
             filterChildren (\ e -> elementName e /= unqual "guid")
                            i
  where
@@ -692,8 +692,8 @@ withItemCategories cats fi =
          foldr (\ (t,mb) acc ->
                   addChild (unode "category"
                                   (fromMaybe (\x -> [x])
-                                             (fmap (\v -> (\ x -> [Attr (unqual "domain") v,x])) mb) $
-                                             (Attr (unqual "term") t))
+                                             (fmap (\v -> (\ x -> [mkAttr (unqual "domain") v,x])) mb) $
+                                             (mkAttr (unqual "term") t))
                                  ) acc)
                i
                cats
