@@ -55,7 +55,9 @@ import Text.RSS.Syntax  as RSS
 import Text.Atom.Feed   as Atom
 import Text.Atom.Feed.Export (atomName)
 import Text.RSS1.Syntax as RSS1
-import Text.XML.Light as XML
+import Data.XML.Types as XML
+
+import Data.XML.Compat
 
 import Text.DublinCore.Types
 
