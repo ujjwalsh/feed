@@ -82,7 +82,7 @@ qualName :: Text -> Name
 qualName x = Name x Nothing Nothing
 
 dcName :: Text -> Name
-dcName x = Name x dcNS dcPrefix
+dcName x = Name x (Just dcNS) (Just dcPrefix)
 
 elementToRSS :: XML.Element -> Maybe RSS
 elementToRSS e = do

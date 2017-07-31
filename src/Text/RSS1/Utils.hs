@@ -21,7 +21,7 @@ module Text.RSS1.Utils
   , pMany
   , children
   , qualName
-  , rssPrefix
+  , qualName'
   , rss10NS
   , rdfPrefix
   , rdfNS
@@ -56,13 +56,13 @@ pQNodes :: Name -> XML.Element -> [XML.Element]
 pQNodes = findChildren
 
 pNode      :: Text -> XML.Element -> Maybe XML.Element
-pNode x e  = listToMaybe (pQNodes (qualName (rss10NS,Nothing) x) e)
+pNode x e  = listToMaybe (pQNodes (qualName (Just rss10NS, Nothing) x) e)
 
 pQNode        :: Name -> XML.Element -> Maybe XML.Element
 pQNode x e    = listToMaybe (pQNodes x e)
 
 pLeaf        :: Text -> XML.Element -> Maybe Text
-pLeaf x e    = strContent `fmap` pQNode (qualName (rss10NS,Nothing) x) e
+pLeaf x e    = strContent `fmap` pQNode (qualName (Just rss10NS, Nothing) x) e
 
 pQLeaf        :: (Maybe Text,Maybe Text) -> Text -> XML.Element -> Maybe Text
 pQLeaf ns x e = strContent `fmap` pQNode (qualName ns x) e
@@ -79,38 +79,40 @@ children      = elementChildren
 qualName :: (Maybe Text, Maybe Text) -> Text -> Name
 qualName (ns,pre) x = Name x ns pre
 
-rssPrefix, rss10NS :: Maybe Text
-rss10NS = Just "http://purl.org/rss/1.0/"
-rssPrefix = Nothing
+qualName' :: (Text, Text) -> Text -> Name
+qualName' (ns,pre) x = Name x (Just ns) (Just pre)
 
-rdfPrefix, rdfNS :: Maybe Text
-rdfNS = Just "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-rdfPrefix = Just "rdf"
+rss10NS :: Text
+rss10NS = "http://purl.org/rss/1.0/"
 
-synPrefix, synNS :: Maybe Text
-synNS = Just "http://purl.org/rss/1.0/modules/syndication/"
-synPrefix = Just "sy"
+rdfPrefix, rdfNS :: Text
+rdfNS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+rdfPrefix = "rdf"
 
-taxPrefix, taxNS :: Maybe Text
-taxNS = Just "http://purl.org/rss/1.0/modules/taxonomy/"
-taxPrefix = Just "taxo"
+synPrefix, synNS :: Text
+synNS = "http://purl.org/rss/1.0/modules/syndication/"
+synPrefix = "sy"
 
-conPrefix, conNS :: Maybe Text
-conNS = Just "http://purl.org/rss/1.0/modules/content/"
-conPrefix = Just "content"
+taxPrefix, taxNS :: Text
+taxNS = "http://purl.org/rss/1.0/modules/taxonomy/"
+taxPrefix = "taxo"
 
-dcPrefix, dcNS :: Maybe Text
-dcNS = Just "http://purl.org/dc/elements/1.1/"
-dcPrefix = Just "dc"
+conPrefix, conNS :: Text
+conNS = "http://purl.org/rss/1.0/modules/content/"
+conPrefix = "content"
+
+dcPrefix, dcNS :: Text
+dcNS = "http://purl.org/dc/elements/1.1/"
+dcPrefix = "dc"
 
 rdfName :: Text -> Name
-rdfName x = Name x rdfNS rdfPrefix
+rdfName x = Name x (Just rdfNS) (Just rdfPrefix)
 
 rssName :: Text -> Name
-rssName x = Name x rss10NS rssPrefix
+rssName x = Name x (Just rss10NS) Nothing
 
 synName :: Text -> Name
-synName x = Name x synNS synPrefix
+synName x = Name x (Just synNS) (Just synPrefix)
 
 known_rss_elts :: [Name]
 known_rss_elts = map rssName [ "channel", "item", "image", "textinput" ]
@@ -119,13 +121,13 @@ known_syn_elts :: [Name]
 known_syn_elts = map synName [ "updateBase", "updateFrequency", "updatePeriod" ]
 
 known_dc_elts :: [Name]
-known_dc_elts  = map (qualName (dcNS,dcPrefix)) dc_element_names
+known_dc_elts  = map (qualName' (dcNS, dcPrefix)) dc_element_names
 
 known_tax_elts :: [Name]
-known_tax_elts = map (qualName (taxNS,taxPrefix)) [ "topic", "topics" ]
+known_tax_elts = map (qualName' (taxNS, taxPrefix)) [ "topic", "topics" ]
 
 known_con_elts :: [Name]
-known_con_elts = map (qualName (conNS,conPrefix)) [ "items", "item", "format", "encoding" ]
+known_con_elts = map (qualName' (conNS, conPrefix)) [ "items", "item", "format", "encoding" ]
 
 removeKnownElts :: XML.Element -> [XML.Element]
 removeKnownElts e =

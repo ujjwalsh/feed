@@ -18,7 +18,6 @@ import Text.RSS1.Utils
 import Text.DublinCore.Types
 
 import Data.List
-import Data.Maybe
 import Data.Text (Text)
 import Data.XML.Types as XML
 import Data.XML.Compat
@@ -44,12 +43,12 @@ xmlFeed f =
              ] ))
         -- should we expect these to be derived by the XML pretty printer..?
     { elAttribs =   nub $
-                    Attr (qualName (Nothing,Nothing) "xmlns") (fromJust rss10NS) :
-                    Attr (qualName (Nothing,Just "xmlns") (fromJust rdfPrefix)) (fromJust rdfNS) :
-                    Attr (qualName (Nothing,Just "xmlns") (fromJust synPrefix)) (fromJust synNS) :
-                    Attr (qualName (Nothing,Just "xmlns") (fromJust taxPrefix)) (fromJust taxNS) :
-                    Attr (qualName (Nothing,Just "xmlns") (fromJust conPrefix)) (fromJust conNS) :
-                    Attr (qualName (Nothing,Just "xmlns") (fromJust dcPrefix))  (fromJust dcNS)  :
+                    Attr (qualName (Nothing,Nothing) "xmlns") (rss10NS) :
+                    Attr (qualName (Nothing,Just "xmlns") (rdfPrefix)) (rdfNS) :
+                    Attr (qualName (Nothing,Just "xmlns") (synPrefix)) (synNS) :
+                    Attr (qualName (Nothing,Just "xmlns") (taxPrefix)) (taxNS) :
+                    Attr (qualName (Nothing,Just "xmlns") (conPrefix)) (conNS) :
+                    Attr (qualName (Nothing,Just "xmlns") (dcPrefix))  (dcNS)  :
                     feedAttrs f}
 
 xmlChannel :: Channel -> XML.Element
@@ -69,7 +68,7 @@ xmlChannel ch =
       xmlContentItems (channelContent ch) ++
       xmlTopics       (channelTopics ch) ++
       channelOther ch))
-    { elAttribs = ( Attr (qualName  (rdfNS,rdfPrefix) "about") (channelURI ch) :
+    { elAttribs = ( Attr (qualName'  (rdfNS,rdfPrefix) "about") (channelURI ch) :
                     channelAttrs ch)}
 
 xmlImageURI :: URIString -> XML.Element
@@ -83,7 +82,7 @@ xmlImage i =
      , xmlLeaf  (rss10NS,Nothing) "link"  (imageLink i)
      ] ++ map xmlDC (imageDC i) ++
      imageOther i))
-    { elAttribs = ( Attr (qualName  (rdfNS,rdfPrefix) "about") (imageURI i) :
+    { elAttribs = ( Attr (qualName'  (rdfNS,rdfPrefix) "about") (imageURI i) :
                     imageAttrs i)}
 
 xmlItemURIs :: [URIString] -> [XML.Element]
