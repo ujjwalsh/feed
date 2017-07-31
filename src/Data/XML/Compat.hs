@@ -15,7 +15,10 @@ import Safe
 type Attr = (Name, [Content])
 
 mkAttr :: Text -> Text -> Attr
-mkAttr a b = (Name a Nothing Nothing, [ContentText b])
+mkAttr k = mkNAttr (Name k Nothing Nothing)
+
+mkNAttr :: Name -> Text -> Attr
+mkNAttr k v = (k, [ContentText v])
 
 attrKey :: Attr -> Name
 attrKey = fst
