@@ -65,7 +65,7 @@ import Text.RSS1.Syntax     as RSS1
 import Text.DublinCore.Types
 
 import Data.XML.Compat
-import Data.XML.Types as XML hiding ( filterChildren )
+import Data.XML.Types as XML
 
 import Data.Maybe ( fromMaybe, mapMaybe )
 import Data.Char  ( toLower )
@@ -542,7 +542,7 @@ withItemFeedLink tit url fi =
       Feed.Types.RSS1Item  i{RSS1.itemTitle=tit}
     Feed.Types.XMLItem i  ->
       Feed.Types.XMLItem $
-        addChild (unode "source" (mkAttr (unqual "url") url,tit)) $
+        addChild (unode "source" ([mkAttr (unqual "url") url], tit)) $
             filterChildren (\ e -> elementName e /= unqual "source")
                            i
 
@@ -608,7 +608,7 @@ withItemId isURL idS fi =
        (_,[]) -> Feed.Types.RSS1Item i{RSS1.itemDC=DCItem{dcElt=DC_Identifier,dcText=idS}:RSS1.itemDC i}
     Feed.Types.XMLItem i  ->
       Feed.Types.XMLItem $
-        addChild (unode "guid" (mkAttr (unqual "isPermaLink") (showBool isURL),idS)) $
+        addChild (unode "guid" ([mkAttr (unqual "isPermaLink") (showBool isURL)], idS)) $
             filterChildren (\ e -> elementName e /= unqual "guid")
                            i
  where
