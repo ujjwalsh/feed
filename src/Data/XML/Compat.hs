@@ -8,8 +8,9 @@ where
 
 import Data.Text (Text)
 import qualified Data.Text as T
-
 import Data.XML.Types
+
+import Safe
 
 type Attr = (Name, [Content])
 
@@ -39,3 +40,7 @@ instance ToNode Text where
 
 findChildren :: Name -> Element -> [Element]
 findChildren n el = Prelude.filter ((n ==) . elementName) $ elementChildren el
+
+findChild :: Name -> Element -> Maybe Element
+findChild = (headMay .) <$> findChildren
+

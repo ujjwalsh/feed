@@ -16,6 +16,7 @@ extra-deps:
 - random-1.1
 - regex-base-0.93.2
 - regex-posix-0.95.2
+- safe-0.3.15
 - test-framework-0.8.1.1
 - test-framework-hunit-0.3.0.2
 - text-1.2.1.3
