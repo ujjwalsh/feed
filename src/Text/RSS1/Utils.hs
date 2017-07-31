@@ -139,9 +139,9 @@ removeKnownElts e =
            , known_tax_elts
            ]
 
-removeKnownAttrs :: XML.Element -> [XML.Attr]
+removeKnownAttrs :: XML.Element -> [Attr]
 removeKnownAttrs e =
-  filter (\ a -> not (attrKey a `elem` known_attrs)) (elAttribs e)
+  filter (\ a -> not (fst a `elem` known_attrs)) (elementAttribs e)
  where
   known_attrs =
      map rdfName [ "about" ]

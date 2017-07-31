@@ -355,8 +355,14 @@ withFeedLogoLink imgURL lnk fe =
 withFeedLanguage :: FeedSetter Text
 withFeedLanguage lang fe =
   case fe of
-   Feed.Types.AtomFeed f -> Feed.Types.AtomFeed $
-        f{Atom.feedAttrs=(XML.Attr (unqual "lang"){qPrefix=Just "xml"} lang):Atom.feedAttrs f}
+   Feed.Types.AtomFeed f -> Feed.Types.AtomFeed
+       f{Atom.feedAttrs=langAttr:Atom.feedAttrs f}
+     where
+       langAttr = (name, [ContentText lang])
+       name = Name { nameLocalName = "lang"
+                   , nameNamespace = Nothing
+                   , namePrefix = Just "xml"
+                   }
    Feed.Types.RSSFeed  f -> Feed.Types.RSSFeed
         f{rssChannel=(rssChannel f){rssLanguage=Just lang}}
    Feed.Types.RSS1Feed f -> Feed.Types.RSS1Feed $
