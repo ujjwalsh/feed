@@ -42,7 +42,8 @@ module Text.RSS.Syntax
   , nullTextInput
   ) where
 
-import Text.XML.Light as XML
+import Data.XML.Compat
+import Data.XML.Types as XML
 import Data.Text (Text)
 
 -- * Core Types
@@ -52,7 +53,7 @@ import Data.Text (Text)
 data RSS
  = RSS
      { rssVersion :: Text
-     , rssAttrs   :: [XML.Attr]
+     , rssAttrs   :: [Attr]
      , rssChannel :: RSSChannel
      , rssOther   :: [XML.Element]
      }
@@ -100,7 +101,7 @@ data RSSItem
      , rssItemGuid         :: Maybe RSSGuid
      , rssItemPubDate      :: Maybe DateString
      , rssItemSource       :: Maybe RSSSource
-     , rssItemAttrs        :: [XML.Attr]
+     , rssItemAttrs        :: [Attr]
      , rssItemOther        :: [XML.Element]
      }
      deriving (Show)
@@ -108,7 +109,7 @@ data RSSItem
 data RSSSource
  = RSSSource
      { rssSourceURL    :: URLString
-     , rssSourceAttrs  :: [XML.Attr]
+     , rssSourceAttrs  :: [Attr]
      , rssSourceTitle  :: Text
      }
      deriving (Show)
@@ -118,14 +119,14 @@ data RSSEnclosure
      { rssEnclosureURL     :: URLString
      , rssEnclosureLength  :: Maybe Integer
      , rssEnclosureType    :: Text
-     , rssEnclosureAttrs   :: [XML.Attr]
+     , rssEnclosureAttrs   :: [Attr]
      }
      deriving (Show)
 
 data RSSCategory
  = RSSCategory
      { rssCategoryDomain   :: Maybe Text
-     , rssCategoryAttrs    :: [XML.Attr]
+     , rssCategoryAttrs    :: [Attr]
      , rssCategoryValue    :: Text
      }
      deriving (Show)
@@ -133,7 +134,7 @@ data RSSCategory
 data RSSGuid
  = RSSGuid
      { rssGuidPermanentURL :: Maybe Bool
-     , rssGuidAttrs        :: [XML.Attr]
+     , rssGuidAttrs        :: [Attr]
      , rssGuidValue        :: Text
      }
      deriving (Show)
@@ -158,7 +159,7 @@ data RSSCloud
      , rssCloudPath     :: Maybe Text
      , rssCloudRegisterProcedure :: Maybe Text
      , rssCloudProtocol :: Maybe Text
-     , rssCloudAttrs    :: [XML.Attr]
+     , rssCloudAttrs    :: [Attr]
      }
      deriving (Show)
 
@@ -168,7 +169,7 @@ data RSSTextInput
      , rssTextInputDesc  :: Text
      , rssTextInputName  :: Text
      , rssTextInputLink  :: URLString
-     , rssTextInputAttrs :: [XML.Attr]
+     , rssTextInputAttrs :: [Attr]
      , rssTextInputOther :: [XML.Element]
      }
      deriving (Show)

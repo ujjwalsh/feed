@@ -39,6 +39,7 @@ module Text.Atom.Feed
   ) where
 
 import Data.Text (Text, unpack)
+import Data.XML.Compat
 import Data.XML.Types as XML
 
 -- *Core types
@@ -49,8 +50,6 @@ type URI        = Text
 type NCName     = Text
 type Date       = Text
 type MediaType  = Text
-
-type Attr = (Name, [Content])
 
 data Feed
  = Feed

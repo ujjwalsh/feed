@@ -28,14 +28,13 @@ module Text.Atom.Pub.Export
   ) where
 
 import Data.Text (Text)
+import Data.XML.Compat
 import Data.XML.Types
 import Text.Atom.Pub
 import Text.Atom.Feed.Export
        ( mb, xmlCategory, xmlTitle
        , xmlns_atom
        )
-
-type Attr = (Name, [Content])
 
 -- ToDo: old crud; inline away.
 mkQName :: Maybe Text -> Text -> Name
@@ -46,9 +45,6 @@ mkElem a b c = Element a b $ map NodeElement c
 
 mkLeaf :: Name -> [Attr] -> Text -> Element
 mkLeaf a b c = Element a b [NodeContent $ ContentText c]
-
-mkAttr :: Text -> Text -> Attr
-mkAttr a b = (Name a Nothing Nothing, [ContentText b])
 
 xmlns_app :: Attr
 xmlns_app = (mkQName (Just "xmlns") "app", [ContentText appNS])
