@@ -65,7 +65,7 @@ xmlChannel ch =
       xmlItemURIs (channelItemURIs ch) ++ map xmlDC (channelDC ch) ++
       concat [ mb xmlUpdatePeriod (channelUpdatePeriod ch)
              , mb xmlUpdateFreq   (channelUpdateFreq ch)
-             , mb (xmlLeaf (synNS,synPrefix) "updateBase")   (channelUpdateBase ch)
+             , mb (xmlLeaf (synNS, Just synPrefix) "updateBase")   (channelUpdateBase ch)
              ] ++
       xmlContentItems (channelContent ch) ++
       xmlTopics       (channelTopics ch) ++
@@ -115,10 +115,10 @@ xmlTextInput ti =
        mkNAttr (rdfName "about") (textInputURI ti) : textInputAttrs ti}
 
 xmlDC :: DCItem -> XML.Element
-xmlDC dc = xmlLeaf (dcNS,dcPrefix) (infoToTag (dcElt dc)) (dcText dc)
+xmlDC dc = xmlLeaf (dcNS, Just dcPrefix) (infoToTag (dcElt dc)) (dcText dc)
 
 xmlUpdatePeriod :: UpdatePeriod -> XML.Element
-xmlUpdatePeriod u = xmlLeaf (synNS,synPrefix) "updatePeriod" (toStr u)
+xmlUpdatePeriod u = xmlLeaf (synNS, Just synPrefix) "updatePeriod" (toStr u)
  where
   toStr ux =
     case ux of
@@ -129,7 +129,7 @@ xmlUpdatePeriod u = xmlLeaf (synNS,synPrefix) "updatePeriod" (toStr u)
       Update_Yearly  -> "yearly"
 
 xmlUpdateFreq :: Integer -> XML.Element
-xmlUpdateFreq f = xmlLeaf (synNS,synPrefix) "updateFrequency" (show f)
+xmlUpdateFreq f = xmlLeaf (synNS, Just synPrefix) "updateFrequency" (show f)
 
 xmlContentItems :: [ContentInfo] -> [XML.Element]
 xmlContentItems [] = []
@@ -151,8 +151,8 @@ xmlContentInfo ci =
 rdfResource :: (Maybe String,Maybe String) -> String -> String -> XML.Element
 rdfResource ns t v = xmlEmpty ns t [Attr (rdfName "resource") v ]
 
-rdfValue :: [XML.Attr] -> String -> XML.Element
-rdfValue as s = (xmlLeaf (rdfNS,rdfPrefix) "value" s){elAttribs=as}
+rdfValue :: [Attr] -> String -> XML.Element
+rdfValue as s = (xmlLeaf (rdfNS, Just rdfPrefix) "value" s){elementAttributes=as}
 
 xmlTopics :: [URIString] -> [XML.Element]
 xmlTopics [] = []
@@ -188,11 +188,13 @@ xmlItem i =
       itemAttrs i
     }
 
-xmlLeaf :: (Maybe String,Maybe String) -> String -> String -> XML.Element
-xmlLeaf ns tg txt =
- blank_element{ elName = qualName ns tg
-              , elContent = [ Text blank_cdata { cdData = txt } ]
-              }
+xmlLeaf :: (Text, Maybe Text) -> Text -> Text -> XML.Element
+xmlLeaf (ns, pre) tg txt =
+ Element
+ { elementName = qualName (Just ns, pre) tg
+ , elementAttributes = []
+ , elementNodes = [ NodeContent $ ContentText txt ]
+ }
 
 xmlEmpty :: (Maybe String,Maybe String) -> String -> [Attr] -> XML.Element
 xmlEmpty ns t as = (qualNode ns t []){elementAttributes = as}
