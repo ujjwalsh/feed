@@ -121,7 +121,7 @@ getFeedHome ft =
     Feed.XMLFeed  f ->
       case findElement "channel" f of
         Just e1 -> fmap strContent $ findElement "link" e1
-        Nothing -> XML.findAttr "href"
+        Nothing -> attributeText "href"
                      =<< findChild (atomName "link") f
  where
   isSelf lr = toStr (Atom.linkRel lr) == "self"
@@ -239,7 +239,7 @@ getFeedGenerator ft =
     Feed.RSS1Feed f -> fmap dcText $ listToMaybe $ filter isSource (RSS1.channelDC (RSS1.feedChannel f))
     Feed.XMLFeed  f -> case findElement "channel" f of
       Just e1 -> fmap strContent $ findElement "generator" e1
-      Nothing -> XML.findAttr "uri"
+      Nothing -> attributeText "uri"
                    =<< findChild (atomName "generator") f
  where
         isSource dc = dcElt dc == DC_Source
@@ -266,7 +266,7 @@ getItemLink it =
     Feed.RSS1Item i -> Just (RSS1.itemLink i)
     Feed.XMLItem i  ->
         fmap strContent (findElement "link" i)
-        <|> (findChild (atomName "link") i >>= XML.findAttr "href")
+        <|> (findChild (atomName "link") i >>= attributeText "href")
  where
   isSelf lr =
     let rel = Atom.linkRel lr
@@ -340,7 +340,7 @@ getItemCommentLink it =
     Feed.RSS1Item i -> fmap dcText $ listToMaybe $ filter isRel $ RSS1.itemDC i
     Feed.XMLItem i  ->
         fmap strContent (findElement "comments" i)
-        <|> (findElement (atomName "link") i >>= XML.findAttr "href")
+        <|> (findElement (atomName "link") i >>= attributeText "href")
  where
   isReplies lr = toStr (Atom.linkRel lr) == "replies"
   isRel dc = dcElt dc == DC_Relation
