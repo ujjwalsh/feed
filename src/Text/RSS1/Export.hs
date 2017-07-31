@@ -97,7 +97,7 @@ xmlItemURIs xs =
   [qualNode (rss10NS, Nothing) "items" $
       [Elem (qualNode (rdfNS,rdfPrefix) "Seq" (map toRes xs))]]
  where
-  toRes u = Elem (xmlEmpty (rdfNS, rdfPrefix) "li" [mkNAttr (rdfName "resource") u])
+  toRes u = Elem (xmlEmpty (rdfNS, Just rdfPrefix) "li" [mkNAttr (rdfName "resource") u])
 
 xmlTextInputURI :: URIString -> XML.Element
 xmlTextInputURI u = xmlEmpty (rss10NS, Nothing) "textinput" [mkNAttr (rdfName "resource") u]
@@ -148,8 +148,8 @@ xmlContentInfo ci =
               ]))
     {elementAttributes = mb (mkNAttr (rdfName "about")) (contentURI ci)}
 
-rdfResource :: (Maybe String,Maybe String) -> String -> String -> XML.Element
-rdfResource ns t v = xmlEmpty ns t [Attr (rdfName "resource") v ]
+rdfResource :: (Text, Text) -> Text -> Text -> XML.Element
+rdfResource (uri, pre) t v = xmlEmpty (uri, Just pre) t [mkNAttr (rdfName "resource") v]
 
 rdfValue :: [Attr] -> String -> XML.Element
 rdfValue as s = (xmlLeaf (rdfNS, Just rdfPrefix) "value" s){elementAttributes=as}
@@ -196,8 +196,8 @@ xmlLeaf (ns, pre) tg txt =
  , elementNodes = [ NodeContent $ ContentText txt ]
  }
 
-xmlEmpty :: (Maybe String,Maybe String) -> String -> [Attr] -> XML.Element
-xmlEmpty ns t as = (qualNode ns t []){elementAttributes = as}
+xmlEmpty :: (Text, Maybe Text) -> Text -> [Attr] -> XML.Element
+xmlEmpty (uri, pre) t as = (qualNode (Just uri, pre) t []){elementAttributes = as}
 
 ---
 mb :: (a -> b) -> Maybe a -> [b]
