@@ -67,6 +67,7 @@ library
     Text.RSS1.Syntax
     Text.RSS1.Utils
   other-modules:
+    Data.Text.Util
     Data.XML.Compat
   build-depends:
       base >= 4 && < 4.11

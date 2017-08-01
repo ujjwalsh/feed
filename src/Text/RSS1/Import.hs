@@ -21,6 +21,7 @@ import Text.DublinCore.Types
 
 import Data.Maybe (mapMaybe, fromMaybe)
 import Control.Monad (guard,mplus)
+import Data.Text.Util
 
 ---
 elementToFeed :: XML.Element -> Maybe Feed
@@ -155,7 +156,7 @@ elementToChannel e = do
 addSyndication :: XML.Element -> Channel -> Channel
 addSyndication e ch =
   ch{ channelUpdatePeriod = fmap toUpdatePeriod $ pQLeaf' (synNS,synPrefix) "updatePeriod" e
-    , channelUpdateFreq   = fmap read $ pQLeaf' (synNS,synPrefix) "updateFrequency" e
+    , channelUpdateFreq   = readInt =<< pQLeaf' (synNS,synPrefix) "updateFrequency" e
     , channelUpdateBase   = pQLeaf' (synNS,synPrefix) "updateBase" e
     }
  where
