@@ -55,10 +55,10 @@ import Data.Text (Text, dropWhile)
 import Data.Text.Util
 
 pNodes :: Text -> [XML.Element] -> [XML.Element]
-pNodes x es = filter ((qualName x ==) . elementName) es
+pNodes x = filter ((qualName x ==) . elementName)
 
 pQNodes :: Name -> [XML.Element] -> [XML.Element]
-pQNodes x es = filter ((x ==) . elementName) es
+pQNodes x = filter ((x ==) . elementName)
 
 pNode :: Text -> [XML.Element] -> Maybe XML.Element
 pNode x es = listToMaybe (pNodes x es)
@@ -70,10 +70,10 @@ pLeaf :: Text -> [XML.Element] -> Maybe Text
 pLeaf x es = strContent `fmap` pNode x es
 
 pQLeaf :: Name -> [XML.Element] -> Maybe Text
-pQLeaf x es = strContent `fmap` (pQNode x es)
+pQLeaf x es = strContent `fmap` pQNode x es
 
 pAttr :: Text -> XML.Element -> Maybe Text
-pAttr x e = attributeText (qualName x) e
+pAttr x = attributeText (qualName x)
 
 pMany :: Text -> (XML.Element -> Maybe a) -> [XML.Element] -> [a]
 pMany p f es = mapMaybe f (pNodes p es)

@@ -21,6 +21,7 @@ module Text.Feed.Translate
 import Prelude ()
 import Prelude.Compat
 
+import Control.Arrow ((&&&))
 import Text.Atom.Feed as Atom
 import Text.Feed.Constructor
 import Text.Feed.Types as Feed
@@ -74,7 +75,8 @@ toAtomItem it =
     XMLItem {} -> error "toAtomItem: unimplemented (from shallow XML rep.)"
     Feed.RSSItem ri -> foldl (\oi f -> f oi) outIt pipeline_rss_atom
       where outIt =
-              (flip withAtomEntry)
+              flip
+                withAtomEntry
                 (newItem AtomKind)
                 (\e ->
                    e {Atom.entryOther = RSS.rssItemOther ri, Atom.entryAttrs = RSS.rssItemAttrs ri})
@@ -99,7 +101,7 @@ toAtomItem it =
             mb f (Just v) = f v
             ls _ [] = id
         -- hack, only used for cats, so specialize:
-            ls f xs = f (map (\c -> (rssCategoryValue c, rssCategoryDomain c)) xs)
+            ls f xs = f (map (rssCategoryValue &&& rssCategoryDomain) xs)
 {-
        pipeline_rss_atom =
         [ withItemTitle    (rssItemTitle ri)

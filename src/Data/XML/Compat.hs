@@ -1,7 +1,6 @@
 {-# LANGUAGE FlexibleInstances #-}
 
 -- | Compatibility interface between `xml` and `xml-types`.
-
 module Data.XML.Compat where
 
 import Prelude ()

@@ -27,6 +27,6 @@ testFullRss20Parse = testCase "parse a complete rss 2.0 file" testRss20
   where
     testRss20 :: Assertion
     testRss20 = do
-      print . (fmap (renderText def)) . elementToDoc . xmlFeed =<<
+      print . fmap (renderText def) . elementToDoc . xmlFeed =<<
         parseFeedFromFile =<< getDataFileName "tests/files/rss20.xml"
       assertBool "OK" True

@@ -24,7 +24,7 @@ examplePosts =
 
 feed :: [(Text, Text, Text)] -> Maybe Text
 feed posts =
-  (fmap (toStrict . renderText def)) $
+  fmap (toStrict . renderText def) $
   elementToDoc $
   Export.xmlFeed $
   fd {Atom.feedEntries = fmap toEntry posts, Atom.feedLinks = [Atom.nullLink "http://example.com/"]}

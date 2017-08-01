@@ -4,7 +4,6 @@ import Prelude ()
 import Prelude.Compat
 
 import Data.XML.Types as XML
-import Test.HUnit (Assertion, assertEqual)
 import Test.Framework (Test, mutuallyExclusive, testGroup)
 import Test.Framework.Providers.HUnit (testCase)
 import Test.HUnit (Assertion, assertEqual)

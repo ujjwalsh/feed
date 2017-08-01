@@ -29,7 +29,7 @@ testFullAtomParse = testCase "parse a complete atom file" testAtom
   where
     testAtom :: Assertion
     testAtom = do
-      print . (fmap (renderText def)) . elementToDoc . xmlFeed =<<
+      print . fmap (renderText def) . elementToDoc . xmlFeed =<<
         parseFeedFromFile =<< getDataFileName "tests/files/atom.xml"
       assertBool "OK" True
 

@@ -69,7 +69,7 @@ valid :: ValidatorResult
 valid = VLeaf []
 
 mkTree :: [(Bool, String)] -> [ValidatorResult] -> ValidatorResult
-mkTree as bs = VNode as bs
+mkTree = VNode
 
 flattenT :: VTree a -> [a]
 flattenT (VLeaf xs) = xs
@@ -116,7 +116,7 @@ checkContents :: Element -> ValidatorResult
 checkContents e =
   case pNodes "content" (elementChildren e) of
     [] -> valid
-    [c] -> mkTree [] $ [checkContent c]
+    [c] -> mkTree [] [checkContent c]
     cs ->
       mkTree
         (flattenT
@@ -134,12 +134,12 @@ checkContentLink e =
       case pNodes "link" (elementChildren e) of
         [] ->
           demand
-            ("An 'entry' element with no 'content' element must have at least one 'link-rel' element")
+            "An 'entry' element with no 'content' element must have at least one 'link-rel' element"
         xs ->
           case filter (== "alternate") $ mapMaybe (pAttr "rel") xs of
             [] ->
               demand
-                ("An 'entry' element with no 'content' element must have at least one 'link-rel' element")
+                "An 'entry' element with no 'content' element must have at least one 'link-rel' element"
             _ -> valid
     _ -> valid
 
@@ -149,17 +149,16 @@ checkLinks e =
     xs ->
       case map fst $
            filter (\(_, n) -> n == "alternate") $
-           mapMaybe (\ex -> fmap (\x -> (ex, x)) $ pAttr "rel" ex) xs of
+           mapMaybe (\ex -> (\x -> (ex, x)) <$> pAttr "rel" ex) xs of
         xs1 ->
           let jmb (Just x) (Just y) = Just (x, y)
               jmb _ _ = Nothing
           in case mapMaybe (\ex -> pAttr "type" ex `jmb` pAttr "hreflang" ex) xs1 of
                xs2 ->
-                 case any (\x -> length x > 1) (group xs2) of
-                   True ->
-                     demand
-                       ("An 'entry' element cannot have duplicate 'link-rel-alternate-type-hreflang' elements")
-                   _ -> valid
+                 if any (\x -> length x > 1) (group xs2)
+                   then demand
+                          "An 'entry' element cannot have duplicate 'link-rel-alternate-type-hreflang' elements"
+                   else valid
 
 checkId :: Element -> ValidatorResult
 checkId e =
@@ -243,16 +242,16 @@ checkContent e =
         "text" ->
           case elementChildren e of
             [] -> valid
-            _ -> demand ("content with type 'text' cannot have child elements, text only.")
+            _ -> demand "content with type 'text' cannot have child elements, text only."
         "html" ->
           case elementChildren e of
             [] -> valid
-            _ -> demand ("content with type 'html' cannot have child elements, text only.")
+            _ -> demand "content with type 'html' cannot have child elements, text only."
         "xhtml" ->
           case elementChildren e of
             [] -> valid
             [_] -> valid -- ToDo: check that it is a 'div'.
-            _ds -> demand ("content with type 'xhtml' should only contain one 'div' child.")
+            _ds -> demand "content with type 'xhtml' should only contain one 'div' child."
         _ -> valid
     ]
   where
@@ -309,7 +308,7 @@ checkTerm e =
       demand ("only one 'term' field expected in 'category' element, found: " ++ show (length xs))
 
 checkAuthor :: Element -> ValidatorResult
-checkAuthor e = checkPerson e
+checkAuthor = checkPerson
 
 checkPerson :: Element -> ValidatorResult
 checkPerson e = mkTree (flattenT $ checkName e) [checkEmail e, checkUri e]

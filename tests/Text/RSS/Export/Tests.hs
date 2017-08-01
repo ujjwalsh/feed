@@ -5,7 +5,6 @@ import Prelude.Compat
 
 import Data.Text (pack)
 import Data.XML.Types as XML
-import Test.HUnit (Assertion, assertEqual)
 import Test.Framework (Test, mutuallyExclusive, testGroup)
 import Test.Framework.Providers.HUnit (testCase)
 import Test.HUnit (Assertion, assertEqual)
@@ -32,8 +31,6 @@ rssExportTests =
         , testCreateXMLLeaf
         ]
     ]
-
-type String = [Char]
 
 testCreateXMLImage :: Test
 testCreateXMLImage = testCase "should create image as xml" testImage
@@ -62,47 +59,47 @@ testCreateXMLImage = testCase "should create image as xml" testImage
             , elementAttributes = [] :: [Attr]
             , elementNodes =
                 [ NodeElement
-                    (XML.Element
-                     { elementName = createQName "url"
-                     , elementAttributes = [] :: [Attr]
-                     , elementNodes = [createContent "image url"]
-                     })
+                    XML.Element
+                    { elementName = createQName "url"
+                    , elementAttributes = [] :: [Attr]
+                    , elementNodes = [createContent "image url"]
+                    }
                 , NodeElement
-                    (XML.Element
-                     { elementName = createQName "title"
-                     , elementAttributes = [] :: [Attr]
-                     , elementNodes = [createContent "image title"]
-                     })
+                    XML.Element
+                    { elementName = createQName "title"
+                    , elementAttributes = [] :: [Attr]
+                    , elementNodes = [createContent "image title"]
+                    }
                 , NodeElement
-                    (XML.Element
-                     { elementName = createQName "link"
-                     , elementAttributes = [] :: [Attr]
-                     , elementNodes = [createContent "image link"]
-                     })
+                    XML.Element
+                    { elementName = createQName "link"
+                    , elementAttributes = [] :: [Attr]
+                    , elementNodes = [createContent "image link"]
+                    }
                 , NodeElement
-                    (XML.Element
-                     { elementName = createQName "width"
-                     , elementAttributes = [] :: [Attr]
-                     , elementNodes = [createContent "100"]
-                     })
+                    XML.Element
+                    { elementName = createQName "width"
+                    , elementAttributes = [] :: [Attr]
+                    , elementNodes = [createContent "100"]
+                    }
                 , NodeElement
-                    (XML.Element
-                     { elementName = createQName "height"
-                     , elementAttributes = [] :: [Attr]
-                     , elementNodes = [createContent "200"]
-                     })
+                    XML.Element
+                    { elementName = createQName "height"
+                    , elementAttributes = [] :: [Attr]
+                    , elementNodes = [createContent "200"]
+                    }
                 , NodeElement
-                    (XML.Element
-                     { elementName = createQName "description"
-                     , elementAttributes = [] :: [Attr]
-                     , elementNodes = [createContent "image desc"]
-                     })
+                    XML.Element
+                    { elementName = createQName "description"
+                    , elementAttributes = [] :: [Attr]
+                    , elementNodes = [createContent "image desc"]
+                    }
                 , NodeElement
-                    (XML.Element
-                     { elementName = createQName "other"
-                     , elementAttributes = [] :: [Attr]
-                     , elementNodes = [createContent "image other"]
-                     })
+                    XML.Element
+                    { elementName = createQName "other"
+                    , elementAttributes = [] :: [Attr]
+                    , elementNodes = [createContent "image other"]
+                    }
                 ]
             }
       assertEqual "image" expected (xmlImage image)
@@ -164,35 +161,35 @@ testCreateXMLTextInput = testCase "should create text input as xml" textInput
             , elementAttributes = [attr] :: [Attr]
             , elementNodes =
                 [ NodeElement
-                    (XML.Element
-                     { elementName = createQName "title"
-                     , elementAttributes = [] :: [Attr]
-                     , elementNodes = [createContent "title"]
-                     })
+                    XML.Element
+                    { elementName = createQName "title"
+                    , elementAttributes = [] :: [Attr]
+                    , elementNodes = [createContent "title"]
+                    }
                 , NodeElement
-                    (XML.Element
-                     { elementName = createQName "description"
-                     , elementAttributes = [] :: [Attr]
-                     , elementNodes = [createContent "desc"]
-                     })
+                    XML.Element
+                    { elementName = createQName "description"
+                    , elementAttributes = [] :: [Attr]
+                    , elementNodes = [createContent "desc"]
+                    }
                 , NodeElement
-                    (XML.Element
-                     { elementName = createQName "name"
-                     , elementAttributes = [] :: [Attr]
-                     , elementNodes = [createContent "name"]
-                     })
+                    XML.Element
+                    { elementName = createQName "name"
+                    , elementAttributes = [] :: [Attr]
+                    , elementNodes = [createContent "name"]
+                    }
                 , NodeElement
-                    (XML.Element
-                     { elementName = createQName "link"
-                     , elementAttributes = [] :: [Attr]
-                     , elementNodes = [createContent "http://url.com"]
-                     })
+                    XML.Element
+                    { elementName = createQName "link"
+                    , elementAttributes = [] :: [Attr]
+                    , elementNodes = [createContent "http://url.com"]
+                    }
                 , NodeElement
-                    (XML.Element
-                     { elementName = createQName "leaf"
-                     , elementAttributes = [] :: [Attr]
-                     , elementNodes = [createContent "text for leaf"]
-                     })
+                    XML.Element
+                    { elementName = createQName "leaf"
+                    , elementAttributes = [] :: [Attr]
+                    , elementNodes = [createContent "text for leaf"]
+                    }
                 ]
             }
       assertEqual "text input" expected (xmlTextInput input)
@@ -227,11 +224,11 @@ testCreateXMLSkipHours = testCase "should create skip hours as xml" skipHours
             where
               hourElem ind =
                 NodeElement
-                  (XML.Element
-                   { elementName = createQName "hour"
-                   , elementAttributes = [] :: [Attr]
-                   , elementNodes = [createContent $ pack $ show $ hoursToSkip !! ind]
-                   })
+                  XML.Element
+                  { elementName = createQName "hour"
+                  , elementAttributes = [] :: [Attr]
+                  , elementNodes = [createContent $ pack $ show $ hoursToSkip !! ind]
+                  }
       assertEqual "skip hours" expected (xmlSkipHours hoursToSkip)
 
 testCreateEmptyXMLSkipDays :: Test
@@ -264,11 +261,11 @@ testCreateXMLSkipDays = testCase "should create skip days as xml" skipDays
             where
               dayElem ind =
                 NodeElement
-                  (XML.Element
-                   { elementName = createQName "day"
-                   , elementAttributes = [] :: [Attr]
-                   , elementNodes = [createContent $ daysToSkip !! ind]
-                   })
+                  XML.Element
+                  { elementName = createQName "day"
+                  , elementAttributes = [] :: [Attr]
+                  , elementNodes = [createContent $ daysToSkip !! ind]
+                  }
       assertEqual "skip days" expected (xmlSkipDays daysToSkip)
 
 testCreateXMLAttr :: Test

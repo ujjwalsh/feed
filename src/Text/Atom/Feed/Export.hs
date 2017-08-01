@@ -73,7 +73,7 @@ atomThreadNS :: Text
 atomThreadNS = "http://purl.org/syndication/thread/1.0"
 
 blank_element :: Name -> [Node] -> XML.Element
-blank_element name content = XML.Element name [] content
+blank_element name = XML.Element name []
 
 xmlns_atom :: Attr
 xmlns_atom = (qn, [ContentText atomNS])
@@ -108,7 +108,7 @@ atomAttr :: Text -> Text -> Attr
 atomAttr x y = (atomName x, [ContentText y])
 
 atomNode :: Text -> [Node] -> XML.Element
-atomNode x xs = blank_element (atomName x) xs
+atomNode x = blank_element (atomName x)
 
 atomLeaf :: Text -> Text -> XML.Element
 atomLeaf tag txt = blank_element (atomName tag) [NodeContent $ ContentText txt]
@@ -121,7 +121,7 @@ atomThreadAttr :: Text -> Text -> Attr
 atomThreadAttr x y = (atomThreadName x, [ContentText y])
 
 atomThreadNode :: Text -> [Node] -> XML.Element
-atomThreadNode x xs = blank_element (atomThreadName x) xs
+atomThreadNode x = blank_element (atomThreadName x)
 
 atomThreadLeaf :: Text -> Text -> XML.Element
 atomThreadLeaf tag txt = blank_element (atomThreadName tag) [NodeContent $ ContentText txt]
@@ -173,8 +173,7 @@ xmlContent cont =
       (atomNode "content" [NodeElement x]) {elementAttributes = [atomAttr "type" "xhtml"]}
     MixedContent mbTy cs -> (atomNode "content" cs) {elementAttributes = mb (atomAttr "type") mbTy}
     ExternalContent mbTy src ->
-      (atomNode "content" [])
-      {elementAttributes = [atomAttr "src" src] ++ mb (atomAttr "type") mbTy}
+      (atomNode "content" []) {elementAttributes = atomAttr "src" src : mb (atomAttr "type") mbTy}
 
 xmlCategory :: Category -> XML.Element
 xmlCategory c =
@@ -244,31 +243,31 @@ xmlInReplyTotal irt =
   {elementAttributes = replyToTotalOther irt}
 
 xmlId :: Text -> XML.Element
-xmlId i = atomLeaf "id" i
+xmlId = atomLeaf "id"
 
 xmlIcon :: URI -> XML.Element
-xmlIcon i = atomLeaf "icon" i
+xmlIcon = atomLeaf "icon"
 
 xmlLogo :: URI -> XML.Element
-xmlLogo l = atomLeaf "logo" l
+xmlLogo = atomLeaf "logo"
 
 xmlUpdated :: Date -> XML.Element
-xmlUpdated u = atomLeaf "updated" u
+xmlUpdated = atomLeaf "updated"
 
 xmlPublished :: Date -> XML.Element
-xmlPublished p = atomLeaf "published" p
+xmlPublished = atomLeaf "published"
 
 xmlRights :: TextContent -> XML.Element
-xmlRights r = xmlTextContent "rights" r
+xmlRights = xmlTextContent "rights"
 
 xmlTitle :: TextContent -> XML.Element
-xmlTitle r = xmlTextContent "title" r
+xmlTitle = xmlTextContent "title"
 
 xmlSubtitle :: TextContent -> XML.Element
-xmlSubtitle s = xmlTextContent "subtitle" s
+xmlSubtitle = xmlTextContent "subtitle"
 
 xmlSummary :: TextContent -> XML.Element
-xmlSummary s = xmlTextContent "summary" s
+xmlSummary = xmlTextContent "summary"
 
 xmlTextContent :: Text -> TextContent -> XML.Element
 xmlTextContent tg t =

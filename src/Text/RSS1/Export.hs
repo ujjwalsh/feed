@@ -37,15 +37,16 @@ qualNode' (uri, pre) = qualNode (Just uri, Just pre)
 xmlFeed :: Feed -> XML.Element
 xmlFeed f =
   (qualNode' (rdfNS, rdfPrefix) "RDF" $
-   map NodeElement $
-   (concat
-      [ [xmlChannel (feedChannel f)]
-      , mb xmlImage (feedImage f)
-      , map xmlItem (feedItems f)
-      , mb xmlTextInput (feedTextInput f)
-      , map xmlTopic (feedTopics f)
-      , feedOther f
-      ]))
+   map
+     NodeElement
+     (concat
+        [ [xmlChannel (feedChannel f)]
+        , mb xmlImage (feedImage f)
+        , map xmlItem (feedItems f)
+        , mb xmlTextInput (feedTextInput f)
+        , map xmlTopic (feedTopics f)
+        , feedOther f
+        ]))
         -- should we expect these to be derived by the XML pretty printer..?
   { elementAttributes =
       nub $
@@ -60,21 +61,22 @@ xmlFeed f =
 xmlChannel :: Channel -> XML.Element
 xmlChannel ch =
   (qualNode (Just rss10NS, Nothing) "channel" $
-   map NodeElement $
-   ([ xmlLeaf (rss10NS, Nothing) "title" (channelTitle ch)
-    , xmlLeaf (rss10NS, Nothing) "link" (channelLink ch)
-    , xmlLeaf (rss10NS, Nothing) "description" (channelDesc ch)
-    ] ++
-    mb xmlTextInputURI (channelTextInputURI ch) ++
-    mb xmlImageURI (channelImageURI ch) ++
-    xmlItemURIs (channelItemURIs ch) ++
-    map xmlDC (channelDC ch) ++
-    concat
-      [ mb xmlUpdatePeriod (channelUpdatePeriod ch)
-      , mb xmlUpdateFreq (channelUpdateFreq ch)
-      , mb (xmlLeaf (synNS, Just synPrefix) "updateBase") (channelUpdateBase ch)
+   map
+     NodeElement
+     ([ xmlLeaf (rss10NS, Nothing) "title" (channelTitle ch)
+      , xmlLeaf (rss10NS, Nothing) "link" (channelLink ch)
+      , xmlLeaf (rss10NS, Nothing) "description" (channelDesc ch)
       ] ++
-    xmlContentItems (channelContent ch) ++ xmlTopics (channelTopics ch) ++ channelOther ch))
+      mb xmlTextInputURI (channelTextInputURI ch) ++
+      mb xmlImageURI (channelImageURI ch) ++
+      xmlItemURIs (channelItemURIs ch) ++
+      map xmlDC (channelDC ch) ++
+      concat
+        [ mb xmlUpdatePeriod (channelUpdatePeriod ch)
+        , mb xmlUpdateFreq (channelUpdateFreq ch)
+        , mb (xmlLeaf (synNS, Just synPrefix) "updateBase") (channelUpdateBase ch)
+        ] ++
+      xmlContentItems (channelContent ch) ++ xmlTopics (channelTopics ch) ++ channelOther ch))
   { elementAttributes =
       mkNAttr (qualName' (rdfNS, rdfPrefix) "about") (channelURI ch) : channelAttrs ch
   }
@@ -85,19 +87,22 @@ xmlImageURI u = xmlEmpty (rss10NS, Nothing) "image" [mkNAttr (rdfName "resource"
 xmlImage :: Image -> XML.Element
 xmlImage i =
   (qualNode (Just rss10NS, Nothing) "image" $
-   map NodeElement $
-   ([ xmlLeaf (rss10NS, Nothing) "title" (imageTitle i)
-    , xmlLeaf (rss10NS, Nothing) "url" (imageURL i)
-    , xmlLeaf (rss10NS, Nothing) "link" (imageLink i)
-    ] ++
-    map xmlDC (imageDC i) ++ imageOther i))
+   map
+     NodeElement
+     ([ xmlLeaf (rss10NS, Nothing) "title" (imageTitle i)
+      , xmlLeaf (rss10NS, Nothing) "url" (imageURL i)
+      , xmlLeaf (rss10NS, Nothing) "link" (imageLink i)
+      ] ++
+      map xmlDC (imageDC i) ++ imageOther i))
   {elementAttributes = mkNAttr (qualName' (rdfNS, rdfPrefix) "about") (imageURI i) : imageAttrs i}
 
 xmlItemURIs :: [URIString] -> [XML.Element]
 xmlItemURIs [] = []
 xmlItemURIs xs =
-  [ qualNode (Just rss10NS, Nothing) "items" $
-    [NodeElement (qualNode' (rdfNS, rdfPrefix) "Seq" (map toRes xs))]
+  [ qualNode
+      (Just rss10NS, Nothing)
+      "items"
+      [NodeElement (qualNode' (rdfNS, rdfPrefix) "Seq" (map toRes xs))]
   ]
   where
     toRes u = NodeElement (xmlEmpty (rdfNS, Just rdfPrefix) "li" [mkNAttr (rdfName "resource") u])
@@ -153,12 +158,13 @@ xmlContentItems xs =
 xmlContentInfo :: ContentInfo -> XML.Element
 xmlContentInfo ci =
   (qualNode' (conNS, conPrefix) "item" $
-   map NodeElement $
-   (concat
-      [ mb (rdfResource (conNS, conPrefix) "format") (contentFormat ci)
-      , mb (rdfResource (conNS, conPrefix) "encoding") (contentEncoding ci)
-      , mb (rdfValue []) (contentValue ci)
-      ]))
+   map
+     NodeElement
+     (concat
+        [ mb (rdfResource (conNS, conPrefix) "format") (contentFormat ci)
+        , mb (rdfResource (conNS, conPrefix) "encoding") (contentEncoding ci)
+        , mb (rdfValue []) (contentValue ci)
+        ]))
   {elementAttributes = mb (mkNAttr (rdfName "about")) (contentURI ci)}
 
 rdfResource :: (Text, Text) -> Text -> Text -> XML.Element
@@ -174,31 +180,35 @@ xmlTopics xs =
       (taxNS, taxPrefix)
       "topics"
       [ NodeElement
-          (qualNode' (rdfNS, rdfPrefix) "Bag" $
-           (map (NodeElement . rdfResource (rdfNS, rdfPrefix) "li") xs))
+          (qualNode'
+             (rdfNS, rdfPrefix)
+             "Bag"
+             (map (NodeElement . rdfResource (rdfNS, rdfPrefix) "li") xs))
       ]
   ]
 
 xmlTopic :: TaxonomyTopic -> XML.Element
 xmlTopic tt =
   (qualNode' (taxNS, taxPrefix) "topic" $
-   map NodeElement $
-   (xmlLeaf (rss10NS, Nothing) "link" (taxonomyLink tt) :
-    mb (xmlLeaf (rss10NS, Nothing) "title") (taxonomyTitle tt) ++
-    mb (xmlLeaf (rss10NS, Nothing) "description") (taxonomyDesc tt) ++
-    xmlTopics (taxonomyTopics tt) ++ map xmlDC (taxonomyDC tt) ++ taxonomyOther tt))
+   map
+     NodeElement
+     (xmlLeaf (rss10NS, Nothing) "link" (taxonomyLink tt) :
+      mb (xmlLeaf (rss10NS, Nothing) "title") (taxonomyTitle tt) ++
+      mb (xmlLeaf (rss10NS, Nothing) "description") (taxonomyDesc tt) ++
+      xmlTopics (taxonomyTopics tt) ++ map xmlDC (taxonomyDC tt) ++ taxonomyOther tt))
   {elementAttributes = [mkNAttr (rdfName "about") (taxonomyURI tt)]}
 
 xmlItem :: Item -> XML.Element
 xmlItem i =
   (qualNode (Just rss10NS, Nothing) "item" $
-   map NodeElement $
-   ([ xmlLeaf (rss10NS, Nothing) "title" (itemTitle i)
-    , xmlLeaf (rss10NS, Nothing) "link" (itemLink i)
-    ] ++
-    mb (xmlLeaf (rss10NS, Nothing) "description") (itemDesc i) ++
-    map xmlDC (itemDC i) ++
-    xmlTopics (itemTopics i) ++ map xmlContentInfo (itemContent i) ++ itemOther i))
+   map
+     NodeElement
+     ([ xmlLeaf (rss10NS, Nothing) "title" (itemTitle i)
+      , xmlLeaf (rss10NS, Nothing) "link" (itemLink i)
+      ] ++
+      mb (xmlLeaf (rss10NS, Nothing) "description") (itemDesc i) ++
+      map xmlDC (itemDC i) ++
+      xmlTopics (itemTopics i) ++ map xmlContentInfo (itemContent i) ++ itemOther i))
   {elementAttributes = mkNAttr (qualName' (rdfNS, rdfPrefix) "about") (itemURI i) : itemAttrs i}
 
 xmlLeaf :: (Text, Maybe Text) -> Text -> Text -> XML.Element

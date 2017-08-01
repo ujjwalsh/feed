@@ -54,10 +54,10 @@ import Text.Atom.Feed.Export (atomName, atomThreadName)
 import qualified Data.Text as T
 
 pNodes :: Text -> [XML.Element] -> [XML.Element]
-pNodes x es = filter ((atomName x ==) . elementName) es
+pNodes x = filter ((atomName x ==) . elementName)
 
 pQNodes :: Name -> [XML.Element] -> [XML.Element]
-pQNodes x es = filter ((x ==) . elementName) es
+pQNodes x = filter ((x ==) . elementName)
 
 pNode :: Text -> [XML.Element] -> Maybe XML.Element
 pNode x es = listToMaybe (pNodes x es)
@@ -72,7 +72,7 @@ pQLeaf :: Name -> [XML.Element] -> Maybe Text
 pQLeaf x es = (T.concat . elementText) `fmap` pQNode x es
 
 pAttr :: Text -> XML.Element -> Maybe Text
-pAttr x e = (`attributeText` e) =<< fst <$> (find sameAttr $ elementAttributes e)
+pAttr x e = (`attributeText` e) =<< fst <$> find sameAttr (elementAttributes e)
   where
     ax = atomName x
     sameAttr (k, _) = k == ax || (not (isJust (nameNamespace k)) && nameLocalName k == x)
@@ -120,8 +120,8 @@ elementFeed e = do
     , feedAttrs = other_as (elementAttributes e)
     }
   where
-    other_es es = filter (\el -> not (elementName el `elem` known_elts)) es
-    other_as as = filter (\a -> not (fst a `elem` known_attrs)) as
+    other_es = filter (\el -> not (elementName el `elem` known_elts))
+    other_as = filter (\a -> not (fst a `elem` known_attrs))
     -- let's have them all (including xml:base and xml:lang + xmlns: stuff)
     known_attrs = []
     known_elts =
@@ -216,7 +216,7 @@ pLink e = do
     , linkOther = []
     }
   where
-    other_as as = filter (\a -> not (fst a `elem` known_attrs)) as
+    other_as = filter (\a -> not (fst a `elem` known_attrs))
     known_attrs = map atomName ["href", "rel", "type", "hreflang", "title", "length"]
 
 pEntry :: XML.Element -> Maybe Entry
@@ -245,7 +245,7 @@ pEntry e = do
     , entryOther = [] -- ?
     }
   where
-    other_as as = filter (\a -> not (fst a `elem` known_attrs)) as
+    other_as = filter (\a -> not (fst a `elem` known_attrs))
     -- let's have them all (including xml:base and xml:lang + xmlns: stuff)
     known_attrs = []
 

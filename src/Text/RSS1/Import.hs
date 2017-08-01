@@ -31,7 +31,7 @@ import Data.Text.Util
 elementToFeed :: XML.Element -> Maybe Feed
 elementToFeed e = do
   guard (elementName e == rdfName "RDF")
-  ver <- pAttr (Nothing, Nothing) "xmlns" e `mplus` (Just rss10NS)
+  ver <- pAttr (Nothing, Nothing) "xmlns" e `mplus` Just rss10NS
   ch <- pNode "channel" e >>= elementToChannel
   let mbImg = pNode "image" e >>= elementToImage
   let is = fromMaybe [] $ fmap elementToItems $ pNode "items" e
@@ -54,7 +54,7 @@ elementToFeed e = do
     }
 
 elementToItems :: XML.Element -> [URIString]
-elementToItems e = seqLeaves e
+elementToItems = seqLeaves
 
 elementToTextInput :: XML.Element -> Maybe TextInputInfo
 elementToTextInput e = do
@@ -65,7 +65,7 @@ elementToTextInput e = do
   na <- pQLeaf (rss10NS, Nothing) "name" e
   li <- pQLeaf (rss10NS, Nothing) "link" e
   let dcs = mapMaybe elementToDC es
-  return $
+  return
     TextInputInfo
     { textInputURI = uri
     , textInputTitle = ti
@@ -131,10 +131,7 @@ elementToChannel e = do
   li <- pLeaf "link" e
   de <- pLeaf "description" e
   let mbImg = pLeaf "image" e
-  let is =
-        case fmap seqLeaves $ pNode "items" e of
-          Nothing -> []
-          Just ss -> ss
+  let is = fromMaybe [] (fmap seqLeaves $ pNode "items" e)
   let tinp = pLeaf "textinput" e
   let dcs = mapMaybe elementToDC es
   let tos = fromMaybe [] (fmap bagLeaves $ pQNode (qualName' (taxNS, taxPrefix) "topics") e)

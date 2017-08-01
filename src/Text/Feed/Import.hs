@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE CPP #-}
-{-# LANGUAGE RecordWildCards #-}
+
 
 --------------------------------------------------------------------
 -- |
@@ -53,6 +53,7 @@ import System.IO.UTF8 as UTF8 (readFile)
 utf8readFile :: FilePath -> IO String
 utf8readFile = UTF8.readFile
 #endif
+
 class XmlSource s where
   parseXmlSource :: s -> Maybe XML.Element
 
@@ -97,14 +98,14 @@ parseFeedSource = parseFeedWithParser parseXmlSource
 -- | 'readRSS2 elt' tries to derive an RSS2.x, RSS-0.9x feed document
 -- from the XML element @e@.
 readRSS2 :: XML.Element -> Maybe Feed
-readRSS2 e = fmap RSSFeed $ RSS.elementToRSS e
+readRSS2 e = RSSFeed <$> RSS.elementToRSS e
 
 -- | 'readRSS1 elt' tries to derive an RSS1.0 feed document
 -- from the XML element @e@.
 readRSS1 :: XML.Element -> Maybe Feed
-readRSS1 e = fmap RSS1Feed $ RSS1.elementToFeed e
+readRSS1 e = RSS1Feed <$> RSS1.elementToFeed e
 
 -- | 'readAtom elt' tries to derive an Atom feed document
 -- from the XML element @e@.
 readAtom :: XML.Element -> Maybe Feed
-readAtom e = fmap AtomFeed $ Atom.elementFeed e
+readAtom e = AtomFeed <$> Atom.elementFeed e
