@@ -17,7 +17,9 @@ module Text.RSS1.Utils
   , pQNode
   , pLeaf
   , pQLeaf
+  , pQLeaf'
   , pAttr
+  , pAttr'
   , pMany
   , children
   , qualName
@@ -64,11 +66,17 @@ pQNode x e    = listToMaybe (pQNodes x e)
 pLeaf        :: Text -> XML.Element -> Maybe Text
 pLeaf x e    = strContent `fmap` pQNode (qualName (Just rss10NS, Nothing) x) e
 
-pQLeaf        :: (Maybe Text,Maybe Text) -> Text -> XML.Element -> Maybe Text
-pQLeaf ns x e = strContent `fmap` pQNode (qualName ns x) e
+pQLeaf'        :: (Text, Text) -> Text -> XML.Element -> Maybe Text
+pQLeaf' (ns, pre) = pQLeaf (ns, Just pre)
+
+pQLeaf        :: (Text, Maybe Text) -> Text -> XML.Element -> Maybe Text
+pQLeaf (ns, pre) x e = strContent `fmap` pQNode (qualName (Just ns, pre) x) e
 
 pAttr        :: (Maybe Text, Maybe Text) -> Text -> XML.Element -> Maybe Text
 pAttr ns x   = attributeText (qualName ns x)
+
+pAttr'        :: (Text, Text) -> Text -> XML.Element -> Maybe Text
+pAttr' (ns, pre) = pAttr (Just ns, Just pre)
 
 pMany        :: (Maybe Text,Maybe Text) -> Text -> (XML.Element -> Maybe a) -> XML.Element -> [a]
 pMany ns p f e  = mapMaybe f (pQNodes (qualName ns p) e)
