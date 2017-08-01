@@ -37,7 +37,7 @@ qualNode' (uri, pre) = qualNode (Just uri, Just pre)
 ---
 xmlFeed :: Feed -> XML.Element
 xmlFeed f =
-  (qualNode' (rdfNS, rdfPrefix) "RDF" $ map Elem $
+  (qualNode' (rdfNS, rdfPrefix) "RDF" $ map NodeElement $
     (concat  [ [xmlChannel (feedChannel f)]
              , mb xmlImage (feedImage f)
              , map xmlItem (feedItems f)
@@ -59,7 +59,7 @@ xmlFeed f =
 
 xmlChannel :: Channel -> XML.Element
 xmlChannel ch =
-  (qualNode (Just rss10NS,Nothing) "channel" $ map Elem $
+  (qualNode (Just rss10NS,Nothing) "channel" $ map NodeElement $
      ([ xmlLeaf  (rss10NS,Nothing) "title" (channelTitle ch)
       , xmlLeaf  (rss10NS,Nothing) "link"  (channelLink ch)
       , xmlLeaf  (rss10NS,Nothing) "description" (channelDesc ch)
@@ -84,7 +84,7 @@ xmlImageURI u = xmlEmpty (rss10NS,Nothing) "image" [mkNAttr (rdfName "resource")
 
 xmlImage :: Image -> XML.Element
 xmlImage i =
- (qualNode (Just rss10NS, Nothing) "image" $ map Elem $
+ (qualNode (Just rss10NS, Nothing) "image" $ map NodeElement $
     ([ xmlLeaf  (rss10NS,Nothing) "title" (imageTitle i)
      ,  xmlLeaf (rss10NS,Nothing) "url"   (imageURL i)
      , xmlLeaf  (rss10NS,Nothing) "link"  (imageLink i)
@@ -99,16 +99,16 @@ xmlItemURIs :: [URIString] -> [XML.Element]
 xmlItemURIs [] = []
 xmlItemURIs xs =
   [qualNode (Just rss10NS, Nothing) "items" $
-      [Elem (qualNode' (rdfNS, rdfPrefix) "Seq" (map toRes xs))]]
+      [NodeElement (qualNode' (rdfNS, rdfPrefix) "Seq" (map toRes xs))]]
  where
-  toRes u = Elem (xmlEmpty (rdfNS, Just rdfPrefix) "li" [mkNAttr (rdfName "resource") u])
+  toRes u = NodeElement (xmlEmpty (rdfNS, Just rdfPrefix) "li" [mkNAttr (rdfName "resource") u])
 
 xmlTextInputURI :: URIString -> XML.Element
 xmlTextInputURI u = xmlEmpty (rss10NS, Nothing) "textinput" [mkNAttr (rdfName "resource") u]
 
 xmlTextInput :: TextInputInfo -> XML.Element
 xmlTextInput ti =
-  (qualNode (Just rss10NS, Nothing) "textinput" $ map Elem $
+  (qualNode (Just rss10NS, Nothing) "textinput" $ map NodeElement $
      [ xmlLeaf (rss10NS,Nothing) "title" (textInputTitle ti)
      , xmlLeaf (rss10NS,Nothing) "description" (textInputDesc ti)
      , xmlLeaf (rss10NS,Nothing) "name" (textInputName ti)
@@ -139,13 +139,13 @@ xmlContentItems :: [ContentInfo] -> [XML.Element]
 xmlContentItems [] = []
 xmlContentItems xs =
   [qualNode' (conNS,conPrefix) "items"
-    [Elem $ qualNode' (rdfNS,rdfPrefix) "Bag"
-              (map (\ e -> Elem (qualNode' (rdfNS,rdfPrefix) "li" [Elem (xmlContentInfo e)]))
+    [NodeElement $ qualNode' (rdfNS,rdfPrefix) "Bag"
+              (map (\ e -> NodeElement (qualNode' (rdfNS,rdfPrefix) "li" [NodeElement (xmlContentInfo e)]))
                    xs)]]
 
 xmlContentInfo :: ContentInfo -> XML.Element
 xmlContentInfo ci =
-  (qualNode' (conNS,conPrefix) "item" $ map Elem $
+  (qualNode' (conNS,conPrefix) "item" $ map NodeElement $
       (concat [ mb (rdfResource (conNS,conPrefix) "format") (contentFormat ci)
               , mb (rdfResource (conNS,conPrefix) "encoding") (contentEncoding ci)
               , mb (rdfValue []) (contentValue ci)
@@ -162,12 +162,12 @@ xmlTopics :: [URIString] -> [XML.Element]
 xmlTopics [] = []
 xmlTopics xs =
  [qualNode' (taxNS,taxPrefix) "topics"
-    [Elem (qualNode' (rdfNS,rdfPrefix) "Bag" $
-            (map (Elem . rdfResource (rdfNS,rdfPrefix) "li") xs))]]
+    [NodeElement (qualNode' (rdfNS,rdfPrefix) "Bag" $
+            (map (NodeElement . rdfResource (rdfNS,rdfPrefix) "li") xs))]]
 
 xmlTopic :: TaxonomyTopic -> XML.Element
 xmlTopic tt =
-  (qualNode' (taxNS,taxPrefix) "topic" $ map Elem $
+  (qualNode' (taxNS,taxPrefix) "topic" $ map NodeElement $
       (xmlLeaf (rss10NS,Nothing) "link"  (taxonomyLink tt):
         mb (xmlLeaf (rss10NS,Nothing) "title") (taxonomyTitle tt) ++
        mb (xmlLeaf (rss10NS,Nothing) "description") (taxonomyDesc tt) ++
@@ -178,7 +178,7 @@ xmlTopic tt =
 
 xmlItem :: Item -> XML.Element
 xmlItem i =
- (qualNode (Just rss10NS,Nothing) "item" $ map Elem $
+ (qualNode (Just rss10NS,Nothing) "item" $ map NodeElement $
     ([ xmlLeaf  (rss10NS,Nothing) "title" (itemTitle i)
      , xmlLeaf  (rss10NS,Nothing) "link"  (itemLink i)
      ] ++

@@ -33,7 +33,8 @@ module Text.RSS1.Syntax
   , nullContentInfo
   ) where
 
-import Text.XML.Light.Types as XML
+import Data.XML.Types as XML
+import Data.XML.Compat
 import Text.DublinCore.Types
 import Data.Text
 
@@ -50,7 +51,7 @@ data Feed
         , feedTextInput :: Maybe TextInputInfo
         , feedTopics    :: [TaxonomyTopic]
         , feedOther     :: [XML.Element]
-        , feedAttrs     :: [XML.Attr]
+        , feedAttrs     :: [Attr]
         }
         deriving (Show)
 
@@ -72,7 +73,7 @@ data Channel
         , channelContent      :: [ContentInfo]
         , channelTopics       :: [URIString]
         , channelOther        :: [XML.Element]
-        , channelAttrs        :: [XML.Attr]
+        , channelAttrs        :: [Attr]
         }
         deriving (Show)
 
@@ -84,7 +85,7 @@ data Image
         , imageLink   :: URIString   -- the href of the rendered img resource.
         , imageDC     :: [DCItem]
         , imageOther  :: [XML.Element]
-        , imageAttrs  :: [XML.Attr]
+        , imageAttrs  :: [Attr]
         }
         deriving (Show)
 
@@ -98,7 +99,7 @@ data Item
         , itemTopics  :: [URIString]
         , itemContent :: [ContentInfo]
         , itemOther   :: [XML.Element]
-        , itemAttrs   :: [XML.Attr]
+        , itemAttrs   :: [Attr]
         }
         deriving (Show)
 
@@ -111,7 +112,7 @@ data TextInputInfo
         , textInputLink  :: URIString
         , textInputDC    :: [DCItem]
         , textInputOther :: [XML.Element]
-        , textInputAttrs :: [XML.Attr]
+        , textInputAttrs :: [Attr]
         }
         deriving (Show)
 
