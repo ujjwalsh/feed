@@ -5,10 +5,10 @@ import Test.Framework (Test, mutuallyExclusive, testGroup)
 import Test.Framework.Providers.HUnit (testCase)
 import Text.RSS.Export
 import Text.RSS.Syntax
-import Text.XML.Light as XML
-import Text.RSS.Utils (createContent, createQName)
+import Data.Text (pack)
+import Data.XML.Types as XML
+import Text.RSS.Utils
 import Text.RSS.Equals ()
-
 
 rssExportTests :: Test
 rssExportTests = testGroup "Text.RSS.Export"
@@ -33,10 +33,10 @@ testCreateXMLImage = testCase "should create image as xml" testImage
     testImage :: Assertion
     testImage = do
         let other = XML.Element {
-            elName = createQName "other"
-            , elAttribs = [] :: [ Attr ]
-            , elContent = [ createContent "image other" ] :: [ Content ]
-            , elLine = Nothing
+            elementName = createQName "other"
+            , elementAttributes = [] :: [ Attr ]
+            , elementNodes = [ createContent "image other" ]
+
         }
 
         let image = RSSImage {
@@ -50,53 +50,53 @@ testCreateXMLImage = testCase "should create image as xml" testImage
         }
 
         let expected = XML.Element {
-            elName = createQName "image"
-            , elAttribs = [] :: [ Attr ]
-            , elContent = [
-                  Elem(XML.Element {
-                    elName = createQName "url"
-                    , elAttribs = [] :: [ Attr ]
-                    , elContent = [ createContent "image url" ] :: [ Content ]
-                    , elLine = Nothing
+            elementName = createQName "image"
+            , elementAttributes = [] :: [ Attr ]
+            , elementNodes = [
+                  NodeElement(XML.Element {
+                    elementName = createQName "url"
+                    , elementAttributes = [] :: [ Attr ]
+                    , elementNodes = [ createContent "image url" ]
+
                   })
-                  , Elem(XML.Element {
-                    elName = createQName "title"
-                    , elAttribs = [] :: [ Attr ]
-                    , elContent = [ createContent "image title" ] :: [ Content ]
-                    , elLine = Nothing
+                  , NodeElement(XML.Element {
+                    elementName = createQName "title"
+                    , elementAttributes = [] :: [ Attr ]
+                    , elementNodes = [ createContent "image title" ]
+
                   })
-                  , Elem(XML.Element {
-                    elName = createQName "link"
-                    , elAttribs = [] :: [ Attr ]
-                    , elContent = [ createContent "image link" ] :: [ Content ]
-                    , elLine = Nothing
+                  , NodeElement(XML.Element {
+                    elementName = createQName "link"
+                    , elementAttributes = [] :: [ Attr ]
+                    , elementNodes = [ createContent "image link" ]
+
                   })
-                  , Elem(XML.Element {
-                    elName = createQName "width"
-                    , elAttribs = [] :: [ Attr ]
-                    , elContent = [ createContent "100" ] :: [ Content ]
-                    , elLine = Nothing
+                  , NodeElement(XML.Element {
+                    elementName = createQName "width"
+                    , elementAttributes = [] :: [ Attr ]
+                    , elementNodes = [ createContent "100" ]
+
                   })
-                  , Elem(XML.Element {
-                    elName = createQName "height"
-                    , elAttribs = [] :: [ Attr ]
-                    , elContent = [ createContent "200" ] :: [ Content ]
-                    , elLine = Nothing
+                  , NodeElement(XML.Element {
+                    elementName = createQName "height"
+                    , elementAttributes = [] :: [ Attr ]
+                    , elementNodes = [ createContent "200" ]
+
                   })
-                  , Elem(XML.Element {
-                    elName = createQName "description"
-                    , elAttribs = [] :: [ Attr ]
-                    , elContent = [ createContent "image desc" ] :: [ Content ]
-                    , elLine = Nothing
+                  , NodeElement(XML.Element {
+                    elementName = createQName "description"
+                    , elementAttributes = [] :: [ Attr ]
+                    , elementNodes = [ createContent "image desc" ]
+
                   })
-                  , Elem(XML.Element {
-                    elName = createQName "other"
-                    , elAttribs = [] :: [ Attr ]
-                    , elContent = [ createContent "image other" ] :: [ Content ]
-                    , elLine = Nothing
+                  , NodeElement(XML.Element {
+                    elementName = createQName "other"
+                    , elementAttributes = [] :: [ Attr ]
+                    , elementNodes = [ createContent "image other" ]
+
                   })
-             ] :: [ Content ]
-            , elLine = Nothing
+             ]
+
         }
 
         assertEqual "image" expected (xmlImage image)
@@ -106,7 +106,7 @@ testCreateXMLCloud = testCase "should create cloud as xml" testCloud
   where
     testCloud :: Assertion
     testCloud = do
-        let attr = XML.Attr { attrKey = createQName "attr" , attrVal = "text for attr" }
+        let attr = mkNAttr (createQName "attr") "text for attr"
 
         let cloud = RSSCloud {
             rssCloudDomain = Just "domain cloud"
@@ -118,17 +118,17 @@ testCreateXMLCloud = testCase "should create cloud as xml" testCloud
         }
 
         let expected = XML.Element {
-           elName = createQName "cloud"
-           , elAttribs = [
-                XML.Attr { attrKey = createQName "domain" , attrVal = "domain cloud" }
-                , XML.Attr { attrKey = createQName "port" , attrVal = "port cloud" }
-                , XML.Attr { attrKey = createQName "path" , attrVal = "path cloud" }
-                , XML.Attr { attrKey = createQName "registerProcedure" , attrVal = "register cloud" }
-                , XML.Attr { attrKey = createQName "protocol" , attrVal = "protocol cloud" }
+           elementName = createQName "cloud"
+           , elementAttributes = [
+                mkNAttr (createQName "domain") "domain cloud"
+                , mkNAttr (createQName "port") "port cloud"
+                , mkNAttr (createQName "path") "path cloud"
+                , mkNAttr (createQName "registerProcedure") "register cloud"
+                , mkNAttr (createQName "protocol") "protocol cloud"
                 , attr
                     ] :: [ Attr ]
-           , elContent = [ createContent "" ]
-           , elLine = Nothing
+           , elementNodes = [ createContent "" ]
+
            }
 
         assertEqual "cloud" expected (xmlCloud cloud)
@@ -140,13 +140,13 @@ testCreateXMLTextInput = testCase "should create text input as xml" textInput
   where
     textInput :: Assertion
     textInput = do
-        let attr = XML.Attr { attrKey = createQName "attr" , attrVal = "text for attr" }
+        let attr = mkNAttr (createQName "attr") "text for attr"
 
         let other = XML.Element {
-             elName = createQName "leaf"
-             , elAttribs = [] :: [ Attr ]
-             , elContent = [ createContent "text for leaf" ] :: [ Content ]
-             , elLine = Nothing
+             elementName = createQName "leaf"
+             , elementAttributes = [] :: [ Attr ]
+             , elementNodes = [ createContent "text for leaf" ]
+
         }
 
         let input = RSSTextInput {
@@ -159,41 +159,41 @@ testCreateXMLTextInput = testCase "should create text input as xml" textInput
         }
 
         let expected = XML.Element {
-            elName = createQName "textInput"
-            , elAttribs = [ attr ] :: [ Attr ]
-            , elContent = [
-                  Elem(XML.Element {
-                    elName = createQName "title"
-                    , elAttribs = [] :: [ Attr ]
-                    , elContent = [ createContent "title" ] :: [ Content ]
-                    , elLine = Nothing
+            elementName = createQName "textInput"
+            , elementAttributes = [ attr ] :: [ Attr ]
+            , elementNodes = [
+                  NodeElement(XML.Element {
+                    elementName = createQName "title"
+                    , elementAttributes = [] :: [ Attr ]
+                    , elementNodes = [ createContent "title" ]
+
                   })
-                  , Elem(XML.Element {
-                    elName = createQName "description"
-                    , elAttribs = [] :: [ Attr ]
-                    , elContent = [ createContent "desc" ] :: [ Content ]
-                    , elLine = Nothing
+                  , NodeElement(XML.Element {
+                    elementName = createQName "description"
+                    , elementAttributes = [] :: [ Attr ]
+                    , elementNodes = [ createContent "desc" ]
+
                   })
-                  , Elem(XML.Element {
-                    elName = createQName "name"
-                    , elAttribs = [] :: [ Attr ]
-                    , elContent = [ createContent "name" ] :: [ Content ]
-                    , elLine = Nothing
+                  , NodeElement(XML.Element {
+                    elementName = createQName "name"
+                    , elementAttributes = [] :: [ Attr ]
+                    , elementNodes = [ createContent "name" ]
+
                   })
-                  , Elem(XML.Element {
-                    elName = createQName "link"
-                    , elAttribs = [] :: [ Attr ]
-                    , elContent = [ createContent "http://url.com" ] :: [ Content ]
-                    , elLine = Nothing
+                  , NodeElement(XML.Element {
+                    elementName = createQName "link"
+                    , elementAttributes = [] :: [ Attr ]
+                    , elementNodes = [ createContent "http://url.com" ]
+
                   })
-                  , Elem(XML.Element {
-                    elName = createQName "leaf"
-                    , elAttribs = [] :: [ Attr ]
-                    , elContent = [ createContent "text for leaf" ] :: [ Content ]
-                    , elLine = Nothing
+                  , NodeElement(XML.Element {
+                    elementName = createQName "leaf"
+                    , elementAttributes = [] :: [ Attr ]
+                    , elementNodes = [ createContent "text for leaf" ]
+
                   })
-             ] :: [ Content ]
-            , elLine = Nothing
+             ]
+
         }
 
         assertEqual "text input" expected (xmlTextInput input)
@@ -207,10 +207,10 @@ testCreateEmptyXMLSkipHours = testCase "should create an empty list of skip hour
     emptySkipHours = do
         let hoursToSkip = []
         let expected = XML.Element {
-            elName = createQName "skipHours"
-            , elAttribs = [] :: [ Attr ]
-            , elContent = [] :: [ Content ]
-            , elLine = Nothing
+            elementName = createQName "skipHours"
+            , elementAttributes = [] :: [ Attr ]
+            , elementNodes = []
+
         }
 
         assertEqual "empty skip hours" expected (xmlSkipHours hoursToSkip)
@@ -224,15 +224,15 @@ testCreateXMLSkipHours = testCase "should create skip hours as xml" skipHours
     skipHours = do
         let hoursToSkip = [ 1, 2, 3 ]
         let expected = XML.Element {
-            elName = createQName "skipHours"
-            , elAttribs = [] :: [ Attr ]
-            , elContent = [ hourElem 0, hourElem 1, hourElem 2 ] :: [ Content ]
-            , elLine = Nothing
-        } where hourElem ind = Elem(XML.Element {
-                elName = createQName "hour"
-                , elAttribs = [] :: [ Attr ]
-                , elContent = [ createContent $ show $ hoursToSkip !! ind ]
-                , elLine = Nothing
+            elementName = createQName "skipHours"
+            , elementAttributes = [] :: [ Attr ]
+            , elementNodes = [ hourElem 0, hourElem 1, hourElem 2 ]
+
+        } where hourElem ind = NodeElement(XML.Element {
+                elementName = createQName "hour"
+                , elementAttributes = [] :: [ Attr ]
+                , elementNodes = [ createContent $ pack $ show $ hoursToSkip !! ind ]
+
           })
 
         assertEqual "skip hours" expected (xmlSkipHours hoursToSkip)
@@ -246,10 +246,10 @@ testCreateEmptyXMLSkipDays = testCase "should create an empty list of skip days 
     emptySkipDays = do
         let daysToSkip = []
         let expected = XML.Element {
-            elName = createQName "skipDays"
-            , elAttribs = [] :: [ Attr ]
-            , elContent = [] :: [ Content ]
-            , elLine = Nothing
+            elementName = createQName "skipDays"
+            , elementAttributes = [] :: [ Attr ]
+            , elementNodes = []
+
         }
 
         assertEqual "empty skip days" expected (xmlSkipDays daysToSkip)
@@ -263,15 +263,15 @@ testCreateXMLSkipDays = testCase "should create skip days as xml" skipDays
     skipDays = do
         let daysToSkip = [ "first day", "second day", "third day" ]
         let expected = XML.Element {
-            elName = createQName "skipDays"
-            , elAttribs = [] :: [ Attr ]
-            , elContent = [ dayElem 0, dayElem 1, dayElem 2 ] :: [ Content ]
-            , elLine = Nothing
-        } where dayElem ind = Elem(XML.Element {
-                elName = createQName "day"
-                , elAttribs = [] :: [ Attr ]
-                , elContent = [ createContent $ daysToSkip !! ind ]
-                , elLine = Nothing
+            elementName = createQName "skipDays"
+            , elementAttributes = [] :: [ Attr ]
+            , elementNodes = [ dayElem 0, dayElem 1, dayElem 2 ]
+
+        } where dayElem ind = NodeElement(XML.Element {
+                elementName = createQName "day"
+                , elementAttributes = [] :: [ Attr ]
+                , elementNodes = [ createContent $ daysToSkip !! ind ]
+
           })
 
         assertEqual "skip days" expected (xmlSkipDays daysToSkip)
@@ -285,7 +285,7 @@ testCreateXMLAttr = testCase "should create attr as xml" createXMLAttr
     createXMLAttr = do
         let tg = "attr"
         let txt = "example of attr value"
-        let expected = XML.Attr { attrKey = createQName tg, attrVal = txt }
+        let expected = mkNAttr (createQName tg) txt
 
         assertEqual "create a leaf" expected (xmlAttr tg txt)
 
@@ -298,10 +298,10 @@ testCreateXMLLeaf = testCase "should create leaf as xml" createXMLLeaf
         let tg = "leaf"
         let txt = "example of leaf text"
         let expected = XML.Element {
-           elName = createQName tg
-           , elAttribs = [] :: [ Attr ]
-           , elContent = [ createContent txt ] :: [ Content ]
-           , elLine = Nothing
+           elementName = createQName tg
+           , elementAttributes = [] :: [ Attr ]
+           , elementNodes = [ createContent txt ]
+
         }
 
         assertEqual "create a leaf" expected (xmlLeaf tg txt)

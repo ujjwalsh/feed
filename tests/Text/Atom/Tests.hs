@@ -4,12 +4,14 @@ import Data.Maybe (isJust)
 import Test.Framework (Test, mutuallyExclusive, testGroup)
 import Test.HUnit (Assertion, assertBool)
 import Test.Framework.Providers.HUnit (testCase)
+import Text.XML
+
 import Text.Atom.Feed
 import Text.Feed.Export
 import Text.Feed.Import
 import Text.Feed.Query
 import Text.Feed.Types
-import Text.XML.Light
+import Text.RSS.Utils
 
 import Paths_feed
 
@@ -26,7 +28,8 @@ testFullAtomParse = testCase "parse a complete atom file" testAtom
   where
     testAtom :: Assertion
     testAtom = do
-      putStrLn . ppTopElement . xmlFeed =<< parseFeedFromFile =<< getDataFileName "tests/files/atom.xml"
+      print . (fmap (renderText def)) . elementToDoc .
+        xmlFeed =<< parseFeedFromFile =<< getDataFileName "tests/files/atom.xml"
       assertBool "OK" True
 
 testAtomAlternate :: Test

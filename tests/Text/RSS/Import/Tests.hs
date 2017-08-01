@@ -5,8 +5,8 @@ import Test.Framework (Test, mutuallyExclusive, testGroup)
 import Test.Framework.Providers.HUnit (testCase)
 import Text.RSS.Import
 import Text.RSS.Syntax
-import Text.XML.Light as XML
-import Text.RSS.Utils (createContent, createQName)
+import Data.XML.Types as XML
+import Text.RSS.Utils
 import Text.RSS.Equals ()
 
 
@@ -25,7 +25,7 @@ testElementToCloudIsNotCreated = testCase "should not create rss cloud" notCreat
   where
     notCreateRSSCloud :: Assertion
     notCreateRSSCloud = do
-        let notXmlCloudElement = XML.Element { elName = createQName "notCloud", elAttribs = [], elContent = [], elLine = Nothing}
+        let notXmlCloudElement = XML.Element { elementName = createQName "notCloud", elementAttributes = [], elementNodes = []}
 
         let expected = Nothing
 
@@ -38,20 +38,20 @@ testElementToCloud = testCase "should create rss cloud" createRSSCloud
   where
     createRSSCloud :: Assertion
     createRSSCloud = do
-        let attr = XML.Attr { attrKey = createQName "attr" , attrVal = "text for attr" }
+        let attr = mkNAttr (createQName "attr") "text for attr"
 
         let xmlCloudElement = XML.Element {
-           elName = createQName "cloud"
-           , elAttribs = [
-                XML.Attr { attrKey = createQName "domain" , attrVal = "domain cloud" }
-                , XML.Attr { attrKey = createQName "port" , attrVal = "port cloud" }
-                , XML.Attr { attrKey = createQName "path" , attrVal = "path cloud" }
-                , XML.Attr { attrKey = createQName "registerProcedure" , attrVal = "register cloud" }
-                , XML.Attr { attrKey = createQName "protocol" , attrVal = "protocol cloud" }
+           elementName = createQName "cloud"
+           , elementAttributes = [
+                mkNAttr (createQName "domain") "domain cloud"
+                , mkNAttr (createQName "port") "port cloud"
+                , mkNAttr (createQName "path") "path cloud"
+                , mkNAttr (createQName "registerProcedure") "register cloud"
+                , mkNAttr (createQName "protocol") "protocol cloud"
                 , attr
              ] :: [ Attr ]
-           , elContent = [ createContent "" ]
-           , elLine = Nothing
+           , elementNodes = [ createContent "" ]
+
         }
 
         let expected = Just RSSCloud {

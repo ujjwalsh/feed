@@ -12,5 +12,6 @@ exampleTests = testGroup "Examples"
 
 typeCheckAtom :: Assertion
 typeCheckAtom = case createAtom of
-                    _:_ -> return ()
-                    _   -> error "createAtom returned an empty String"
+                    Just ""  -> error "createAtom returned an empty Text"
+                    Just _   -> return ()
+                    Nothing  -> error "createAtom returned document with unresolved entities"
