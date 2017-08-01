@@ -41,13 +41,12 @@ module Text.Atom.Feed.Import
 import Prelude ()
 import Prelude.Compat
 
-import Control.Monad (guard, liftM, mplus)
+import Control.Monad (guard, mplus)
 import Data.List (find)
 import Data.Maybe (isJust, listToMaybe, mapMaybe)
 import Data.Text (Text)
 import Data.Text.Read
 import Data.XML.Types as XML
-import Text.XML.Cursor
 
 import Text.Atom.Feed
 import Text.Atom.Feed.Export (atomName, atomThreadName)
@@ -92,6 +91,7 @@ pMany p f es = mapMaybe f (pNodes p es)
 children :: XML.Element -> [XML.Element]
 children = elementChildren
 
+elementTexts :: Element -> Text
 elementTexts = T.concat . elementText
 
 elementFeed :: XML.Element -> Maybe Feed
