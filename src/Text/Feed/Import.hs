@@ -31,6 +31,7 @@ import Prelude ()
 import Prelude.Compat
 
 import Control.Exception
+import Data.ByteString.Lazy (ByteString)
 import Data.Text.Lazy (Text, pack)
 import Data.XML.Types as XML
 
@@ -58,6 +59,9 @@ utf8readFile = UTF8.readFile
 
 class FeedSource s where
   parseFeedSourceXML :: s -> Either SomeException C.Document
+
+instance FeedSource ByteString where
+  parseFeedSourceXML = C.parseLBS C.def
 
 instance FeedSource Text where
   parseFeedSourceXML = C.parseText C.def
