@@ -19,7 +19,8 @@
 module Text.Feed.Import
   ( parseFeedFromFile -- :: FilePath -> IO Feed
   , parseFeedString -- :: String -> Maybe Feed
-  , parseFeedSource -- :: XmlSource s => s -> Maybe Feed
+  , parseFeedSource -- :: FeedSource s => s -> Maybe Feed
+  , FeedSource
           -- if you know your format, use these directly:
   , readRSS2 -- :: XML.Element -> Maybe Feed
   , readRSS1 -- :: XML.Element -> Maybe Feed
@@ -29,6 +30,7 @@ module Text.Feed.Import
 import Prelude ()
 import Prelude.Compat
 
+import Control.Exception
 import Data.Text.Lazy (Text, pack)
 import Data.XML.Types as XML
 
@@ -54,17 +56,14 @@ utf8readFile :: FilePath -> IO String
 utf8readFile = UTF8.readFile
 #endif
 
-class XmlSource s where
-  parseXmlSource :: s -> Maybe XML.Element
+class FeedSource s where
+  parseFeedSourceXML :: s -> Either SomeException C.Document
 
-instance XmlSource Text where
-  parseXmlSource s =
-    case C.parseText C.def s of
-      Right d -> Just $ C.toXMLElement $ C.documentRoot d
-      Left _ -> Nothing
+instance FeedSource Text where
+  parseFeedSourceXML = C.parseText C.def
 
-instance XmlSource String where
-  parseXmlSource = parseXmlSource . pack
+instance FeedSource String where
+  parseFeedSourceXML = parseFeedSourceXML . pack
 
 -- | 'parseFeedFromFile fp' reads in the contents of the file at @fp@;
 -- the assumed encoding is UTF-8.
@@ -79,11 +78,14 @@ parseFeedFromFile fp = do
 -- as one of the feed formats. First as Atom, then RSS2 before
 -- giving RSS1 a try. @Nothing@ is, rather unhelpfully, returned
 -- as an indication of error.
-parseFeedWithParser :: XmlSource s => (s -> Maybe Element) -> s -> Maybe Feed
+parseFeedWithParser :: FeedSource s => (s -> Either e C.Document) -> s -> Maybe Feed
 parseFeedWithParser parser str =
   case parser str of
-    Nothing -> Nothing
-    Just e -> readAtom e `mplus` readRSS2 e `mplus` readRSS1 e `mplus` Just (XMLFeed e)
+    Left _ -> Nothing
+    Right d ->
+      readAtom e `mplus` readRSS2 e `mplus` readRSS1 e `mplus` Just (XMLFeed e)
+      where
+        e = C.toXMLElement $ C.documentRoot d
 
 parseFeedString :: String -> Maybe Feed
 parseFeedString = parseFeedSource
@@ -92,8 +94,8 @@ parseFeedString = parseFeedSource
 -- one of the feed formats. First as Atom, then RSS2 before giving
 -- RSS1 a try. @Nothing@ is, rather unhelpfully, returned as an
 -- indication of error.
-parseFeedSource :: XmlSource s => s -> Maybe Feed
-parseFeedSource = parseFeedWithParser parseXmlSource
+parseFeedSource :: FeedSource s => s -> Maybe Feed
+parseFeedSource = parseFeedWithParser parseFeedSourceXML
 
 -- | 'readRSS2 elt' tries to derive an RSS2.x, RSS-0.9x feed document
 -- from the XML element @e@.
