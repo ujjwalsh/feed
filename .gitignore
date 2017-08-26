@@ -9,3 +9,4 @@ HLint.hs
 cabal.sandbox.config
 dist
 setup
+/.ghc.environment.*

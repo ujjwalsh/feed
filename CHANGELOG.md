@@ -1,3 +1,8 @@
+# 1.0.0.0
+
+* Thanks to Dmitry Dzhus feed has been modernized to use the `text`,
+  `xml-types` and `xml-conduit` libraries.
+
 ### 0.3.12.0
 
 * Adds support for some fallback parsing of atom feeds to XMLFeed (thanks to Joey Hess)
