@@ -88,10 +88,10 @@ newFeed fk =
            "dummy-and-bogus-update-date")
     RSSKind mbV ->
       let def = RSS.nullRSS "dummy-title" "default-channel-url"
-      in RSSFeed $ fromMaybe def $ fmap (\v -> def {RSS.rssVersion = v}) mbV
+       in RSSFeed $ fromMaybe def $ fmap (\v -> def {RSS.rssVersion = v}) mbV
     RDFKind mbV ->
       let def = RSS1.nullFeed "default-channel-url" "dummy-title"
-      in RSS1Feed $ fromMaybe def $ fmap (\v -> def {RSS1.feedVersion = v}) mbV
+       in RSS1Feed $ fromMaybe def $ fmap (\v -> def {RSS1.feedVersion = v}) mbV
 
 feedFromRSS :: RSS.RSS -> Feed.Types.Feed
 feedFromRSS = RSSFeed
@@ -280,17 +280,18 @@ withFeedPubDate dateStr fe =
       case break isDate $ RSS1.channelDC (RSS1.feedChannel f) of
         (as, dci:bs) ->
           f
-          { RSS1.feedChannel =
-              (RSS1.feedChannel f) {RSS1.channelDC = as ++ dci {dcText = dateStr} : bs}
-          }
+            { RSS1.feedChannel =
+                (RSS1.feedChannel f) {RSS1.channelDC = as ++ dci {dcText = dateStr} : bs}
+            }
         (_, []) ->
           f
-          { RSS1.feedChannel =
-              (RSS1.feedChannel f)
-              { RSS1.channelDC =
-                  DCItem {dcElt = DC_Date, dcText = dateStr} : RSS1.channelDC (RSS1.feedChannel f)
-              }
-          }
+            { RSS1.feedChannel =
+                (RSS1.feedChannel f)
+                  { RSS1.channelDC =
+                      DCItem {dcElt = DC_Date, dcText = dateStr} :
+                      RSS1.channelDC (RSS1.feedChannel f)
+                  }
+            }
     Feed.Types.XMLFeed f ->
       Feed.Types.XMLFeed $
       mapMaybeChildren
@@ -319,17 +320,18 @@ withFeedLastUpdate dateStr fe =
       case break isDate $ RSS1.channelDC (RSS1.feedChannel f) of
         (as, dci:bs) ->
           f
-          { RSS1.feedChannel =
-              (RSS1.feedChannel f) {RSS1.channelDC = as ++ dci {dcText = dateStr} : bs}
-          }
+            { RSS1.feedChannel =
+                (RSS1.feedChannel f) {RSS1.channelDC = as ++ dci {dcText = dateStr} : bs}
+            }
         (_, []) ->
           f
-          { RSS1.feedChannel =
-              (RSS1.feedChannel f)
-              { RSS1.channelDC =
-                  DCItem {dcElt = DC_Date, dcText = dateStr} : RSS1.channelDC (RSS1.feedChannel f)
-              }
-          }
+            { RSS1.feedChannel =
+                (RSS1.feedChannel f)
+                  { RSS1.channelDC =
+                      DCItem {dcElt = DC_Date, dcText = dateStr} :
+                      RSS1.channelDC (RSS1.feedChannel f)
+                  }
+            }
     Feed.Types.XMLFeed f ->
       Feed.Types.XMLFeed $
       mapMaybeChildren
@@ -362,15 +364,15 @@ withFeedLogoLink imgURL lnk fe =
     Feed.Types.RSSFeed f ->
       Feed.Types.RSSFeed
         f
-        { rssChannel =
-            (rssChannel f) {rssImage = Just $ RSS.nullImage imgURL (rssTitle (rssChannel f)) lnk}
-        }
+          { rssChannel =
+              (rssChannel f) {rssImage = Just $ RSS.nullImage imgURL (rssTitle (rssChannel f)) lnk}
+          }
     Feed.Types.RSS1Feed f ->
       Feed.Types.RSS1Feed $
       f
-      { feedImage = Just $ RSS1.nullImage imgURL (RSS1.channelTitle (RSS1.feedChannel f)) lnk
-      , feedChannel = (feedChannel f) {channelImageURI = Just imgURL}
-      }
+        { feedImage = Just $ RSS1.nullImage imgURL (RSS1.channelTitle (RSS1.feedChannel f)) lnk
+        , feedChannel = (feedChannel f) {channelImageURI = Just imgURL}
+        }
     Feed.Types.XMLFeed f ->
       Feed.Types.XMLFeed $
       mapMaybeChildren
@@ -408,17 +410,18 @@ withFeedLanguage lang fe =
       case break isLang $ RSS1.channelDC (RSS1.feedChannel f) of
         (as, dci:bs) ->
           f
-          { RSS1.feedChannel =
-              (RSS1.feedChannel f) {RSS1.channelDC = as ++ dci {dcText = lang} : bs}
-          }
+            { RSS1.feedChannel =
+                (RSS1.feedChannel f) {RSS1.channelDC = as ++ dci {dcText = lang} : bs}
+            }
         (_, []) ->
           f
-          { RSS1.feedChannel =
-              (RSS1.feedChannel f)
-              { RSS1.channelDC =
-                  DCItem {dcElt = DC_Language, dcText = lang} : RSS1.channelDC (RSS1.feedChannel f)
-              }
-          }
+            { RSS1.feedChannel =
+                (RSS1.feedChannel f)
+                  { RSS1.channelDC =
+                      DCItem {dcElt = DC_Language, dcText = lang} :
+                      RSS1.channelDC (RSS1.feedChannel f)
+                  }
+            }
     Feed.Types.XMLFeed f ->
       Feed.Types.XMLFeed $
       mapMaybeChildren
@@ -442,29 +445,29 @@ withFeedCategories cats fe =
     Feed.Types.AtomFeed f ->
       Feed.Types.AtomFeed
         f
-        { Atom.feedCategories =
-            map (\(t, mb) -> (Atom.newCategory t) {Atom.catScheme = mb}) cats ++ feedCategories f
-        }
+          { Atom.feedCategories =
+              map (\(t, mb) -> (Atom.newCategory t) {Atom.catScheme = mb}) cats ++ feedCategories f
+          }
     Feed.Types.RSSFeed f ->
       Feed.Types.RSSFeed
         f
-        { rssChannel =
-            (rssChannel f)
-            { RSS.rssCategories =
-                map (\(t, mb) -> (RSS.newCategory t) {RSS.rssCategoryDomain = mb}) cats ++
-                RSS.rssCategories (rssChannel f)
-            }
-        }
+          { rssChannel =
+              (rssChannel f)
+                { RSS.rssCategories =
+                    map (\(t, mb) -> (RSS.newCategory t) {RSS.rssCategoryDomain = mb}) cats ++
+                    RSS.rssCategories (rssChannel f)
+                }
+          }
     Feed.Types.RSS1Feed f ->
       Feed.Types.RSS1Feed
         f
-        { feedChannel =
-            (feedChannel f)
-            { RSS1.channelDC =
-                map (\(t, _) -> DCItem {dcElt = DC_Subject, dcText = t}) cats ++
-                RSS1.channelDC (feedChannel f)
-            }
-        }
+          { feedChannel =
+              (feedChannel f)
+                { RSS1.channelDC =
+                    map (\(t, _) -> DCItem {dcElt = DC_Subject, dcText = t}) cats ++
+                    RSS1.channelDC (feedChannel f)
+                }
+          }
     Feed.Types.XMLFeed f ->
       Feed.Types.XMLFeed $
       mapMaybeChildren
@@ -478,7 +481,7 @@ withFeedCategories cats fe =
                                "category"
                                (fromMaybe
                                   (: [])
-                                  (fmap (\ v x -> [mkAttr "domain" v, x]) mb)
+                                  (fmap (\v x -> [mkAttr "domain" v, x]) mb)
                                   (mkAttr "term" t)))
                             acc)
                        e
@@ -499,15 +502,17 @@ withFeedGenerator (gen, mbURI) fe =
       case break isSource $ RSS1.channelDC (RSS1.feedChannel f) of
         (as, dci:bs) ->
           f
-          {RSS1.feedChannel = (RSS1.feedChannel f) {RSS1.channelDC = as ++ dci {dcText = gen} : bs}}
+            { RSS1.feedChannel =
+                (RSS1.feedChannel f) {RSS1.channelDC = as ++ dci {dcText = gen} : bs}
+            }
         (_, []) ->
           f
-          { RSS1.feedChannel =
-              (RSS1.feedChannel f)
-              { RSS1.channelDC =
-                  DCItem {dcElt = DC_Source, dcText = gen} : RSS1.channelDC (RSS1.feedChannel f)
-              }
-          }
+            { RSS1.feedChannel =
+                (RSS1.feedChannel f)
+                  { RSS1.channelDC =
+                      DCItem {dcElt = DC_Source, dcText = gen} : RSS1.channelDC (RSS1.feedChannel f)
+                  }
+            }
     Feed.Types.XMLFeed f ->
       Feed.Types.XMLFeed $
       mapMaybeChildren
@@ -601,9 +606,9 @@ withItemFeedLink tit url fi =
     Feed.Types.AtomItem e ->
       Feed.Types.AtomItem
         e
-        { Atom.entrySource =
-            Just Atom.nullSource {sourceId = Just url, sourceTitle = Just (TextString tit)}
-        }
+          { Atom.entrySource =
+              Just Atom.nullSource {sourceId = Just url, sourceTitle = Just (TextString tit)}
+          }
     Feed.Types.RSSItem i -> Feed.Types.RSSItem i {RSS.rssItemSource = Just (RSS.nullSource url tit)}
     Feed.Types.RSS1Item i -> Feed.Types.RSS1Item i {RSS1.itemTitle = tit}
     Feed.Types.XMLItem i ->
@@ -638,28 +643,28 @@ withItemEnclosure url ty mb_len fi =
     Feed.Types.AtomItem e ->
       Feed.Types.AtomItem
         e
-        { Atom.entryLinks =
-            ((nullLink url)
-             { linkRel = Just (Left "enclosure")
-             , linkType = ty
-             , linkLength = fmap (pack . show) mb_len
-             }) :
-            Atom.entryLinks e
-        }
+          { Atom.entryLinks =
+              ((nullLink url)
+                 { linkRel = Just (Left "enclosure")
+                 , linkType = ty
+                 , linkLength = fmap (pack . show) mb_len
+                 }) :
+              Atom.entryLinks e
+          }
     Feed.Types.RSSItem i ->
       Feed.Types.RSSItem
         i {RSS.rssItemEnclosure = Just (nullEnclosure url mb_len (fromMaybe "text/html" ty))}
     Feed.Types.RSS1Item i ->
       Feed.Types.RSS1Item
         i
-        { RSS1.itemContent =
-            nullContentInfo {contentURI = Just url, contentFormat = ty} : RSS1.itemContent i
-        }
+          { RSS1.itemContent =
+              nullContentInfo {contentURI = Just url, contentFormat = ty} : RSS1.itemContent i
+          }
     Feed.Types.XMLItem i ->
       Feed.Types.XMLItem $
       addChild
         ((unode "enclosure" url)
-         {elementAttributes = [mkAttr "length" "0", mkAttr "type" (fromMaybe "text/html" ty)]}) $
+           {elementAttributes = [mkAttr "length" "0", mkAttr "type" (fromMaybe "text/html" ty)]}) $
       filterChildren (\e -> elementName e /= "enclosure") i
 
 -- | 'withItemId isURL id' associates new unique identifier with a feed item.
@@ -746,22 +751,22 @@ withItemCategories cats fi =
     Feed.Types.AtomItem e ->
       Feed.Types.AtomItem
         e
-        { Atom.entryCategories =
-            map (\(t, mb) -> (Atom.newCategory t) {Atom.catScheme = mb}) cats ++ entryCategories e
-        }
+          { Atom.entryCategories =
+              map (\(t, mb) -> (Atom.newCategory t) {Atom.catScheme = mb}) cats ++ entryCategories e
+          }
     Feed.Types.RSSItem i ->
       Feed.Types.RSSItem
         i
-        { RSS.rssItemCategories =
-            map (\(t, mb) -> (RSS.newCategory t) {RSS.rssCategoryDomain = mb}) cats ++
-            rssItemCategories i
-        }
+          { RSS.rssItemCategories =
+              map (\(t, mb) -> (RSS.newCategory t) {RSS.rssCategoryDomain = mb}) cats ++
+              rssItemCategories i
+          }
     Feed.Types.RSS1Item i ->
       Feed.Types.RSS1Item
         i
-        { RSS1.itemDC =
-            map (\(t, _) -> DCItem {dcElt = DC_Subject, dcText = t}) cats ++ RSS1.itemDC i
-        }
+          { RSS1.itemDC =
+              map (\(t, _) -> DCItem {dcElt = DC_Subject, dcText = t}) cats ++ RSS1.itemDC i
+          }
     Feed.Types.XMLItem i ->
       Feed.Types.XMLItem $
       foldr
@@ -769,10 +774,7 @@ withItemCategories cats fi =
            addChild
              (unode
                 "category"
-                (fromMaybe
-                   (: [])
-                   (fmap (\ v x -> [mkAttr "domain" v, x]) mb)
-                   (mkAttr "term" t)))
+                (fromMaybe (: []) (fmap (\v x -> [mkAttr "domain" v, x]) mb) (mkAttr "term" t)))
              acc)
         i
         cats

@@ -42,16 +42,16 @@ elementToFeed e = do
   let as_rest = removeKnownAttrs e
   return
     Feed
-    { feedVersion = ver
-    , feedChannel = ch1
-    , feedImage = mbImg
-    , feedItems = its
-    , feedTextInput = mbTI
-    , feedTopics =
-        mapMaybe elementToTaxonomyTopic $ pQNodes (qualName' (taxNS, taxPrefix) "topic") e
-    , feedOther = es_rest
-    , feedAttrs = as_rest
-    }
+      { feedVersion = ver
+      , feedChannel = ch1
+      , feedImage = mbImg
+      , feedItems = its
+      , feedTextInput = mbTI
+      , feedTopics =
+          mapMaybe elementToTaxonomyTopic $ pQNodes (qualName' (taxNS, taxPrefix) "topic") e
+      , feedOther = es_rest
+      , feedAttrs = as_rest
+      }
 
 elementToItems :: XML.Element -> [URIString]
 elementToItems = seqLeaves
@@ -67,15 +67,15 @@ elementToTextInput e = do
   let dcs = mapMaybe elementToDC es
   return
     TextInputInfo
-    { textInputURI = uri
-    , textInputTitle = ti
-    , textInputDesc = desc
-    , textInputName = na
-    , textInputLink = li
-    , textInputDC = dcs
-    , textInputOther = es
-    , textInputAttrs = elementAttributes e
-    }
+      { textInputURI = uri
+      , textInputTitle = ti
+      , textInputDesc = desc
+      , textInputName = na
+      , textInputLink = li
+      , textInputDC = dcs
+      , textInputOther = es
+      , textInputAttrs = elementAttributes e
+      }
 
 elementToItem :: XML.Element -> Maybe Item
 elementToItem e = do
@@ -92,16 +92,16 @@ elementToItem e = do
   let as_other = removeKnownAttrs e
   return
     Item
-    { itemURI = uri
-    , itemTitle = ti
-    , itemLink = li
-    , itemDesc = desc
-    , itemDC = dcs
-    , itemTopics = tos
-    , itemContent = cs
-    , itemOther = es_other
-    , itemAttrs = as_other
-    }
+      { itemURI = uri
+      , itemTitle = ti
+      , itemLink = li
+      , itemDesc = desc
+      , itemDC = dcs
+      , itemTopics = tos
+      , itemContent = cs
+      , itemOther = es_other
+      , itemAttrs = as_other
+      }
 
 elementToImage :: XML.Element -> Maybe Image
 elementToImage e = do
@@ -114,14 +114,14 @@ elementToImage e = do
   let dcs = mapMaybe elementToDC es
   return
     Image
-    { imageURI = uri
-    , imageTitle = ti
-    , imageURL = ur
-    , imageLink = li
-    , imageDC = dcs
-    , imageOther = es
-    , imageAttrs = as
-    }
+      { imageURI = uri
+      , imageTitle = ti
+      , imageURL = ur
+      , imageLink = li
+      , imageDC = dcs
+      , imageOther = es
+      , imageAttrs = as
+      }
 
 elementToChannel :: XML.Element -> Maybe Channel
 elementToChannel e = do
@@ -140,31 +140,31 @@ elementToChannel e = do
   let as_other = removeKnownAttrs e
   let def_chan =
         Channel
-        { channelURI = uri
-        , channelTitle = ti
-        , channelLink = li
-        , channelDesc = de
-        , channelImageURI = mbImg
-        , channelItemURIs = is
-        , channelTextInputURI = tinp
-        , channelDC = dcs
-        , channelUpdatePeriod = Nothing
-        , channelUpdateFreq = Nothing
-        , channelUpdateBase = Nothing
-        , channelContent = cs
-        , channelTopics = tos
-        , channelOther = es_other
-        , channelAttrs = as_other
-        }
+          { channelURI = uri
+          , channelTitle = ti
+          , channelLink = li
+          , channelDesc = de
+          , channelImageURI = mbImg
+          , channelItemURIs = is
+          , channelTextInputURI = tinp
+          , channelDC = dcs
+          , channelUpdatePeriod = Nothing
+          , channelUpdateFreq = Nothing
+          , channelUpdateBase = Nothing
+          , channelContent = cs
+          , channelTopics = tos
+          , channelOther = es_other
+          , channelAttrs = as_other
+          }
   return (addSyndication e def_chan)
 
 addSyndication :: XML.Element -> Channel -> Channel
 addSyndication e ch =
   ch
-  { channelUpdatePeriod = fmap toUpdatePeriod $ pQLeaf' (synNS, synPrefix) "updatePeriod" e
-  , channelUpdateFreq = readInt =<< pQLeaf' (synNS, synPrefix) "updateFrequency" e
-  , channelUpdateBase = pQLeaf' (synNS, synPrefix) "updateBase" e
-  }
+    { channelUpdatePeriod = fmap toUpdatePeriod $ pQLeaf' (synNS, synPrefix) "updatePeriod" e
+    , channelUpdateFreq = readInt =<< pQLeaf' (synNS, synPrefix) "updateFrequency" e
+    , channelUpdateBase = pQLeaf' (synNS, synPrefix) "updateBase" e
+    }
   where
     toUpdatePeriod x =
       case x of
@@ -207,26 +207,26 @@ elementToTaxonomyTopic e = do
   li <- pQLeaf' (taxNS, taxPrefix) "link" e
   return
     TaxonomyTopic
-    { taxonomyURI = uri
-    , taxonomyLink = li
-    , taxonomyTitle = pLeaf "title" e
-    , taxonomyDesc = pLeaf "description" e
-    , taxonomyTopics =
-        fromMaybe [] (fmap bagLeaves $ pQNode (qualName' (taxNS, taxPrefix) "topics") e)
-    , taxonomyDC = mapMaybe elementToDC es
-    , taxonomyOther = es
-    }
+      { taxonomyURI = uri
+      , taxonomyLink = li
+      , taxonomyTitle = pLeaf "title" e
+      , taxonomyDesc = pLeaf "description" e
+      , taxonomyTopics =
+          fromMaybe [] (fmap bagLeaves $ pQNode (qualName' (taxNS, taxPrefix) "topics") e)
+      , taxonomyDC = mapMaybe elementToDC es
+      , taxonomyOther = es
+      }
 
 elementToContent :: XML.Element -> Maybe ContentInfo
 elementToContent e = do
   guard (elementName e == qualName' (conNS, conPrefix) "items")
   return
     ContentInfo
-    { contentURI = pAttr' (rdfNS, rdfPrefix) "about" e
-    , contentFormat = pQLeaf' (conNS, conPrefix) "format" e
-    , contentEncoding = pQLeaf' (conNS, conPrefix) "encoding" e
-    , contentValue = pQLeaf' (rdfNS, rdfPrefix) "value" e
-    }
+      { contentURI = pAttr' (rdfNS, rdfPrefix) "about" e
+      , contentFormat = pQLeaf' (conNS, conPrefix) "format" e
+      , contentEncoding = pQLeaf' (conNS, conPrefix) "encoding" e
+      , contentValue = pQLeaf' (rdfNS, rdfPrefix) "value" e
+      }
 
 bagLeaves :: XML.Element -> [URIString]
 bagLeaves be =

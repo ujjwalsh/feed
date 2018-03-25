@@ -103,22 +103,22 @@ elementFeed e = do
   u <- pLeaf "updated" es
   return
     Feed
-    { feedId = i
-    , feedTitle = t
-    , feedSubtitle = pTextContent "subtitle" es
-    , feedUpdated = u
-    , feedAuthors = pMany "author" pPerson es
-    , feedContributors = pMany "contributor" pPerson es
-    , feedCategories = pMany "category" pCategory es
-    , feedGenerator = pGenerator `fmap` pNode "generator" es
-    , feedIcon = pLeaf "icon" es
-    , feedLogo = pLeaf "logo" es
-    , feedRights = pTextContent "rights" es
-    , feedLinks = pMany "link" pLink es
-    , feedEntries = pMany "entry" pEntry es
-    , feedOther = other_es es
-    , feedAttrs = other_as (elementAttributes e)
-    }
+      { feedId = i
+      , feedTitle = t
+      , feedSubtitle = pTextContent "subtitle" es
+      , feedUpdated = u
+      , feedAuthors = pMany "author" pPerson es
+      , feedContributors = pMany "contributor" pPerson es
+      , feedCategories = pMany "category" pCategory es
+      , feedGenerator = pGenerator `fmap` pNode "generator" es
+      , feedIcon = pLeaf "icon" es
+      , feedLogo = pLeaf "logo" es
+      , feedRights = pTextContent "rights" es
+      , feedLinks = pMany "link" pLink es
+      , feedEntries = pMany "entry" pEntry es
+      , feedOther = other_es es
+      , feedAttrs = other_as (elementAttributes e)
+      }
   where
     other_es = filter (\el -> not (elementName el `elem` known_elts))
     other_as = filter (\a -> not (fst a `elem` known_attrs))
@@ -162,22 +162,22 @@ pPerson e = do
   name <- pLeaf "name" es -- or missing "name"
   return
     Person
-    { personName = name
-    , personURI = pLeaf "uri" es
-    , personEmail = pLeaf "email" es
-    , personOther = [] -- XXX?
-    }
+      { personName = name
+      , personURI = pLeaf "uri" es
+      , personEmail = pLeaf "email" es
+      , personOther = [] -- XXX?
+      }
 
 pCategory :: XML.Element -> Maybe Category
 pCategory e = do
   term <- pAttr "term" e -- or missing "term" attribute
   return
     Category
-    { catTerm = term
-    , catScheme = pAttr "scheme" e
-    , catLabel = pAttr "label" e
-    , catOther = [] -- XXX?
-    }
+      { catTerm = term
+      , catScheme = pAttr "scheme" e
+      , catLabel = pAttr "label" e
+      , catOther = [] -- XXX?
+      }
 
 pGenerator :: XML.Element -> Generator
 pGenerator e =
@@ -186,35 +186,35 @@ pGenerator e =
 pSource :: XML.Element -> Source
 pSource e =
   let es = children e
-  in Source
-     { sourceAuthors = pMany "author" pPerson es
-     , sourceCategories = pMany "category" pCategory es
-     , sourceGenerator = pGenerator `fmap` pNode "generator" es
-     , sourceIcon = pLeaf "icon" es
-     , sourceId = pLeaf "id" es
-     , sourceLinks = pMany "link" pLink es
-     , sourceLogo = pLeaf "logo" es
-     , sourceRights = pTextContent "rights" es
-     , sourceSubtitle = pTextContent "subtitle" es
-     , sourceTitle = pTextContent "title" es
-     , sourceUpdated = pLeaf "updated" es
-     , sourceOther = [] -- XXX ?
-     }
+   in Source
+        { sourceAuthors = pMany "author" pPerson es
+        , sourceCategories = pMany "category" pCategory es
+        , sourceGenerator = pGenerator `fmap` pNode "generator" es
+        , sourceIcon = pLeaf "icon" es
+        , sourceId = pLeaf "id" es
+        , sourceLinks = pMany "link" pLink es
+        , sourceLogo = pLeaf "logo" es
+        , sourceRights = pTextContent "rights" es
+        , sourceSubtitle = pTextContent "subtitle" es
+        , sourceTitle = pTextContent "title" es
+        , sourceUpdated = pLeaf "updated" es
+        , sourceOther = [] -- XXX ?
+        }
 
 pLink :: XML.Element -> Maybe Link
 pLink e = do
   uri <- pAttr "href" e
   return
     Link
-    { linkHref = uri
-    , linkRel = Right `fmap` pAttr "rel" e
-    , linkType = pAttr "type" e
-    , linkHrefLang = pAttr "hreflang" e
-    , linkTitle = pAttr "title" e
-    , linkLength = pAttr "length" e
-    , linkAttrs = other_as (elementAttributes e)
-    , linkOther = []
-    }
+      { linkHref = uri
+      , linkRel = Right `fmap` pAttr "rel" e
+      , linkType = pAttr "type" e
+      , linkHrefLang = pAttr "hreflang" e
+      , linkTitle = pAttr "title" e
+      , linkLength = pAttr "length" e
+      , linkAttrs = other_as (elementAttributes e)
+      , linkOther = []
+      }
   where
     other_as = filter (\a -> not (fst a `elem` known_attrs))
     known_attrs = map atomName ["href", "rel", "type", "hreflang", "title", "length"]
@@ -227,23 +227,23 @@ pEntry e = do
   u <- pLeaf "updated" es `mplus` pLeaf "published" es
   return
     Entry
-    { entryId = i
-    , entryTitle = t
-    , entryUpdated = u
-    , entryAuthors = pMany "author" pPerson es
-    , entryContributor = pMany "contributor" pPerson es
-    , entryCategories = pMany "category" pCategory es
-    , entryContent = pContent =<< pNode "content" es
-    , entryLinks = pMany "link" pLink es
-    , entryPublished = pLeaf "published" es
-    , entryRights = pTextContent "rights" es
-    , entrySource = pSource `fmap` pNode "source" es
-    , entrySummary = pTextContent "summary" es
-    , entryInReplyTo = pInReplyTo es
-    , entryInReplyTotal = pInReplyTotal es
-    , entryAttrs = other_as (elementAttributes e)
-    , entryOther = [] -- ?
-    }
+      { entryId = i
+      , entryTitle = t
+      , entryUpdated = u
+      , entryAuthors = pMany "author" pPerson es
+      , entryContributor = pMany "contributor" pPerson es
+      , entryCategories = pMany "category" pCategory es
+      , entryContent = pContent =<< pNode "content" es
+      , entryLinks = pMany "link" pLink es
+      , entryPublished = pLeaf "published" es
+      , entryRights = pTextContent "rights" es
+      , entrySource = pSource `fmap` pNode "source" es
+      , entrySummary = pTextContent "summary" es
+      , entryInReplyTo = pInReplyTo es
+      , entryInReplyTotal = pInReplyTotal es
+      , entryAttrs = other_as (elementAttributes e)
+      , entryOther = [] -- ?
+      }
   where
     other_as = filter (\a -> not (fst a `elem` known_attrs))
     -- let's have them all (including xml:base and xml:lang + xmlns: stuff)
@@ -281,11 +281,11 @@ pInReplyTo es = do
     Just ref ->
       return
         InReplyTo
-        { replyToRef = ref
-        , replyToHRef = pQAttr (atomThreadName "href") t
-        , replyToType = pQAttr (atomThreadName "type") t
-        , replyToSource = pQAttr (atomThreadName "source") t
-        , replyToOther = elementAttributes t -- ToDo: snip out matched ones.
-        , replyToContent = elementNodes t
-        }
+          { replyToRef = ref
+          , replyToHRef = pQAttr (atomThreadName "href") t
+          , replyToType = pQAttr (atomThreadName "type") t
+          , replyToSource = pQAttr (atomThreadName "source") t
+          , replyToOther = elementAttributes t -- ToDo: snip out matched ones.
+          , replyToContent = elementNodes t
+          }
     _ -> fail "no parse"

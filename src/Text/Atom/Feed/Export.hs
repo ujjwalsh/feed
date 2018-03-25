@@ -83,10 +83,10 @@ xmlns_atom = (qn, [ContentText atomNS])
         Nothing -> Name {nameLocalName = "xmlns", nameNamespace = Nothing, namePrefix = Nothing}
         Just s ->
           Name
-          { nameLocalName = s
-          , nameNamespace = Nothing -- XXX: is this ok?
-          , namePrefix = Just "xmlns"
-          }
+            { nameLocalName = s
+            , nameNamespace = Nothing -- XXX: is this ok?
+            , namePrefix = Just "xmlns"
+            }
 
 xmlns_atom_thread :: Attr
 xmlns_atom_thread = (qn, [ContentText atomThreadNS])
@@ -96,10 +96,10 @@ xmlns_atom_thread = (qn, [ContentText atomThreadNS])
         Nothing -> Name {nameLocalName = "xmlns", nameNamespace = Nothing, namePrefix = Nothing}
         Just s ->
           Name
-          { nameLocalName = s
-          , nameNamespace = Nothing -- XXX: is this ok?
-          , namePrefix = Just "xmlns"
-          }
+            { nameLocalName = s
+            , nameNamespace = Nothing -- XXX: is this ok?
+            , namePrefix = Just "xmlns"
+            }
 
 atomName :: Text -> Name
 atomName nc = Name {nameLocalName = nc, nameNamespace = Just atomNS, namePrefix = atom_prefix}
@@ -143,7 +143,7 @@ xmlFeed f =
    mb xmlLogo (feedLogo f) ++
    mb xmlRights (feedRights f) ++
    mb xmlSubtitle (feedSubtitle f) ++ map xmlEntry (feedEntries f) ++ feedOther f)
-  {elementAttributes = [xmlns_atom]}
+    {elementAttributes = [xmlns_atom]}
 
 xmlEntry :: Entry -> XML.Element
 xmlEntry e =
@@ -162,7 +162,7 @@ xmlEntry e =
    mb xmlSource (entrySource e) ++
    mb xmlSummary (entrySummary e) ++
    mb xmlInReplyTo (entryInReplyTo e) ++ mb xmlInReplyTotal (entryInReplyTotal e) ++ entryOther e)
-  {elementAttributes = entryAttrs e}
+    {elementAttributes = entryAttrs e}
 
 xmlContent :: EntryContent -> XML.Element
 xmlContent cont =
@@ -178,21 +178,21 @@ xmlContent cont =
 xmlCategory :: Category -> XML.Element
 xmlCategory c =
   (atomNode "category" (map NodeElement (catOther c)))
-  { elementAttributes =
-      [atomAttr "term" (catTerm c)] ++
-      mb (atomAttr "scheme") (catScheme c) ++ mb (atomAttr "label") (catLabel c)
-  }
+    { elementAttributes =
+        [atomAttr "term" (catTerm c)] ++
+        mb (atomAttr "scheme") (catScheme c) ++ mb (atomAttr "label") (catLabel c)
+    }
 
 xmlLink :: Link -> XML.Element
 xmlLink l =
   (atomNode "link" (map NodeElement (linkOther l)))
-  { elementAttributes =
-      [atomAttr "href" (linkHref l)] ++
-      mb (atomAttr "rel" . either id id) (linkRel l) ++
-      mb (atomAttr "type") (linkType l) ++
-      mb (atomAttr "hreflang") (linkHrefLang l) ++
-      mb (atomAttr "title") (linkTitle l) ++ mb (atomAttr "length") (linkLength l) ++ linkAttrs l
-  }
+    { elementAttributes =
+        [atomAttr "href" (linkHref l)] ++
+        mb (atomAttr "rel" . either id id) (linkRel l) ++
+        mb (atomAttr "type") (linkType l) ++
+        mb (atomAttr "hreflang") (linkHrefLang l) ++
+        mb (atomAttr "title") (linkTitle l) ++ mb (atomAttr "length") (linkLength l) ++ linkAttrs l
+    }
 
 xmlSource :: Source -> Element
 xmlSource s =
@@ -213,7 +213,7 @@ xmlSource s =
 xmlGenerator :: Generator -> Element
 xmlGenerator g =
   (atomLeaf "generator" (genText g))
-  {elementAttributes = mb (atomAttr "uri") (genURI g) ++ mb (atomAttr "version") (genVersion g)}
+    {elementAttributes = mb (atomAttr "uri") (genURI g) ++ mb (atomAttr "version") (genVersion g)}
 
 xmlAuthor :: Person -> XML.Element
 xmlAuthor p = atomNode "author" (xmlPerson p)
@@ -230,17 +230,17 @@ xmlPerson p =
 xmlInReplyTo :: InReplyTo -> XML.Element
 xmlInReplyTo irt =
   (atomThreadNode "in-reply-to" (replyToContent irt))
-  { elementAttributes =
-      mb (atomThreadAttr "ref") (Just $ replyToRef irt) ++
-      mb (atomThreadAttr "href") (replyToHRef irt) ++
-      mb (atomThreadAttr "type") (replyToType irt) ++
-      mb (atomThreadAttr "source") (replyToSource irt) ++ replyToOther irt
-  }
+    { elementAttributes =
+        mb (atomThreadAttr "ref") (Just $ replyToRef irt) ++
+        mb (atomThreadAttr "href") (replyToHRef irt) ++
+        mb (atomThreadAttr "type") (replyToType irt) ++
+        mb (atomThreadAttr "source") (replyToSource irt) ++ replyToOther irt
+    }
 
 xmlInReplyTotal :: InReplyTotal -> XML.Element
 xmlInReplyTotal irt =
   (atomThreadLeaf "total" (pack $ show $ replyToTotal irt))
-  {elementAttributes = replyToTotalOther irt}
+    {elementAttributes = replyToTotalOther irt}
 
 xmlId :: Text -> XML.Element
 xmlId = atomLeaf "id"

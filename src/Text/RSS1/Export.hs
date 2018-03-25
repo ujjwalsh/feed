@@ -48,15 +48,15 @@ xmlFeed f =
         , feedOther f
         ]))
         -- should we expect these to be derived by the XML pretty printer..?
-  { elementAttributes =
-      nub $
-      mkNAttr (qualName (Nothing, Nothing) "xmlns") rss10NS :
-      mkNAttr (qualName (Nothing, Just "xmlns") rdfPrefix) rdfNS :
-      mkNAttr (qualName (Nothing, Just "xmlns") synPrefix) synNS :
-      mkNAttr (qualName (Nothing, Just "xmlns") taxPrefix) taxNS :
-      mkNAttr (qualName (Nothing, Just "xmlns") conPrefix) conNS :
-      mkNAttr (qualName (Nothing, Just "xmlns") dcPrefix) dcNS : feedAttrs f
-  }
+    { elementAttributes =
+        nub $
+        mkNAttr (qualName (Nothing, Nothing) "xmlns") rss10NS :
+        mkNAttr (qualName (Nothing, Just "xmlns") rdfPrefix) rdfNS :
+        mkNAttr (qualName (Nothing, Just "xmlns") synPrefix) synNS :
+        mkNAttr (qualName (Nothing, Just "xmlns") taxPrefix) taxNS :
+        mkNAttr (qualName (Nothing, Just "xmlns") conPrefix) conNS :
+        mkNAttr (qualName (Nothing, Just "xmlns") dcPrefix) dcNS : feedAttrs f
+    }
 
 xmlChannel :: Channel -> XML.Element
 xmlChannel ch =
@@ -77,9 +77,9 @@ xmlChannel ch =
         , mb (xmlLeaf (synNS, Just synPrefix) "updateBase") (channelUpdateBase ch)
         ] ++
       xmlContentItems (channelContent ch) ++ xmlTopics (channelTopics ch) ++ channelOther ch))
-  { elementAttributes =
-      mkNAttr (qualName' (rdfNS, rdfPrefix) "about") (channelURI ch) : channelAttrs ch
-  }
+    { elementAttributes =
+        mkNAttr (qualName' (rdfNS, rdfPrefix) "about") (channelURI ch) : channelAttrs ch
+    }
 
 xmlImageURI :: URIString -> XML.Element
 xmlImageURI u = xmlEmpty (rss10NS, Nothing) "image" [mkNAttr (rdfName "resource") u]
@@ -94,7 +94,7 @@ xmlImage i =
       , xmlLeaf (rss10NS, Nothing) "link" (imageLink i)
       ] ++
       map xmlDC (imageDC i) ++ imageOther i))
-  {elementAttributes = mkNAttr (qualName' (rdfNS, rdfPrefix) "about") (imageURI i) : imageAttrs i}
+    {elementAttributes = mkNAttr (qualName' (rdfNS, rdfPrefix) "about") (imageURI i) : imageAttrs i}
 
 xmlItemURIs :: [URIString] -> [XML.Element]
 xmlItemURIs [] = []
@@ -120,7 +120,7 @@ xmlTextInput ti =
    , xmlLeaf (rss10NS, Nothing) "link" (textInputLink ti)
    ] ++
    map xmlDC (textInputDC ti) ++ textInputOther ti)
-  {elementAttributes = mkNAttr (rdfName "about") (textInputURI ti) : textInputAttrs ti}
+    {elementAttributes = mkNAttr (rdfName "about") (textInputURI ti) : textInputAttrs ti}
 
 xmlDC :: DCItem -> XML.Element
 xmlDC dc = xmlLeaf (dcNS, Just dcPrefix) (infoToTag (dcElt dc)) (dcText dc)
@@ -165,7 +165,7 @@ xmlContentInfo ci =
         , mb (rdfResource (conNS, conPrefix) "encoding") (contentEncoding ci)
         , mb (rdfValue []) (contentValue ci)
         ]))
-  {elementAttributes = mb (mkNAttr (rdfName "about")) (contentURI ci)}
+    {elementAttributes = mb (mkNAttr (rdfName "about")) (contentURI ci)}
 
 rdfResource :: (Text, Text) -> Text -> Text -> XML.Element
 rdfResource (uri, pre) t v = xmlEmpty (uri, Just pre) t [mkNAttr (rdfName "resource") v]
@@ -196,7 +196,7 @@ xmlTopic tt =
       mb (xmlLeaf (rss10NS, Nothing) "title") (taxonomyTitle tt) ++
       mb (xmlLeaf (rss10NS, Nothing) "description") (taxonomyDesc tt) ++
       xmlTopics (taxonomyTopics tt) ++ map xmlDC (taxonomyDC tt) ++ taxonomyOther tt))
-  {elementAttributes = [mkNAttr (rdfName "about") (taxonomyURI tt)]}
+    {elementAttributes = [mkNAttr (rdfName "about") (taxonomyURI tt)]}
 
 xmlItem :: Item -> XML.Element
 xmlItem i =
@@ -209,15 +209,15 @@ xmlItem i =
       mb (xmlLeaf (rss10NS, Nothing) "description") (itemDesc i) ++
       map xmlDC (itemDC i) ++
       xmlTopics (itemTopics i) ++ map xmlContentInfo (itemContent i) ++ itemOther i))
-  {elementAttributes = mkNAttr (qualName' (rdfNS, rdfPrefix) "about") (itemURI i) : itemAttrs i}
+    {elementAttributes = mkNAttr (qualName' (rdfNS, rdfPrefix) "about") (itemURI i) : itemAttrs i}
 
 xmlLeaf :: (Text, Maybe Text) -> Text -> Text -> XML.Element
 xmlLeaf (ns, pre) tg txt =
   Element
-  { elementName = qualName (Just ns, pre) tg
-  , elementAttributes = []
-  , elementNodes = [NodeContent $ ContentText txt]
-  }
+    { elementName = qualName (Just ns, pre) tg
+    , elementAttributes = []
+    , elementNodes = [NodeContent $ ContentText txt]
+    }
 
 xmlEmpty :: (Text, Maybe Text) -> Text -> [Attr] -> XML.Element
 xmlEmpty (uri, pre) t as = (qualNode (Just uri, pre) t []) {elementAttributes = as}

@@ -9,7 +9,7 @@ import Test.Framework.Providers.HUnit (testCase)
 import Test.HUnit (Assertion, assertBool)
 import Text.XML
 
-import Text.Atom.Feed (TextContent (TextString), entryLinks, nullEntry, nullLink)
+import Text.Atom.Feed (TextContent(TextString), entryLinks, nullEntry, nullLink)
 import Text.Feed.Export (xmlFeed)
 import Text.Feed.Import (parseFeedFromFile)
 import Text.Feed.Query
@@ -40,4 +40,4 @@ testAtomAlternate = testCase "*unspecified* link relation means 'alternate'" tes
     testAlt =
       let nullent = nullEntry "" (TextString "") ""
           item = AtomItem nullent {entryLinks = [nullLink ""]}
-      in assertBool "unspecified means alternate" $ isJust $ getItemLink item
+       in assertBool "unspecified means alternate" $ isJust $ getItemLink item

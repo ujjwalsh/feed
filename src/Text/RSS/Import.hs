@@ -96,11 +96,11 @@ elementToRSS e = do
   ch <- pNode "channel" es >>= elementToChannel
   return
     RSS
-    { rssVersion = v
-    , rssAttrs = filter (\a -> not (fst a `elem` known_attrs)) as
-    , rssChannel = ch
-    , rssOther = filter (\e1 -> elementName e1 /= qualName "channel") es
-    }
+      { rssVersion = v
+      , rssAttrs = filter (\a -> not (fst a `elem` known_attrs)) as
+      , rssChannel = ch
+      , rssOther = filter (\e1 -> elementName e1 /= qualName "channel") es
+      }
   where
     known_attrs = ["version"]
 
@@ -112,29 +112,29 @@ elementToChannel e = do
   link <- pLeaf "link" es
   return
     RSSChannel
-    { rssTitle = title
-    , rssLink = link
+      { rssTitle = title
+      , rssLink = link
         -- being liberal, <description/> is a required channel element.
-    , rssDescription = fromMaybe title (pLeaf "description" es)
-    , rssItems = pMany "item" elementToItem es
-    , rssLanguage = pLeaf "language" es `mplus` pQLeaf (dcName "lang") es
-    , rssCopyright = pLeaf "copyright" es
-    , rssEditor = pLeaf "managingEditor" es `mplus` pQLeaf (dcName "creator") es
-    , rssWebMaster = pLeaf "webMaster" es
-    , rssPubDate = pLeaf "pubDate" es `mplus` pQLeaf (dcName "date") es
-    , rssLastUpdate = pLeaf "lastBuildDate" es `mplus` pQLeaf (dcName "date") es
-    , rssCategories = pMany "category" elementToCategory es
-    , rssGenerator = pLeaf "generator" es `mplus` pQLeaf (dcName "source") es
-    , rssDocs = pLeaf "docs" es
-    , rssCloud = pNode "cloud" es >>= elementToCloud
-    , rssTTL = pLeaf "ttl" es >>= readInt
-    , rssImage = pNode "image" es >>= elementToImage
-    , rssRating = pLeaf "rating" es
-    , rssTextInput = pNode "textInput" es >>= elementToTextInput
-    , rssSkipHours = pNode "skipHours" es >>= elementToSkipHours
-    , rssSkipDays = pNode "skipDays" es >>= elementToSkipDays
-    , rssChannelOther = filter (\e1 -> not (elementName e1 `elem` known_channel_elts)) es
-    }
+      , rssDescription = fromMaybe title (pLeaf "description" es)
+      , rssItems = pMany "item" elementToItem es
+      , rssLanguage = pLeaf "language" es `mplus` pQLeaf (dcName "lang") es
+      , rssCopyright = pLeaf "copyright" es
+      , rssEditor = pLeaf "managingEditor" es `mplus` pQLeaf (dcName "creator") es
+      , rssWebMaster = pLeaf "webMaster" es
+      , rssPubDate = pLeaf "pubDate" es `mplus` pQLeaf (dcName "date") es
+      , rssLastUpdate = pLeaf "lastBuildDate" es `mplus` pQLeaf (dcName "date") es
+      , rssCategories = pMany "category" elementToCategory es
+      , rssGenerator = pLeaf "generator" es `mplus` pQLeaf (dcName "source") es
+      , rssDocs = pLeaf "docs" es
+      , rssCloud = pNode "cloud" es >>= elementToCloud
+      , rssTTL = pLeaf "ttl" es >>= readInt
+      , rssImage = pNode "image" es >>= elementToImage
+      , rssRating = pLeaf "rating" es
+      , rssTextInput = pNode "textInput" es >>= elementToTextInput
+      , rssSkipHours = pNode "skipHours" es >>= elementToSkipHours
+      , rssSkipDays = pNode "skipDays" es >>= elementToSkipDays
+      , rssChannelOther = filter (\e1 -> not (elementName e1 `elem` known_channel_elts)) es
+      }
   where
     known_channel_elts =
       map
@@ -170,14 +170,14 @@ elementToImage e = do
   link <- pLeaf "link" es
   return
     RSSImage
-    { rssImageURL = url
-    , rssImageTitle = title
-    , rssImageLink = link
-    , rssImageWidth = pLeaf "width" es >>= readInt
-    , rssImageHeight = pLeaf "height" es >>= readInt
-    , rssImageDesc = pLeaf "description" es
-    , rssImageOther = filter (\e1 -> not (elementName e1 `elem` known_image_elts)) es
-    }
+      { rssImageURL = url
+      , rssImageTitle = title
+      , rssImageLink = link
+      , rssImageWidth = pLeaf "width" es >>= readInt
+      , rssImageHeight = pLeaf "height" es >>= readInt
+      , rssImageDesc = pLeaf "description" es
+      , rssImageOther = filter (\e1 -> not (elementName e1 `elem` known_image_elts)) es
+      }
   where
     known_image_elts = map qualName ["url", "title", "link", "width", "height", "description"]
 
@@ -187,10 +187,10 @@ elementToCategory e = do
   let as = elementAttributes e
   return
     RSSCategory
-    { rssCategoryDomain = pAttr "domain" e
-    , rssCategoryAttrs = filter (\a -> not (nameLocalName (attrKey a) `elem` known_attrs)) as
-    , rssCategoryValue = strContent e
-    }
+      { rssCategoryDomain = pAttr "domain" e
+      , rssCategoryAttrs = filter (\a -> not (nameLocalName (attrKey a) `elem` known_attrs)) as
+      , rssCategoryValue = strContent e
+      }
   where
     known_attrs = ["domain"]
 
@@ -200,13 +200,13 @@ elementToCloud e = do
   let as = elementAttributes e
   return
     RSSCloud
-    { rssCloudDomain = pAttr "domain" e
-    , rssCloudPort = pAttr "port" e
-    , rssCloudPath = pAttr "path" e
-    , rssCloudRegisterProcedure = pAttr "registerProcedure" e
-    , rssCloudProtocol = pAttr "protocol" e
-    , rssCloudAttrs = filter (\a -> not (nameLocalName (attrKey a) `elem` known_attrs)) as
-    }
+      { rssCloudDomain = pAttr "domain" e
+      , rssCloudPort = pAttr "port" e
+      , rssCloudPath = pAttr "path" e
+      , rssCloudRegisterProcedure = pAttr "registerProcedure" e
+      , rssCloudProtocol = pAttr "protocol" e
+      , rssCloudAttrs = filter (\a -> not (nameLocalName (attrKey a) `elem` known_attrs)) as
+      }
   where
     known_attrs = ["domain", "port", "path", "registerProcedure", "protocol"]
 
@@ -216,19 +216,19 @@ elementToItem e = do
   let es = children e
   return
     RSSItem
-    { rssItemTitle = pLeaf "title" es
-    , rssItemLink = pLeaf "link" es
-    , rssItemDescription = pLeaf "description" es
-    , rssItemAuthor = pLeaf "author" es `mplus` pQLeaf (dcName "creator") es
-    , rssItemCategories = pMany "category" elementToCategory es
-    , rssItemComments = pLeaf "comments" es
-    , rssItemEnclosure = pNode "enclosure" es >>= elementToEnclosure
-    , rssItemGuid = pNode "guid" es >>= elementToGuid
-    , rssItemPubDate = pLeaf "pubDate" es `mplus` pQLeaf (dcName "date") es
-    , rssItemSource = pNode "source" es >>= elementToSource
-    , rssItemAttrs = elementAttributes e
-    , rssItemOther = filter (\e1 -> not (elementName e1 `elem` known_item_elts)) es
-    }
+      { rssItemTitle = pLeaf "title" es
+      , rssItemLink = pLeaf "link" es
+      , rssItemDescription = pLeaf "description" es
+      , rssItemAuthor = pLeaf "author" es `mplus` pQLeaf (dcName "creator") es
+      , rssItemCategories = pMany "category" elementToCategory es
+      , rssItemComments = pLeaf "comments" es
+      , rssItemEnclosure = pNode "enclosure" es >>= elementToEnclosure
+      , rssItemGuid = pNode "guid" es >>= elementToGuid
+      , rssItemPubDate = pLeaf "pubDate" es `mplus` pQLeaf (dcName "date") es
+      , rssItemSource = pNode "source" es >>= elementToSource
+      , rssItemAttrs = elementAttributes e
+      , rssItemOther = filter (\e1 -> not (elementName e1 `elem` known_item_elts)) es
+      }
   where
     known_item_elts =
       map
@@ -252,10 +252,10 @@ elementToSource e = do
   url <- pAttr "url" e
   return
     RSSSource
-    { rssSourceURL = url
-    , rssSourceAttrs = filter (\a -> not (nameLocalName (attrKey a) `elem` known_attrs)) as
-    , rssSourceTitle = strContent e
-    }
+      { rssSourceURL = url
+      , rssSourceAttrs = filter (\a -> not (nameLocalName (attrKey a) `elem` known_attrs)) as
+      , rssSourceTitle = strContent e
+      }
   where
     known_attrs = ["url"]
 
@@ -267,11 +267,11 @@ elementToEnclosure e = do
   ty <- pAttr "type" e
   return
     RSSEnclosure
-    { rssEnclosureURL = url
-    , rssEnclosureType = ty
-    , rssEnclosureLength = pAttr "length" e >>= readInt
-    , rssEnclosureAttrs = filter (\a -> not (nameLocalName (attrKey a) `elem` known_attrs)) as
-    }
+      { rssEnclosureURL = url
+      , rssEnclosureType = ty
+      , rssEnclosureLength = pAttr "length" e >>= readInt
+      , rssEnclosureAttrs = filter (\a -> not (nameLocalName (attrKey a) `elem` known_attrs)) as
+      }
   where
     known_attrs = ["url", "type", "length"]
 
@@ -281,10 +281,10 @@ elementToGuid e = do
   let as = elementAttributes e
   return
     RSSGuid
-    { rssGuidPermanentURL = pAttr "isPermaLink" e >>= readBool
-    , rssGuidAttrs = filter (\a -> not (nameLocalName (attrKey a) `elem` known_attrs)) as
-    , rssGuidValue = strContent e
-    }
+      { rssGuidPermanentURL = pAttr "isPermaLink" e >>= readBool
+      , rssGuidAttrs = filter (\a -> not (nameLocalName (attrKey a) `elem` known_attrs)) as
+      , rssGuidValue = strContent e
+      }
   where
     known_attrs = ["isPermaLink"]
 
@@ -298,13 +298,13 @@ elementToTextInput e = do
   link <- pLeaf "link" es
   return
     RSSTextInput
-    { rssTextInputTitle = title
-    , rssTextInputDesc = desc
-    , rssTextInputName = name
-    , rssTextInputLink = link
-    , rssTextInputAttrs = elementAttributes e
-    , rssTextInputOther = filter (\e1 -> not (elementName e1 `elem` known_ti_elts)) es
-    }
+      { rssTextInputTitle = title
+      , rssTextInputDesc = desc
+      , rssTextInputName = name
+      , rssTextInputLink = link
+      , rssTextInputAttrs = elementAttributes e
+      , rssTextInputOther = filter (\e1 -> not (elementName e1 `elem` known_ti_elts)) es
+      }
   where
     known_ti_elts = map qualName ["title", "description", "name", "link"]
 

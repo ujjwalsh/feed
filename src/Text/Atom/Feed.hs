@@ -187,22 +187,22 @@ nullFeed ::
   -> Feed
 nullFeed i t u =
   Feed
-  { feedId = i
-  , feedTitle = t
-  , feedUpdated = u
-  , feedAuthors = []
-  , feedCategories = []
-  , feedContributors = []
-  , feedGenerator = Nothing
-  , feedIcon = Nothing
-  , feedLinks = []
-  , feedLogo = Nothing
-  , feedRights = Nothing
-  , feedSubtitle = Nothing
-  , feedEntries = []
-  , feedAttrs = []
-  , feedOther = []
-  }
+    { feedId = i
+    , feedTitle = t
+    , feedUpdated = u
+    , feedAuthors = []
+    , feedCategories = []
+    , feedContributors = []
+    , feedGenerator = Nothing
+    , feedIcon = Nothing
+    , feedLinks = []
+    , feedLogo = Nothing
+    , feedRights = Nothing
+    , feedSubtitle = Nothing
+    , feedEntries = []
+    , feedAttrs = []
+    , feedOther = []
+    }
 
 nullEntry ::
      URI -- ^entryId
@@ -211,23 +211,23 @@ nullEntry ::
   -> Entry
 nullEntry i t u =
   Entry
-  { entryId = i
-  , entryTitle = t
-  , entryUpdated = u
-  , entryAuthors = []
-  , entryCategories = []
-  , entryContent = Nothing
-  , entryContributor = []
-  , entryLinks = []
-  , entryPublished = Nothing
-  , entryRights = Nothing
-  , entrySource = Nothing
-  , entrySummary = Nothing
-  , entryInReplyTo = Nothing
-  , entryInReplyTotal = Nothing
-  , entryAttrs = []
-  , entryOther = []
-  }
+    { entryId = i
+    , entryTitle = t
+    , entryUpdated = u
+    , entryAuthors = []
+    , entryCategories = []
+    , entryContent = Nothing
+    , entryContributor = []
+    , entryLinks = []
+    , entryPublished = Nothing
+    , entryRights = Nothing
+    , entrySource = Nothing
+    , entrySummary = Nothing
+    , entryInReplyTo = Nothing
+    , entryInReplyTotal = Nothing
+    , entryAttrs = []
+    , entryOther = []
+    }
 
 nullGenerator ::
      Text -- ^genText
@@ -239,32 +239,32 @@ nullLink ::
   -> Link
 nullLink uri =
   Link
-  { linkHref = uri
-  , linkRel = Nothing
-  , linkType = Nothing
-  , linkHrefLang = Nothing
-  , linkTitle = Nothing
-  , linkLength = Nothing
-  , linkAttrs = []
-  , linkOther = []
-  }
+    { linkHref = uri
+    , linkRel = Nothing
+    , linkType = Nothing
+    , linkHrefLang = Nothing
+    , linkTitle = Nothing
+    , linkLength = Nothing
+    , linkAttrs = []
+    , linkOther = []
+    }
 
 nullSource :: Source
 nullSource =
   Source
-  { sourceAuthors = []
-  , sourceCategories = []
-  , sourceGenerator = Nothing
-  , sourceIcon = Nothing
-  , sourceId = Nothing
-  , sourceLinks = []
-  , sourceLogo = Nothing
-  , sourceRights = Nothing
-  , sourceSubtitle = Nothing
-  , sourceTitle = Nothing
-  , sourceUpdated = Nothing
-  , sourceOther = []
-  }
+    { sourceAuthors = []
+    , sourceCategories = []
+    , sourceGenerator = Nothing
+    , sourceIcon = Nothing
+    , sourceId = Nothing
+    , sourceLinks = []
+    , sourceLogo = Nothing
+    , sourceRights = Nothing
+    , sourceSubtitle = Nothing
+    , sourceTitle = Nothing
+    , sourceUpdated = Nothing
+    , sourceOther = []
+    }
 
 nullPerson :: Person
 nullPerson = Person {personName = "", personURI = Nothing, personEmail = Nothing, personOther = []}

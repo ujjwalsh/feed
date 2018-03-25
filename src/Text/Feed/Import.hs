@@ -2,7 +2,6 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE CPP #-}
 
-
 --------------------------------------------------------------------
 -- |
 -- Module    : Text.Feed.Import
@@ -56,7 +55,6 @@ import System.IO.UTF8 as UTF8 (readFile)
 utf8readFile :: FilePath -> IO String
 utf8readFile = UTF8.readFile
 #endif
-
 class FeedSource s where
   parseFeedSourceXML :: s -> Either SomeException C.Document
 
@@ -86,10 +84,8 @@ parseFeedWithParser :: FeedSource s => (s -> Either e C.Document) -> s -> Maybe 
 parseFeedWithParser parser str =
   case parser str of
     Left _ -> Nothing
-    Right d ->
-      readAtom e `mplus` readRSS2 e `mplus` readRSS1 e `mplus` Just (XMLFeed e)
-      where
-        e = C.toXMLElement $ C.documentRoot d
+    Right d -> readAtom e `mplus` readRSS2 e `mplus` readRSS1 e `mplus` Just (XMLFeed e)
+      where e = C.toXMLElement $ C.documentRoot d
 
 parseFeedString :: String -> Maybe Feed
 parseFeedString = parseFeedSource

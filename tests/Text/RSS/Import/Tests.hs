@@ -27,7 +27,7 @@ testElementToCloudIsNotCreated = testCase "should not create rss cloud" notCreat
     notCreateRSSCloud = do
       let notXmlCloudElement =
             XML.Element
-            {elementName = createQName "notCloud", elementAttributes = [], elementNodes = []}
+              {elementName = createQName "notCloud", elementAttributes = [], elementNodes = []}
       let expected = Nothing
       assertEqual "not create rss cloud" expected (elementToCloud notXmlCloudElement)
 
@@ -39,25 +39,25 @@ testElementToCloud = testCase "should create rss cloud" createRSSCloud
       let attr = mkNAttr (createQName "attr") "text for attr"
       let xmlCloudElement =
             XML.Element
-            { elementName = createQName "cloud"
-            , elementAttributes =
-                [ mkNAttr (createQName "domain") "domain cloud"
-                , mkNAttr (createQName "port") "port cloud"
-                , mkNAttr (createQName "path") "path cloud"
-                , mkNAttr (createQName "registerProcedure") "register cloud"
-                , mkNAttr (createQName "protocol") "protocol cloud"
-                , attr
-                ] :: [Attr]
-            , elementNodes = [createContent ""]
-            }
+              { elementName = createQName "cloud"
+              , elementAttributes =
+                  [ mkNAttr (createQName "domain") "domain cloud"
+                  , mkNAttr (createQName "port") "port cloud"
+                  , mkNAttr (createQName "path") "path cloud"
+                  , mkNAttr (createQName "registerProcedure") "register cloud"
+                  , mkNAttr (createQName "protocol") "protocol cloud"
+                  , attr
+                  ] :: [Attr]
+              , elementNodes = [createContent ""]
+              }
       let expected =
             Just
               RSSCloud
-              { rssCloudDomain = Just "domain cloud"
-              , rssCloudPort = Just "port cloud"
-              , rssCloudPath = Just "path cloud"
-              , rssCloudRegisterProcedure = Just "register cloud"
-              , rssCloudProtocol = Just "protocol cloud"
-              , rssCloudAttrs = [attr]
-              }
+                { rssCloudDomain = Just "domain cloud"
+                , rssCloudPort = Just "port cloud"
+                , rssCloudPath = Just "path cloud"
+                , rssCloudRegisterProcedure = Just "register cloud"
+                , rssCloudProtocol = Just "protocol cloud"
+                , rssCloudAttrs = [attr]
+                }
       assertEqual "create rss cloud" expected (elementToCloud xmlCloudElement)

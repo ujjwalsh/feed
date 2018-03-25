@@ -153,12 +153,12 @@ checkLinks e =
         xs1 ->
           let jmb (Just x) (Just y) = Just (x, y)
               jmb _ _ = Nothing
-          in case mapMaybe (\ex -> pAttr "type" ex `jmb` pAttr "hreflang" ex) xs1 of
-               xs2 ->
-                 if any (\x -> length x > 1) (group xs2)
-                   then demand
-                          "An 'entry' element cannot have duplicate 'link-rel-alternate-type-hreflang' elements"
-                   else valid
+           in case mapMaybe (\ex -> pAttr "type" ex `jmb` pAttr "hreflang" ex) xs1 of
+                xs2 ->
+                  if any (\x -> length x > 1) (group xs2)
+                    then demand
+                           "An 'entry' element cannot have duplicate 'link-rel-alternate-type-hreflang' elements"
+                    else valid
 
 checkId :: Element -> ValidatorResult
 checkId e =

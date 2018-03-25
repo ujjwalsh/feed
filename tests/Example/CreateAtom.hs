@@ -16,8 +16,7 @@ import Text.XML
 atomFeed :: Maybe Text
 atomFeed = renderFeed examplePosts
 
-data Post
-  = Post
+data Post = Post
   { _postedOn :: Text
   , _url :: Text
   , _content :: Text
@@ -35,10 +34,10 @@ toEntry (Post date url content) =
      url -- The ID field. Must be a link to validate.
      (Atom.TextString (take 20 content)) -- Title
      date)
-  { Atom.entryAuthors = [Atom.nullPerson {Atom.personName = "J. Smith"}]
-  , Atom.entryLinks = [Atom.nullLink url]
-  , Atom.entryContent = Just (Atom.HTMLContent content)
-  }
+    { Atom.entryAuthors = [Atom.nullPerson {Atom.personName = "J. Smith"}]
+    , Atom.entryLinks = [Atom.nullLink url]
+    , Atom.entryContent = Just (Atom.HTMLContent content)
+    }
 
 feed :: [Post] -> Atom.Feed
 feed posts =
@@ -47,7 +46,7 @@ feed posts =
     (Atom.TextString "Example Website") -- Title
     (case posts -- Updated
            of
-       (Post latestPostDate _ _):_ -> latestPostDate
+       Post latestPostDate _ _:_ -> latestPostDate
        _ -> "")
 
 renderFeed :: [Post] -> Maybe Text
@@ -55,4 +54,5 @@ renderFeed posts =
   fmap (toStrict . renderText def) $
   elementToDoc $
   Export.xmlFeed $
-  (feed posts) {Atom.feedEntries = fmap toEntry posts, Atom.feedLinks = [Atom.nullLink "http://example.com/"]}
+  (feed posts)
+    {Atom.feedEntries = fmap toEntry posts, Atom.feedLinks = [Atom.nullLink "http://example.com/"]}

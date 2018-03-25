@@ -33,8 +33,7 @@ import Prelude.Compat
 import Data.Text (Text)
 import Data.XML.Compat
 import Data.XML.Types
-import Text.Atom.Feed.Export
-       (mb, xmlCategory, xmlTitle, xmlns_atom)
+import Text.Atom.Feed.Export (mb, xmlCategory, xmlTitle, xmlns_atom)
 import Text.Atom.Pub
 
 -- ToDo: old crud; inline away.

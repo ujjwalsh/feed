@@ -72,8 +72,7 @@ import Data.Time.Format (ParseTime)
 import qualified Data.Time.Format as F
 
 -- for getItemPublishDate rfc822 date parsing.
-import Data.Time.Locale.Compat
-       (defaultTimeLocale, iso8601DateFormat, rfc822DateFormat)
+import Data.Time.Locale.Compat (defaultTimeLocale, iso8601DateFormat, rfc822DateFormat)
 
 feedItems :: Feed.Feed -> [Feed.Item]
 feedItems fe =
@@ -143,7 +142,7 @@ getFeedHTML ft =
   where
     isSelf lr =
       let rel = Atom.linkRel lr
-      in (isNothing rel || toStr rel == "alternate") && isHTMLType (linkType lr)
+       in (isNothing rel || toStr rel == "alternate") && isHTMLType (linkType lr)
     isHTMLType (Just str) = "html" `T.isSuffixOf` str
     isHTMLType _ = True -- if none given, assume html.
 
@@ -275,7 +274,7 @@ getItemLink it =
   where
     isSelf lr =
       let rel = Atom.linkRel lr
-      in (isNothing rel || toStr rel == "alternate") && isHTMLType (linkType lr)
+       in (isNothing rel || toStr rel == "alternate") && isHTMLType (linkType lr)
     isHTMLType (Just str) = "html" `T.isSuffixOf` str
     isHTMLType _ = True -- if none given, assume html.
 
