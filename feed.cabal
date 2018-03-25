@@ -142,3 +142,14 @@ test-suite readme
     , xml-types
   build-tool-depends:
     markdown-unlit:markdown-unlit >= 0.4 && < 0.6
+
+test-suite readme-doctests
+    hs-source-dirs: tests
+    main-is: doctest-driver.hs
+    extensions: OverloadedStrings
+    type: exitcode-stdio-1.0
+    build-depends:
+        base >= 4 && < 4.14
+      , doctest
+      , doctest-driver-gen
+      , feed
