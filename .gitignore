@@ -2,11 +2,10 @@
 *.o
 *~
 /.cabal-sandbox/
+/.ghc.environment.*
 /.idea/
+/.stack-work/
 /dist-newstyle/
-HLint.hs
-.stack-work/
 cabal.sandbox.config
 dist
 setup
-/.ghc.environment.*
