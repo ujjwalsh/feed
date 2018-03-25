@@ -3,7 +3,7 @@ module Example where
 import Prelude ()
 import Prelude.Compat
 
-import Example.CreateAtom (createAtom)
+import Example.CreateAtom (atomFeed)
 import Test.Framework (Test, testGroup)
 import Test.Framework.Providers.HUnit (testCase)
 import Test.HUnit (Assertion)
@@ -14,7 +14,7 @@ exampleTests =
 
 typeCheckAtom :: Assertion
 typeCheckAtom =
-  case createAtom of
+  case atomFeed of
     Just "" -> error "createAtom returned an empty Text"
     Just _ -> return ()
     Nothing -> error "createAtom returned document with unresolved entities"
