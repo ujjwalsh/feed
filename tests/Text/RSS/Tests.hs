@@ -3,6 +3,7 @@ module Text.RSS.Tests where
 import Prelude ()
 import Prelude.Compat
 
+import Data.Maybe (isJust)
 import Test.Framework (Test, mutuallyExclusive, testGroup)
 import Test.Framework.Providers.HUnit (testCase)
 import Test.HUnit (Assertion, assertBool)
@@ -27,6 +28,6 @@ testFullRss20Parse = testCase "parse a complete rss 2.0 file" testRss20
   where
     testRss20 :: Assertion
     testRss20 = do
-      print . fmap (renderText def) . elementToDoc . xmlFeed =<<
-        parseFeedFromFile =<< getDataFileName "tests/files/rss20.xml"
-      assertBool "OK" True
+      contents <- parseFeedFromFile =<< getDataFileName "tests/files/rss20.xml"
+      let res = fmap (renderText def) . elementToDoc . xmlFeed $ contents
+      assertBool "RSS 2.0 Parsing" $ isJust res
