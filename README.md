@@ -47,9 +47,9 @@ import qualified Text.Atom.Feed.Export as Export (textFeed)
 
 myFeed :: Atom.Feed
 myFeed = Atom.nullFeed
-    "http://example.com/atom.xml"       -- ^ id
-    (Atom.TextString "Example Website") -- ^ title
-    "2017-08-01"                        -- ^ last updated
+    "http://example.com/atom.xml"
+    (Atom.TextString "Example Website")
+    "2017-08-01"
 ```
 
 Now we can export the feed to `Text`.
@@ -59,14 +59,17 @@ renderFeed :: Atom.Feed -> Maybe Lazy.Text
 renderFeed = Export.textFeed
 ```
 
-```
-> renderFeed myFeed
-<?xml version="1.0" encoding="UTF-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <title type="text">Example Website</title>
-  <id>http://example.com/atom.xml</id>
-  <updated>2017-08-01</updated>
-</feed>
+We can now render our feed:
+
+```haskell
+-- |
+-- >>> renderFeed myFeed
+-- <?xml version="1.0" encoding="UTF-8"?>
+-- <feed xmlns="http://www.w3.org/2005/Atom">
+--   <title xmlns:ns="http://www.w3.org/2005/Atom" ns:type="text">Example Website</title>
+--   <id>http://example.com/atom.xml</id>
+--   <updated>2017-08-01</updated>
+-- </feed>
 ```
 
 The `TextContent` sum type allows us to specify which type of text we're providing.
