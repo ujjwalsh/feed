@@ -1,4 +1,6 @@
-module Text.Atom.Tests (atomTests) where
+module Text.Atom.Tests
+  ( atomTests
+  ) where
 
 import Prelude.Compat
 

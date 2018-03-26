@@ -1,4 +1,6 @@
-module Example (exampleTests) where
+module Example
+  ( exampleTests
+  ) where
 
 import Prelude.Compat
 

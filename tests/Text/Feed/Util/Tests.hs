@@ -1,4 +1,6 @@
-module Text.Feed.Util.Tests (feedUtilTests) where
+module Text.Feed.Util.Tests
+  ( feedUtilTests
+  ) where
 
 import Prelude.Compat
 

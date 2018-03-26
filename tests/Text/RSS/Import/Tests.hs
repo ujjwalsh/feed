@@ -1,4 +1,6 @@
-module Text.RSS.Import.Tests (rssImportTests) where
+module Text.RSS.Import.Tests
+  ( rssImportTests
+  ) where
 
 import Prelude.Compat
 

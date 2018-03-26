@@ -1,4 +1,5 @@
 {-# OPTIONS -fno-warn-incomplete-patterns #-}
+
 --------------------------------------------------------------------
 -- |
 -- Module    : Text.Feed.Constructor
@@ -479,11 +480,7 @@ withFeedCategories cats fe =
                           addChild
                             (unode
                                "category"
-                               (maybe
-                                  (: [])
-                                  (\v x -> [mkAttr "domain" v, x])
-                                  mb
-                                  (mkAttr "term" t)))
+                               (maybe (: []) (\v x -> [mkAttr "domain" v, x]) mb (mkAttr "term" t)))
                             acc)
                        e
                        cats)
@@ -773,9 +770,7 @@ withItemCategories cats fi =
       foldr
         (\(t, mb) acc ->
            addChild
-             (unode
-                "category"
-                (maybe (: []) (\v x -> [mkAttr "domain" v, x]) mb (mkAttr "term" t)))
+             (unode "category" (maybe (: []) (\v x -> [mkAttr "domain" v, x]) mb (mkAttr "term" t)))
              acc)
         i
         cats

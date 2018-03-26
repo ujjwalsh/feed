@@ -85,8 +85,15 @@ xmlCategories (CategoriesExternal u) = mkElem (appName "categories") [mkAttr "hr
 xmlCategories (Categories mbFixed mbScheme cs) =
   mkElem
     (appName "categories")
-    (mb (\ f -> mkAttr "fixed" (if f then "yes" else "no")) mbFixed ++
-      mb (mkAttr "scheme") mbScheme)
+    (mb
+       (\f ->
+          mkAttr
+            "fixed"
+            (if f
+               then "yes"
+               else "no"))
+       mbFixed ++
+     mb (mkAttr "scheme") mbScheme)
     (map xmlCategory cs)
 
 xmlAccept :: Accept -> Element

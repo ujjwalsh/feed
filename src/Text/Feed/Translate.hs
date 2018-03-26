@@ -74,11 +74,10 @@ toAtomItem it =
     XMLItem {} -> error "toAtomItem: unimplemented (from shallow XML rep.)"
     Feed.RSSItem ri -> foldl (\oi f -> f oi) outIt pipeline_rss_atom
       where outIt =
-                withAtomEntry
-                  (\e ->
-                     e{Atom.entryOther = RSS.rssItemOther ri,
-                       Atom.entryAttrs = RSS.rssItemAttrs ri})
-                  (newItem AtomKind)
+              withAtomEntry
+                (\e ->
+                   e {Atom.entryOther = RSS.rssItemOther ri, Atom.entryAttrs = RSS.rssItemAttrs ri})
+                (newItem AtomKind)
             pipeline_rss_atom =
               [ mb withItemTitle (rssItemTitle ri)
               , mb withItemLink (rssItemLink ri)

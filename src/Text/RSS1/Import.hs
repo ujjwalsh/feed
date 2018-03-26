@@ -210,8 +210,7 @@ elementToTaxonomyTopic e = do
       , taxonomyLink = li
       , taxonomyTitle = pLeaf "title" e
       , taxonomyDesc = pLeaf "description" e
-      , taxonomyTopics =
-          maybe [] bagLeaves $ pQNode (qualName' (taxNS, taxPrefix) "topics") e
+      , taxonomyTopics = maybe [] bagLeaves $ pQNode (qualName' (taxNS, taxPrefix) "topics") e
       , taxonomyDC = mapMaybe elementToDC es
       , taxonomyOther = es
       }
