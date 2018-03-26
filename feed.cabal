@@ -43,7 +43,9 @@ source-repository head
 library
   ghc-options:       -Wall
   hs-source-dirs:    src
-  extensions:        OverloadedStrings
+  extensions:
+    NoImplicitPrelude
+    OverloadedStrings
   exposed-modules:
     Text.Atom.Feed
     Text.Atom.Feed.Export
@@ -89,7 +91,9 @@ test-suite tests
   hs-source-dirs:    tests
   main-is:           Main.hs
   type:              exitcode-stdio-1.0
-  extensions:        OverloadedStrings
+  extensions:
+    NoImplicitPrelude
+    OverloadedStrings
   other-modules:
     Paths_feed
     Example
@@ -120,7 +124,9 @@ test-suite tests
 test-suite readme
   ghc-options:       -Wall -pgmL markdown-unlit
   main-is:           README.lhs
-  extensions:        OverloadedStrings
+  extensions:
+    NoImplicitPrelude
+    OverloadedStrings
   type:              exitcode-stdio-1.0
   build-depends:
       base >= 4 && < 4.12

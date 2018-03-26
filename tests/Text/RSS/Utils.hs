@@ -1,6 +1,5 @@
 module Text.RSS.Utils where
 
-import Prelude ()
 import Prelude.Compat
 
 import Data.Text

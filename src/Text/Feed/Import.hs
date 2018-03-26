@@ -26,7 +26,6 @@ module Text.Feed.Import
   , readAtom -- :: XML.Element -> Maybe Feed
   ) where
 
-import Prelude ()
 import Prelude.Compat
 
 import Control.Exception

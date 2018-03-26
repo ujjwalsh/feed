@@ -15,7 +15,6 @@ module Text.Feed.Util
   , toFeedDateStringUTC
   ) where
 
-import Prelude ()
 import Prelude.Compat
 
 import Data.Time (UTCTime, formatTime)

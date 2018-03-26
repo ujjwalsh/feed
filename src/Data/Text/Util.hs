@@ -2,6 +2,8 @@ module Data.Text.Util
   ( readInt
   ) where
 
+import Prelude.Compat
+
 import Data.Text
 import Data.Text.Read
 

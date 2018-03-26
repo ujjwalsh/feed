@@ -18,7 +18,6 @@ module Text.Feed.Translate
   , withRSS1Item -- :: (RSS1.Item -> RSS1.Item) -> Item -> Item
   ) where
 
-import Prelude ()
 import Prelude.Compat
 
 import Control.Arrow ((&&&))
@@ -75,11 +74,11 @@ toAtomItem it =
     XMLItem {} -> error "toAtomItem: unimplemented (from shallow XML rep.)"
     Feed.RSSItem ri -> foldl (\oi f -> f oi) outIt pipeline_rss_atom
       where outIt =
-              flip
                 withAtomEntry
-                (newItem AtomKind)
-                (\e ->
-                   e {Atom.entryOther = RSS.rssItemOther ri, Atom.entryAttrs = RSS.rssItemAttrs ri})
+                  (\e ->
+                     e{Atom.entryOther = RSS.rssItemOther ri,
+                       Atom.entryAttrs = RSS.rssItemAttrs ri})
+                  (newItem AtomKind)
             pipeline_rss_atom =
               [ mb withItemTitle (rssItemTitle ri)
               , mb withItemLink (rssItemLink ri)

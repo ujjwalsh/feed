@@ -27,7 +27,6 @@ module Text.Atom.Pub.Export
   , xmlAccept
   ) where
 
-import Prelude ()
 import Prelude.Compat
 
 import Data.Text (Text)
@@ -60,7 +59,7 @@ xmlService s =
   mkElem
     (appName "service")
     [xmlns_app, xmlns_atom]
-    (concat [map xmlWorkspace (serviceWorkspaces s), serviceOther s])
+    (map xmlWorkspace (serviceWorkspaces s) ++ serviceOther s)
 
 xmlWorkspace :: Workspace -> Element
 xmlWorkspace w =
@@ -86,17 +85,8 @@ xmlCategories (CategoriesExternal u) = mkElem (appName "categories") [mkAttr "hr
 xmlCategories (Categories mbFixed mbScheme cs) =
   mkElem
     (appName "categories")
-    (concat
-       [ mb
-           (\f ->
-              mkAttr
-                "fixed"
-                (if f
-                   then "yes"
-                   else "no"))
-           mbFixed
-       , mb (mkAttr "scheme") mbScheme
-       ])
+    (mb (\ f -> mkAttr "fixed" (if f then "yes" else "no")) mbFixed ++
+      mb (mkAttr "scheme") mbScheme)
     (map xmlCategory cs)
 
 xmlAccept :: Accept -> Element

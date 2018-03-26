@@ -20,7 +20,6 @@ module Text.Atom.Pub
   , Accept(..)
   ) where
 
-import Prelude ()
 import Prelude.Compat
 
 import Data.Text (Text)

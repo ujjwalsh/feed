@@ -45,7 +45,6 @@ module Text.Feed.Query
   , getItemDescription -- :: ItemGetter Text (synonym of previous.)
   ) where
 
-import Prelude ()
 import Prelude.Compat
 
 import Text.Feed.Types as Feed

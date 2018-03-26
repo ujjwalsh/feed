@@ -1,6 +1,5 @@
 module Text.RSS.Export.Tests where
 
-import Prelude ()
 import Prelude.Compat
 
 import Data.Text (pack)

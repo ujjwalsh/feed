@@ -16,7 +16,6 @@ module Text.Atom.Feed.Link
   , showLinkAttr
   ) where
 
-import Prelude ()
 import Prelude.Compat
 
 -- | Atom feeds uses typed IRI links to represent

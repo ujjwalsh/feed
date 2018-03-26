@@ -38,12 +38,11 @@ module Text.Atom.Feed.Import
   , pInReplyTo
   ) where
 
-import Prelude ()
 import Prelude.Compat
 
 import Control.Monad (guard, mplus)
 import Data.List (find)
-import Data.Maybe (isJust, listToMaybe, mapMaybe)
+import Data.Maybe (isNothing, listToMaybe, mapMaybe)
 import Data.Text (Text)
 import Data.Text.Read
 import Data.XML.Types as XML
@@ -75,7 +74,7 @@ pAttr :: Text -> XML.Element -> Maybe Text
 pAttr x e = (`attributeText` e) =<< fst <$> find sameAttr (elementAttributes e)
   where
     ax = atomName x
-    sameAttr (k, _) = k == ax || (not (isJust (nameNamespace k)) && nameLocalName k == x)
+    sameAttr (k, _) = k == ax || (isNothing (nameNamespace k) && nameLocalName k == x)
 
 pAttrs :: Text -> XML.Element -> [Text]
 pAttrs x e = [t | ContentText t <- cnts]
@@ -120,8 +119,8 @@ elementFeed e = do
       , feedAttrs = other_as (elementAttributes e)
       }
   where
-    other_es = filter (\el -> not (elementName el `elem` known_elts))
-    other_as = filter (\a -> not (fst a `elem` known_attrs))
+    other_es = filter ((`notElem` known_elts) . elementName)
+    other_as = filter ((`notElem` known_attrs) . fst)
     -- let's have them all (including xml:base and xml:lang + xmlns: stuff)
     known_attrs = []
     known_elts =
@@ -216,7 +215,7 @@ pLink e = do
       , linkOther = []
       }
   where
-    other_as = filter (\a -> not (fst a `elem` known_attrs))
+    other_as = filter ((`notElem` known_attrs) . fst)
     known_attrs = map atomName ["href", "rel", "type", "hreflang", "title", "length"]
 
 pEntry :: XML.Element -> Maybe Entry
@@ -245,7 +244,7 @@ pEntry e = do
       , entryOther = [] -- ?
       }
   where
-    other_as = filter (\a -> not (fst a `elem` known_attrs))
+    other_as = filter ((`notElem` known_attrs) . fst)
     -- let's have them all (including xml:base and xml:lang + xmlns: stuff)
     known_attrs = []
 

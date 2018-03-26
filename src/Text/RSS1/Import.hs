@@ -14,7 +14,6 @@ module Text.RSS1.Import
   ( elementToFeed
   ) where
 
-import Prelude ()
 import Prelude.Compat
 
 import Data.XML.Compat
@@ -24,7 +23,7 @@ import Text.RSS1.Syntax
 import Text.RSS1.Utils
 
 import Control.Monad (guard, mplus)
-import Data.Maybe (fromMaybe, mapMaybe)
+import Data.Maybe (mapMaybe)
 import Data.Text.Util
 
 ---
@@ -34,7 +33,7 @@ elementToFeed e = do
   ver <- pAttr (Nothing, Nothing) "xmlns" e `mplus` Just rss10NS
   ch <- pNode "channel" e >>= elementToChannel
   let mbImg = pNode "image" e >>= elementToImage
-  let is = fromMaybe [] $ fmap elementToItems $ pNode "items" e
+  let is = maybe [] elementToItems $ pNode "items" e
   let mbTI = pNode "textinput" e >>= elementToTextInput
   let ch1 = ch {channelItemURIs = is}
   let its = pMany (Just rss10NS, Nothing) "item" elementToItem e
@@ -86,7 +85,7 @@ elementToItem e = do
   li <- pQLeaf (rss10NS, Nothing) "link" e
   let desc = pQLeaf (rss10NS, Nothing) "description" e
   let dcs = mapMaybe elementToDC es
-  let tos = fromMaybe [] (fmap bagLeaves $ pQNode (qualName' (taxNS, taxPrefix) "topics") e)
+  let tos = maybe [] bagLeaves $ pQNode (qualName' (taxNS, taxPrefix) "topics") e
   let cs = mapMaybe elementToContent es
   let es_other = removeKnownElts e
   let as_other = removeKnownAttrs e
@@ -131,10 +130,10 @@ elementToChannel e = do
   li <- pLeaf "link" e
   de <- pLeaf "description" e
   let mbImg = pLeaf "image" e
-  let is = fromMaybe [] (fmap seqLeaves $ pNode "items" e)
+  let is = maybe [] seqLeaves $ pNode "items" e
   let tinp = pLeaf "textinput" e
   let dcs = mapMaybe elementToDC es
-  let tos = fromMaybe [] (fmap bagLeaves $ pQNode (qualName' (taxNS, taxPrefix) "topics") e)
+  let tos = maybe [] bagLeaves $ pQNode (qualName' (taxNS, taxPrefix) "topics") e
   let cs = mapMaybe elementToContent es
   let es_other = removeKnownElts e
   let as_other = removeKnownAttrs e
@@ -161,7 +160,7 @@ elementToChannel e = do
 addSyndication :: XML.Element -> Channel -> Channel
 addSyndication e ch =
   ch
-    { channelUpdatePeriod = fmap toUpdatePeriod $ pQLeaf' (synNS, synPrefix) "updatePeriod" e
+    { channelUpdatePeriod = toUpdatePeriod <$> pQLeaf' (synNS, synPrefix) "updatePeriod" e
     , channelUpdateFreq = readInt =<< pQLeaf' (synNS, synPrefix) "updateFrequency" e
     , channelUpdateBase = pQLeaf' (synNS, synPrefix) "updateBase" e
     }
@@ -212,7 +211,7 @@ elementToTaxonomyTopic e = do
       , taxonomyTitle = pLeaf "title" e
       , taxonomyDesc = pLeaf "description" e
       , taxonomyTopics =
-          fromMaybe [] (fmap bagLeaves $ pQNode (qualName' (taxNS, taxPrefix) "topics") e)
+          maybe [] bagLeaves $ pQNode (qualName' (taxNS, taxPrefix) "topics") e
       , taxonomyDC = mapMaybe elementToDC es
       , taxonomyOther = es
       }
@@ -235,7 +234,7 @@ bagLeaves be =
        guard (elementName e == qualName' (rdfNS, rdfPrefix) "li")
        pAttr' (rdfNS, rdfPrefix) "resource" e `mplus`
          fmap strContent (pQNode (qualName' (rdfNS, rdfPrefix) "li") e))
-    (fromMaybe [] $ fmap children $ pQNode (qualName' (rdfNS, rdfPrefix) "Bag") be)
+    (maybe [] children $ pQNode (qualName' (rdfNS, rdfPrefix) "Bag") be)
 
 {-
 bagElements :: XML.Element -> [XML.Element]
@@ -252,4 +251,4 @@ seqLeaves se =
     (\e -> do
        guard (elementName e == rdfName "li")
        return (strContent e))
-    (fromMaybe [] $ fmap children $ pQNode (rdfName "Seq") se)
+    (maybe [] children $ pQNode (rdfName "Seq") se)

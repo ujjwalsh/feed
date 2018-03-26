@@ -19,7 +19,6 @@ module Text.DublinCore.Types
   , dc_element_names
   ) where
 
-import Prelude ()
 import Prelude.Compat
 
 import Data.Text

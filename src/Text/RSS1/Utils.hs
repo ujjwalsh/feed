@@ -46,7 +46,6 @@ module Text.RSS1.Utils
   , removeKnownAttrs
   ) where
 
-import Prelude ()
 import Prelude.Compat
 
 import Data.XML.Compat
@@ -145,12 +144,12 @@ known_con_elts :: [Name]
 known_con_elts = map (qualName' (conNS, conPrefix)) ["items", "item", "format", "encoding"]
 
 removeKnownElts :: XML.Element -> [XML.Element]
-removeKnownElts e = filter (\e1 -> not (elementName e1 `elem` known_elts)) (elementChildren e)
+removeKnownElts e = filter (\e1 -> elementName e1 `notElem` known_elts) (elementChildren e)
   where
     known_elts =
       concat [known_rss_elts, known_syn_elts, known_dc_elts, known_con_elts, known_tax_elts]
 
 removeKnownAttrs :: XML.Element -> [Attr]
-removeKnownAttrs e = filter (\a -> not (fst a `elem` known_attrs)) (elementAttributes e)
+removeKnownAttrs e = filter ((`notElem` known_attrs) . fst) (elementAttributes e)
   where
     known_attrs = map rdfName ["about"]

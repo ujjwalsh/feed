@@ -42,7 +42,6 @@ module Text.Atom.Feed.Validate
   , checkUri
   ) where
 
-import Prelude ()
 import Prelude.Compat
 
 import Data.XML.Types

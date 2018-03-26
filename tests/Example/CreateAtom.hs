@@ -2,7 +2,6 @@ module Example.CreateAtom
   ( atomFeed
   ) where
 
-import Prelude ()
 import Prelude.Compat hiding (take)
 
 import qualified Text.Atom.Feed as Atom

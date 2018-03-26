@@ -1,3 +1,4 @@
+{-# OPTIONS -fno-warn-incomplete-patterns #-}
 --------------------------------------------------------------------
 -- |
 -- Module    : Text.Feed.Constructor
@@ -52,7 +53,6 @@ module Text.Feed.Constructor
   , withItemRights -- :: ItemSetter Text
   ) where
 
-import Prelude ()
 import Prelude.Compat
 
 import Text.Feed.Types as Feed.Types
@@ -88,10 +88,10 @@ newFeed fk =
            "dummy-and-bogus-update-date")
     RSSKind mbV ->
       let def = RSS.nullRSS "dummy-title" "default-channel-url"
-       in RSSFeed $ fromMaybe def $ fmap (\v -> def {RSS.rssVersion = v}) mbV
+       in RSSFeed $ maybe def (\v -> def {RSS.rssVersion = v}) mbV
     RDFKind mbV ->
       let def = RSS1.nullFeed "default-channel-url" "dummy-title"
-       in RSS1Feed $ fromMaybe def $ fmap (\v -> def {RSS1.feedVersion = v}) mbV
+       in RSS1Feed $ maybe def (\v -> def {RSS1.feedVersion = v}) mbV
 
 feedFromRSS :: RSS.RSS -> Feed.Types.Feed
 feedFromRSS = RSSFeed
@@ -479,9 +479,10 @@ withFeedCategories cats fe =
                           addChild
                             (unode
                                "category"
-                               (fromMaybe
+                               (maybe
                                   (: [])
-                                  (fmap (\v x -> [mkAttr "domain" v, x]) mb)
+                                  (\v x -> [mkAttr "domain" v, x])
+                                  mb
                                   (mkAttr "term" t)))
                             acc)
                        e
@@ -774,7 +775,7 @@ withItemCategories cats fi =
            addChild
              (unode
                 "category"
-                (fromMaybe (: []) (fmap (\v x -> [mkAttr "domain" v, x]) mb) (mkAttr "term" t)))
+                (maybe (: []) (\v x -> [mkAttr "domain" v, x]) mb (mkAttr "term" t)))
              acc)
         i
         cats

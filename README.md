@@ -36,7 +36,6 @@ minimum viable 'X', use the 'nullX' constructor.*
 
 module Main where
 
-import Prelude ()
 import Prelude.Compat hiding (take)
 
 import Data.Text

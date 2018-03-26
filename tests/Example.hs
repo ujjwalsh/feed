@@ -1,6 +1,5 @@
 module Example where
 
-import Prelude ()
 import Prelude.Compat
 
 import Example.CreateAtom (atomFeed)

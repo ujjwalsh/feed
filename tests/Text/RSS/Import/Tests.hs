@@ -1,6 +1,5 @@
 module Text.RSS.Import.Tests where
 
-import Prelude ()
 import Prelude.Compat
 
 import Data.XML.Types as XML

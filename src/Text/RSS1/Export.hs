@@ -14,7 +14,6 @@ module Text.RSS1.Export
   ( xmlFeed
   ) where
 
-import Prelude ()
 import Prelude.Compat
 
 import Text.DublinCore.Types

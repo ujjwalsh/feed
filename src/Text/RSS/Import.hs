@@ -39,7 +39,6 @@ module Text.RSS.Import
   , readBool
   ) where
 
-import Prelude ()
 import Prelude.Compat
 
 import Data.XML.Compat
@@ -97,7 +96,7 @@ elementToRSS e = do
   return
     RSS
       { rssVersion = v
-      , rssAttrs = filter (\a -> not (fst a `elem` known_attrs)) as
+      , rssAttrs = filter ((`notElem` known_attrs) . fst) as
       , rssChannel = ch
       , rssOther = filter (\e1 -> elementName e1 /= qualName "channel") es
       }
@@ -133,7 +132,7 @@ elementToChannel e = do
       , rssTextInput = pNode "textInput" es >>= elementToTextInput
       , rssSkipHours = pNode "skipHours" es >>= elementToSkipHours
       , rssSkipDays = pNode "skipDays" es >>= elementToSkipDays
-      , rssChannelOther = filter (\e1 -> not (elementName e1 `elem` known_channel_elts)) es
+      , rssChannelOther = filter ((`notElem` known_channel_elts) . elementName) es
       }
   where
     known_channel_elts =
@@ -176,7 +175,7 @@ elementToImage e = do
       , rssImageWidth = pLeaf "width" es >>= readInt
       , rssImageHeight = pLeaf "height" es >>= readInt
       , rssImageDesc = pLeaf "description" es
-      , rssImageOther = filter (\e1 -> not (elementName e1 `elem` known_image_elts)) es
+      , rssImageOther = filter ((`notElem` known_image_elts) . elementName) es
       }
   where
     known_image_elts = map qualName ["url", "title", "link", "width", "height", "description"]
@@ -188,7 +187,7 @@ elementToCategory e = do
   return
     RSSCategory
       { rssCategoryDomain = pAttr "domain" e
-      , rssCategoryAttrs = filter (\a -> not (nameLocalName (attrKey a) `elem` known_attrs)) as
+      , rssCategoryAttrs = filter ((`notElem` known_attrs) . nameLocalName . attrKey) as
       , rssCategoryValue = strContent e
       }
   where
@@ -205,7 +204,7 @@ elementToCloud e = do
       , rssCloudPath = pAttr "path" e
       , rssCloudRegisterProcedure = pAttr "registerProcedure" e
       , rssCloudProtocol = pAttr "protocol" e
-      , rssCloudAttrs = filter (\a -> not (nameLocalName (attrKey a) `elem` known_attrs)) as
+      , rssCloudAttrs = filter ((`notElem` known_attrs) . nameLocalName . attrKey) as
       }
   where
     known_attrs = ["domain", "port", "path", "registerProcedure", "protocol"]
@@ -227,7 +226,7 @@ elementToItem e = do
       , rssItemPubDate = pLeaf "pubDate" es `mplus` pQLeaf (dcName "date") es
       , rssItemSource = pNode "source" es >>= elementToSource
       , rssItemAttrs = elementAttributes e
-      , rssItemOther = filter (\e1 -> not (elementName e1 `elem` known_item_elts)) es
+      , rssItemOther = filter ((`notElem` known_item_elts) . elementName) es
       }
   where
     known_item_elts =
@@ -253,7 +252,7 @@ elementToSource e = do
   return
     RSSSource
       { rssSourceURL = url
-      , rssSourceAttrs = filter (\a -> not (nameLocalName (attrKey a) `elem` known_attrs)) as
+      , rssSourceAttrs = filter ((`notElem` known_attrs) . nameLocalName . attrKey) as
       , rssSourceTitle = strContent e
       }
   where
@@ -270,7 +269,7 @@ elementToEnclosure e = do
       { rssEnclosureURL = url
       , rssEnclosureType = ty
       , rssEnclosureLength = pAttr "length" e >>= readInt
-      , rssEnclosureAttrs = filter (\a -> not (nameLocalName (attrKey a) `elem` known_attrs)) as
+      , rssEnclosureAttrs = filter ((`notElem` known_attrs) . nameLocalName . attrKey) as
       }
   where
     known_attrs = ["url", "type", "length"]
@@ -282,7 +281,7 @@ elementToGuid e = do
   return
     RSSGuid
       { rssGuidPermanentURL = pAttr "isPermaLink" e >>= readBool
-      , rssGuidAttrs = filter (\a -> not (nameLocalName (attrKey a) `elem` known_attrs)) as
+      , rssGuidAttrs = filter ((`notElem` known_attrs) . nameLocalName . attrKey) as
       , rssGuidValue = strContent e
       }
   where
@@ -303,7 +302,7 @@ elementToTextInput e = do
       , rssTextInputName = name
       , rssTextInputLink = link
       , rssTextInputAttrs = elementAttributes e
-      , rssTextInputOther = filter (\e1 -> not (elementName e1 `elem` known_ti_elts)) es
+      , rssTextInputOther = filter ((`notElem` known_ti_elts) . elementName) es
       }
   where
     known_ti_elts = map qualName ["title", "description", "name", "link"]

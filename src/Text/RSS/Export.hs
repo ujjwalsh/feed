@@ -30,7 +30,6 @@ module Text.RSS.Export
   , mb
   ) where
 
-import Prelude ()
 import Prelude.Compat
 
 import Data.XML.Compat
