@@ -61,7 +61,7 @@ import Text.DublinCore.Types
 
 import Control.Applicative ((<|>))
 import Control.Arrow ((&&&))
-import Control.Monad (mplus)
+import Control.Monad.Compat (mplus)
 import Data.Maybe
 import Data.Text (Text)
 import qualified Data.Text as T

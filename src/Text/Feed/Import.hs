@@ -39,7 +39,7 @@ import Text.Feed.Types
 import Text.RSS.Import as RSS
 import Text.RSS1.Import as RSS1
 
-import Control.Monad
+import Control.Monad.Compat
 
 import qualified Text.XML as C
 #if MIN_VERSION_utf8_string(1,0,0)

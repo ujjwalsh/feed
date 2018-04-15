@@ -22,7 +22,7 @@ import Text.DublinCore.Types
 import Text.RSS1.Syntax
 import Text.RSS1.Utils
 
-import Control.Monad (guard, mplus)
+import Control.Monad.Compat (guard, mplus)
 import Data.Maybe (mapMaybe)
 import Data.Text.Util
 

@@ -40,8 +40,8 @@ module Text.Atom.Feed.Import
 
 import Prelude.Compat
 
-import Control.Monad (guard, mplus)
-import Data.List (find)
+import Control.Monad.Compat (guard, mplus)
+import Data.List.Compat (find)
 import Data.Maybe (isNothing, listToMaybe, mapMaybe)
 import Data.Text (Text)
 import Data.Text.Read

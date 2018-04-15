@@ -47,7 +47,7 @@ import Data.XML.Types as XML
 import Text.RSS.Syntax
 import Text.RSS1.Utils (dcNS, dcPrefix)
 
-import Control.Monad (guard, mplus)
+import Control.Monad.Compat (guard, mplus)
 import Data.Char (isSpace)
 import Data.Maybe (fromMaybe, listToMaybe, mapMaybe)
 import Data.Text (Text, dropWhile)
