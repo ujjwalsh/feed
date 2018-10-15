@@ -131,7 +131,6 @@ test-suite readme
     , text
     , xml-types
     , feed
-    , text
     , xml-conduit
     , xml-types
   build-tool-depends:

@@ -29,6 +29,7 @@ module Text.Atom.Feed.Export
   , atomThreadNode
   , atomThreadLeaf
   , xmlFeed
+  , textFeed
   , xmlEntry
   , xmlContent
   , xmlCategory
@@ -58,6 +59,8 @@ import Prelude.Compat
 import Data.Text (Text, pack)
 import Data.XML.Types as XML
 import Text.Atom.Feed
+import qualified Data.Text.Lazy as TL
+import qualified Data.Text.Util as U
 
 atom_prefix :: Maybe Text
 atom_prefix = Nothing -- Just "atom"
@@ -143,6 +146,9 @@ xmlFeed f =
    mb xmlRights (feedRights f) ++
    mb xmlSubtitle (feedSubtitle f) ++ map xmlEntry (feedEntries f) ++ feedOther f)
     {elementAttributes = [xmlns_atom]}
+
+textFeed :: Feed -> Maybe TL.Text
+textFeed = U.renderFeed xmlFeed
 
 xmlEntry :: Entry -> XML.Element
 xmlEntry e =

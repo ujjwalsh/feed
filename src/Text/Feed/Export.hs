@@ -13,17 +13,20 @@
 --------------------------------------------------------------------
 module Text.Feed.Export
   ( Text.Feed.Export.xmlFeed -- :: Feed -> XML.Element
+  , Text.Feed.Export.textFeed -- :: Feed -> TL.Text
   ) where
 
-import Prelude.Compat ()
+import Prelude.Compat
 
 import Text.Feed.Types
 
 import Text.Atom.Feed.Export as Atom
 import Text.RSS.Export as RSS
 import Text.RSS1.Export as RSS1
+import qualified Data.Text.Util as U
 
 import Data.XML.Types as XML
+import qualified Data.Text.Lazy as TL
 
 -- | 'xmlFeed f' serializes a @Feed@ document into a conforming
 -- XML toplevel element.
@@ -34,3 +37,6 @@ xmlFeed fe =
     RSSFeed f -> RSS.xmlRSS f
     RSS1Feed f -> RSS1.xmlFeed f
     XMLFeed e -> e -- that was easy!
+
+textFeed :: Feed -> Maybe TL.Text
+textFeed = U.renderFeed Text.Feed.Export.xmlFeed

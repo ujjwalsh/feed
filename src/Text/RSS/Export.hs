@@ -14,6 +14,7 @@ module Text.RSS.Export
   ( qualNode
   , qualName
   , xmlRSS
+  , textRSS
   , xmlChannel
   , xmlItem
   , xmlSource
@@ -35,8 +36,10 @@ import Prelude.Compat
 import Data.XML.Compat
 import Data.XML.Types as XML
 import Text.RSS.Syntax
+import qualified Data.Text.Util as U
 
 import Data.Text (Text, pack)
+import qualified Data.Text.Lazy as TL
 
 qualName :: Text -> XML.Name
 qualName n = Name n Nothing Nothing
@@ -49,6 +52,9 @@ xmlRSS :: RSS -> XML.Element
 xmlRSS r =
   (qualNode "rss" $ map NodeElement (xmlChannel (rssChannel r) : rssOther r))
     {elementAttributes = mkAttr "version" (rssVersion r) : rssAttrs r}
+
+textRSS :: RSS -> Maybe TL.Text
+textRSS = U.renderFeed xmlRSS
 
 xmlChannel :: RSSChannel -> XML.Element
 xmlChannel ch =
