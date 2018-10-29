@@ -12,6 +12,7 @@
 --------------------------------------------------------------------
 module Text.RSS1.Export
   ( xmlFeed
+  , textFeed
   ) where
 
 import Prelude.Compat
@@ -19,10 +20,12 @@ import Prelude.Compat
 import Text.DublinCore.Types
 import Text.RSS1.Syntax
 import Text.RSS1.Utils
+import qualified Data.Text.Util as U
 
 import Data.List.Compat
 import Data.Text (Text)
 import qualified Data.Text as T
+import qualified Data.Text.Lazy as TL
 import Data.XML.Compat
 import Data.XML.Types as XML
 
@@ -56,6 +59,9 @@ xmlFeed f =
         mkNAttr (qualName (Nothing, Just "xmlns") conPrefix) conNS :
         mkNAttr (qualName (Nothing, Just "xmlns") dcPrefix) dcNS : feedAttrs f
     }
+
+textFeed :: Feed -> Maybe TL.Text
+textFeed = U.renderFeed xmlFeed
 
 xmlChannel :: Channel -> XML.Element
 xmlChannel ch =

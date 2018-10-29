@@ -39,11 +39,10 @@ module Main where
 import Prelude.Compat hiding (take)
 
 import Data.Text
-import qualified Text.XML as C
 import Data.XML.Types as XML
 import qualified Data.Text.Lazy as Lazy
 import qualified Text.Atom.Feed as Atom
-import qualified Text.Atom.Feed.Export as Export
+import qualified Text.Atom.Feed.Export as Export (textFeed)
 
 myFeed :: Atom.Feed
 myFeed = Atom.nullFeed
@@ -52,16 +51,11 @@ myFeed = Atom.nullFeed
     "2017-08-01"                        -- ^ last updated
 ```
 
+Now we can export the feed to `Text`.
+
 ```haskell
-
--- TODO: Some boilerplate, we should include this in the library!
-
-elementToDoc :: XML.Element -> Maybe C.Document
-elementToDoc el =
-  either (const Nothing) Just $ C.fromXMLDocument $ XML.Document (Prologue [] Nothing []) el []
-
 renderFeed :: Atom.Feed -> Maybe Lazy.Text
-renderFeed = fmap (C.renderText C.def) . elementToDoc . Export.xmlFeed
+renderFeed = Export.textFeed
 ```
 
 ```
