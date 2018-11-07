@@ -1,3 +1,9 @@
+#### 1.0.1.0
+
+* Support for GHC 8.6.x libraries
+
+* Add `textFeed` and `textRSS` helpers (thanks to Francesco Ariis)
+
 # 1.0.0.0
 
 * Thanks to Dmitry Dzhus feed has been modernized to use the `text`,
