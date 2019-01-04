@@ -136,4 +136,4 @@ test-suite readme
     , xml-conduit
     , xml-types
   build-tool-depends:
-    markdown-unlit:markdown-unlit == 0.4.*
+    markdown-unlit:markdown-unlit >= 0.4 && < 0.6
