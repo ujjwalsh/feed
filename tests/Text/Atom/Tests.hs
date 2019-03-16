@@ -31,7 +31,7 @@ testFullAtomParse = testCase "parse a complete atom file" testAtom
     testAtom :: Assertion
     testAtom = do
       contents <- parseFeedFromFile =<< getDataFileName "tests/files/atom.xml"
-      let res = fmap (renderText def) . elementToDoc . xmlFeed $ contents
+      let res = fmap (renderText def) . (>>= elementToDoc) . fmap xmlFeed $ contents
       assertBool "Atom Parsing" $ isJust res
 
 testAtomAlternate :: Test
