@@ -30,5 +30,5 @@ testFullRss20Parse = testCase "parse a complete rss 2.0 file" testRss20
     testRss20 :: Assertion
     testRss20 = do
       contents <- parseFeedFromFile =<< getDataFileName "tests/files/rss20.xml"
-      let res = fmap (renderText def) . elementToDoc . xmlFeed $ contents
+      let res = fmap (renderText def) . (>>= elementToDoc) . fmap xmlFeed $ contents
       assertBool "RSS 2.0 Parsing" $ isJust res
