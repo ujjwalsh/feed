@@ -1,3 +1,7 @@
+## 1.1.0.0
+
+* `parseFeedFromFile` now returns `IO (Maybe Feed)` instead of `IO Feed` to distinguish IO exceptions from parse failures. Thanks to Jake Keuhlen.
+
 #### 1.0.1.0
 
 * Support for GHC 8.6.x libraries
