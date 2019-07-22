@@ -1,3 +1,7 @@
+## 1.2.0.0
+
+Updated `EntryContent`'s `HTMLContent` to wrap an `XML.Element` instead of `Text`. Thanks to Jake Keuhlen.
+
 ## 1.1.0.0
 
 * `parseFeedFromFile` now returns `IO (Maybe Feed)` instead of `IO Feed` to distinguish IO exceptions from parse failures. Thanks to Jake Keuhlen.
