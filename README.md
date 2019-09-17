@@ -62,7 +62,7 @@ renderFeed = Export.textFeed
 > renderFeed myFeed
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title xmlns:ns="http://www.w3.org/2005/Atom" ns:type="text">Example Website</title>
+  <title type="text">Example Website</title>
   <id>http://example.com/atom.xml</id>
   <updated>2017-08-01</updated>
 </feed>
@@ -124,29 +124,29 @@ feed =
 > renderFeed feed
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title xmlns:ns="http://www.w3.org/2005/Atom" ns:type="text">Example Website</title>
+  <title type="text">Example Website</title>
   <id>http://example.com/atom.xml</id>
   <updated>2017-08-01</updated>
-  <link xmlns:ns="http://www.w3.org/2005/Atom" ns:href="http://example.com/"/>
+  <link href="http://example.com/"/>
   <entry>
     <id>http://example.com/2</id>
-    <title xmlns:ns="http://www.w3.org/2005/Atom" ns:type="text">Bar.</title>
+    <title type="text">Bar.</title>
     <updated>2000-02-02T18:30:00Z</updated>
     <author>
       <name>J. Smith</name>
     </author>
-    <content xmlns:ns="http://www.w3.org/2005/Atom" ns:type="html">Bar.</content>
-    <link xmlns:ns="http://www.w3.org/2005/Atom" ns:href="http://example.com/2"/>
+    <content type="text">Bar.</content>
+    <link href="http://example.com/2"/>
   </entry>
   <entry>
     <id>http://example.com/1</id>
-    <title xmlns:ns="http://www.w3.org/2005/Atom" ns:type="text">Foo.</title>
+    <title type="text">Foo.</title>
     <updated>2000-01-01T18:30:00Z</updated>
     <author>
       <name>J. Smith</name>
     </author>
-    <content xmlns:ns="http://www.w3.org/2005/Atom" ns:type="html">Foo.</content>
-    <link xmlns:ns="http://www.w3.org/2005/Atom" ns:href="http://example.com/1"/>
+    <content type="text">Foo.</content>
+    <link href="http://example.com/1"/>
   </entry>
 </feed>
 ```
