@@ -1,3 +1,8 @@
+#### 1.2.0.1
+
+* Get rid of xmlns:ns and ns:-prefixed attributes that confused some applications, thanks to Tomas Janousek.
+* GHC 8.8 support
+
 ## 1.2.0.0
 
 Updated `EntryContent`'s `HTMLContent` to wrap an `XML.Element` instead of `Text`. Thanks to Jake Keuhlen.
