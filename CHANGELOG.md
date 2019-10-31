@@ -1,3 +1,6 @@
+#### 1.3.0.0
+* Reverted changes to `EntryContent` that came in 1.2.0.0. Thanks to Tomas Janousek.
+
 #### 1.2.0.1
 
 * Get rid of xmlns:ns and ns:-prefixed attributes that confused some applications, thanks to Tomas Janousek.
