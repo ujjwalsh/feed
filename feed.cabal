@@ -103,6 +103,7 @@ test-suite tests
     Example.CreateAtom
     ImportExport
     Text.Atom.Tests
+    Text.Atom.Validate.Tests
     Text.Feed.Util.Tests
     Text.RSS.Equals
     Text.RSS.Export.Tests
