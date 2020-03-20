@@ -1,3 +1,7 @@
+### 1.3.0.1
+* Add a test to check that validation works on a simple entry.
+* Change attribute handling when validating so that type attribute is recognised properly on content.
+
 #### 1.3.0.0
 * Reverted changes to `EntryContent` that came in 1.2.0.0. Thanks to Tomas Janousek.
 
