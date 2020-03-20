@@ -71,15 +71,17 @@ pQLeaf :: Name -> [XML.Element] -> Maybe Text
 pQLeaf x es = (T.concat . elementText) `fmap` pQNode x es
 
 pAttr :: Text -> XML.Element -> Maybe Text
-pAttr x e = (`attributeText` e) =<< fst <$> find sameAttr (elementAttributes e)
-  where
-    ax = atomName x
-    sameAttr (k, _) = k == ax || (isNothing (nameNamespace k) && nameLocalName k == x)
+pAttr x e = (`attributeText` e) =<< find (sameAtomAttr x) (map fst $ elementAttributes e)
 
 pAttrs :: Text -> XML.Element -> [Text]
 pAttrs x e = [t | ContentText t <- cnts]
   where
-    cnts = concat [v | (k, v) <- elementAttributes e, k == atomName x]
+    cnts = concat [v | (k, v) <- elementAttributes e, sameAtomAttr x k]
+
+sameAtomAttr :: Text -> Name -> Bool
+sameAtomAttr x k = k == ax || (isNothing (nameNamespace k) && nameLocalName k == x)
+  where
+    ax = atomName x
 
 pQAttr :: Name -> XML.Element -> Maybe Text
 pQAttr = attributeText
