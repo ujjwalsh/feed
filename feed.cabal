@@ -33,6 +33,7 @@ tested-with:
   , GHC == 8.4.4
   , GHC == 8.6.5
   , GHC == 8.8.1
+  , GHC == 8.10.1
 data-files:
   tests/files/*.xml
 extra-source-files:
@@ -76,7 +77,7 @@ library
     Data.Text.Util
     Data.XML.Compat
   build-depends:
-      base >= 4 && < 4.14
+      base >= 4 && < 4.15
     , base-compat >= 0.9 && < 0.12
     , bytestring >= 0.9 && < 0.11
     , old-locale == 1.0.*
@@ -111,7 +112,7 @@ test-suite tests
     Text.RSS.Tests
     Text.RSS.Utils
   build-depends:
-      base >= 4 && < 4.14
+      base >= 4 && < 4.15
     , base-compat >= 0.9 && < 0.12
     , HUnit >= 1.2 && < 1.7
     , feed
@@ -132,7 +133,7 @@ test-suite readme
     OverloadedStrings
   type:              exitcode-stdio-1.0
   build-depends:
-      base >= 4 && < 4.14
+      base >= 4 && < 4.15
     , base-compat >= 0.9 && < 0.12
     , text
     , xml-types
